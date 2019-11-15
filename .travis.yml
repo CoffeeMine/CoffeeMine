@@ -8,4 +8,5 @@ addons:
     - maven
  
 script:
+- mvn com.github.eirslett:frontend-maven-plugin:1.7.6:install-node-and-npm -DnodeVersion="v12.13.0"
 - mvn spring-boot:start
