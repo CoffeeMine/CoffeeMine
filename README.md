@@ -1,4 +1,4 @@
-# Project Base for CoffeMine
+# Project Base for CoffeeMine
 
 This contains all the necessary configuration and some placeholder files to get you started.
 
