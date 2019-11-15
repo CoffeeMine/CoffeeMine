@@ -1,0 +1,11 @@
+language: java
+jdk: openjdk11
+
+addons:
+  apt:
+    packages:
+    - nodejs
+    - maven
+ 
+script:
+- mvn spring-boot:start
