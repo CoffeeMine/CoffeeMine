@@ -1,0 +1,7 @@
+:host, [theme ~= dark] {
+  --material-background-color: #111111;
+  --material-secondary-background-color: black;
+  --material-tertiary-background-color: #1d1d1d;
+  --material-primary-color: #76c54f;
+  --material-primary-text-color:#76c54f;
+}
