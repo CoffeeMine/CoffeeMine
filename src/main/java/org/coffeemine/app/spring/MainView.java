@@ -9,11 +9,11 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
-import com.vaadin.flow.theme.lumo.Lumo;
+import com.vaadin.flow.theme.material.Material;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Route
-@Theme(value = Lumo.class, variant = Lumo.DARK)
+@Theme(value = Material.class, variant = Material.DARK)
 @PageTitle("CoffeeMine")
 @PWA(name = "CoffeeMine, your OpenSource Project Management Tool", shortName = "CoffeeMine")
 public class MainView extends AppLayout {
