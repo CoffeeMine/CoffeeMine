@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteData;
 import com.vaadin.flow.router.Router;
 
@@ -16,12 +16,21 @@ public class TopBar extends HorizontalLayout {
     static int tabIndex = 0;
 
     public TopBar() {
+        this.setSizeFull();
+        this.setMaxWidth("1300px");
+        this.getStyle().set("margin", "auto");
+
+        HorizontalLayout tabLayout = new HorizontalLayout();
+
+        this.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+        tabLayout.setWidthFull();
+
         Router router = UI.getCurrent().getRouter();
         List<RouteData> routes = router.getRegistry().getRegisteredRoutes();
 
         Map<Tab, RouteData> tabRoute = new HashMap<>();
         Tabs routingTabs = new Tabs();
-
+        
         routes.forEach(r -> {
             Tab tab = new Tab(r.getNavigationTarget().getSimpleName());
             routingTabs.add(tab);
@@ -34,6 +43,7 @@ public class TopBar extends HorizontalLayout {
         });
 
         routingTabs.setSelectedIndex(tabIndex);
-        add(routingTabs); 
+        tabLayout.add(routingTabs);
+        this.add(tabLayout);
     }
 }
