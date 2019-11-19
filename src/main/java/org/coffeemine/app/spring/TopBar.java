@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -21,6 +23,7 @@ public class TopBar extends HorizontalLayout {
         this.getStyle().set("margin", "auto");
 
         HorizontalLayout tabLayout = new HorizontalLayout();
+        HorizontalLayout miscLayout = new HorizontalLayout();
 
         this.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
         tabLayout.setWidthFull();
@@ -44,6 +47,15 @@ public class TopBar extends HorizontalLayout {
 
         routingTabs.setSelectedIndex(tabIndex);
         tabLayout.add(routingTabs);
-        this.add(tabLayout);
+
+        Button AccountButton = new Button("Account");
+
+        AccountButton.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
+        AccountButton.addClickListener(e -> {
+            // TODO: add functionality.
+        });
+        miscLayout.add(AccountButton);
+
+        this.add(tabLayout, miscLayout);
     }
 }
