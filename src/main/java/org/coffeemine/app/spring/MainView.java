@@ -17,16 +17,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 @PageTitle("CoffeeMine")
 @PWA(name = "CoffeeMine, your OpenSource Project Management Tool", shortName = "CoffeeMine")
 public class MainView extends AppLayout {
-
     public MainView(@Autowired MessageBean bean) {
         addToNavbar(new TopBar());
         final var content_div = new Div();
         setContent(content_div);
+        setContent(new CalendarComponent());
         content_div.add(new H1("CoffeeMine Boards"));
         Button button = new Button("Click me!",
                 e -> Notification.show(bean.getMessage()));
         addToDrawer(button);
-        setDrawerOpened(false);
     }
 
 }
