@@ -7,3 +7,24 @@
   /* TODO: base this of primary color */
   --material-primary-color-transparent: rgba(95,151,246, 0.09)
 }
+
+vaadin-tab[selected][orientation=vertical] {
+  background: var(--material-primary-color-transparent);
+  border-top-right-radius: 1000px;
+  border-bottom-right-radius: 1000px;
+
+}
+vaadin-tab[orientation=vertical]:hover {
+  border-top-right-radius: 1000px;
+  border-bottom-right-radius: 1000px;
+
+}
+vaadin-text-field {
+  background-color: var(--material-tertiary-background-color);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  padding-top: 8px;
+  margin-top: auto;
+  margin-bottom: auto;
+  /* line-height: 10px; */
+}
