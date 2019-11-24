@@ -9,7 +9,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.Route;
 
 public class TopBar extends HorizontalLayout {
-    static int tabIndex = 0;
 
     public TopBar() {
         this.setWidthFull();
