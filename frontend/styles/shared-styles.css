@@ -13,6 +13,10 @@
   padding: 0px;
 }
 
+.mono_font {
+  font-family: 'Roboto Mono', monospace;
+}
+
 vaadin-tab[selected][orientation=vertical] {
   background: var(--material-primary-color-transparent);
   border-top-right-radius: 1000px;
