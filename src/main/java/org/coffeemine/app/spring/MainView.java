@@ -18,6 +18,8 @@ import com.vaadin.flow.theme.material.Material;
 public class MainView extends AppLayout {
 
     public MainView() {
+        // TODO: enable on mobile devices
+        this.setDrawerOpened(false);
 
         final var topbar = new TopBar();
         addToNavbar(topbar);
