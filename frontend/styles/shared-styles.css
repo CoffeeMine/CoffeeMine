@@ -1,7 +1,9 @@
 :host, [theme ~= dark] {
-  --material-background-color: #111111;
-  --material-secondary-background-color: black;
+  --material-background-color: #121212;
+  --material-secondary-background-color: #1f1f1f;
   --material-tertiary-background-color: #1d1d1d;
-  --material-primary-color: #76c54f;
-  --material-primary-text-color:#76c54f;
+  --material-primary-color: rgb(95,151,246);
+  --material-primary-text-color: var(--material-primary-color);
+  /* TODO: base this of primary color */
+  --material-primary-color-transparent: rgba(95,151,246, 0.09)
 }
