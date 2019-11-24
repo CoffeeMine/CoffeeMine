@@ -22,6 +22,10 @@ public class MainView extends AppLayout {
         final var content_div = new Div();
         setContent(content_div);
         content_div.add(new H1("CoffeeMine Boards"));
+
+        final var sidebar = new SideBar();
+        addToDrawer(sidebar);
+
     }
 
 }
