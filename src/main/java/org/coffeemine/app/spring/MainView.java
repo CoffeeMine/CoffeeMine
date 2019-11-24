@@ -17,8 +17,11 @@ import com.vaadin.flow.theme.material.Material;
 @PWA(name = "CoffeeMine, your OpenSource Project Management Tool", shortName = "CoffeeMine")
 public class MainView extends AppLayout {
 
-        addToNavbar(new TopBar());
     public MainView() {
+
+        final var topbar = new TopBar();
+        addToNavbar(topbar);
+
         final var content_div = new Div();
         setContent(content_div);
         content_div.add(new H1("CoffeeMine Boards"));
@@ -29,4 +32,3 @@ public class MainView extends AppLayout {
     }
 
 }
-
