@@ -26,6 +26,7 @@ public class MainView extends AppLayout {
         Button button = new Button("Click me!",
                 e -> Notification.show(bean.getMessage()));
         addToDrawer(button);
+        setDrawerOpened(false);
     }
 
 }
