@@ -17,13 +17,8 @@ import com.vaadin.flow.theme.material.Material;
 @PWA(name = "CoffeeMine, your OpenSource Project Management Tool", shortName = "CoffeeMine")
 public class MainView extends AppLayout {
 
-    public MainView() {
-        // TODO: enable on mobile devices
-        this.setDrawerOpened(false);
-
-        final var topbar = new TopBar();
-        addToNavbar(topbar);
-
+    public MainView(@Autowired MessageBean bean) {
+        addToNavbar(new TopBar());
         final var content_div = new Div();
         setContent(content_div);
         content_div.add(new H1("CoffeeMine Boards"));
