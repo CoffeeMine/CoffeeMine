@@ -1,5 +1,6 @@
 package org.coffeemine.app.spring;
 
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.vaadin.stefan.fullcalendar.CalendarViewImpl;
@@ -12,11 +13,14 @@ import java.time.LocalDateTime;
 public class CalendarComponent extends VerticalLayout {
 
     private static FullCalendar systemCalendar;
+    private Text date;
 
     public CalendarComponent(){
         systemCalendar = new FullCalendar();
+        date = new Text(LocalDateTime.now().getYear() + "  " + LocalDateTime.now().getMonth().toString());
         systemCalendar.setFirstDay(DayOfWeek.MONDAY);
         systemCalendar.setBusinessHours();
+        add(date);
         add(systemCalendar);
     }
 

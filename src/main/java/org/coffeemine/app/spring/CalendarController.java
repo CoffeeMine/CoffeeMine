@@ -4,6 +4,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.textfield.TextField;
 
 class CalendarController extends HorizontalLayout {
     CalendarController(){
@@ -24,6 +25,8 @@ class CalendarController extends HorizontalLayout {
     }
 
     FormLayout newTaskForm() {
-        return new FormLayout();
+        FormLayout newForm = new FormLayout();
+        newForm.addFormItem(new TextField(), "Task Name");
+        return newForm;
     }
 }

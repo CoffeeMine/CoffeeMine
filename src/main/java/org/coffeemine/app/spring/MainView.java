@@ -21,8 +21,6 @@ public class MainView extends AppLayout {
         addToNavbar(new TopBar());
         final var content_div = new Div();
         setContent(content_div);
-        content_div.add(new CalendarController());
-        content_div.add(new CalendarComponent());
         content_div.add(new H1("CoffeeMine Boards"));
         Button button = new Button("Click me!",
                 e -> Notification.show(bean.getMessage()));
