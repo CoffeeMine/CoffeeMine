@@ -1,18 +1,41 @@
 package org.coffeemine.app.spring;
 
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import org.vaadin.stefan.fullcalendar.CalendarViewImpl;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 
 public class CalendarComponent extends VerticalLayout {
+
+    private static FullCalendar systemCalendar;
+
     public CalendarComponent(){
-        FullCalendar systemCalendar = new FullCalendar();
-        Button today = new Button("Today",e -> systemCalendar.today());
-        Button previous = new Button("<< Previous", e -> systemCalendar.previous());
-        Button next = new Button("next >>",e -> systemCalendar.next());
-        add(previous);
-        add(today);
-        add(next);
+        systemCalendar = new FullCalendar();
         add(systemCalendar);
+    }
+
+    static void calendarGoNext(){
+        systemCalendar.next();
+    }
+
+    static void calendarGoPrevious(){
+        systemCalendar.previous();
+    }
+
+    static void calendarGoToday(){
+        systemCalendar.today();
+    }
+
+    static void changeCalendarView(String viewName){
+        switch(viewName) {
+            case "Day":
+                systemCalendar.changeView(CalendarViewImpl.DAY_GRID_DAY);
+                break;
+            case "Week":
+                systemCalendar.changeView(CalendarViewImpl.DAY_GRID_WEEK);
+                break;
+            default:
+                systemCalendar.changeView(CalendarViewImpl.DAY_GRID_MONTH);
+                break;
+        }
     }
 }
