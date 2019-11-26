@@ -1,0 +1,39 @@
+:host, [theme ~= dark] {
+  --material-background-color: #121212;
+  --material-secondary-background-color: #1f1f1f;
+  --material-tertiary-background-color: #1d1d1d;
+  --material-primary-color: rgb(95,151,246);
+  --material-primary-text-color: var(--material-primary-color);
+  /* TODO: base this of primary color */
+  --material-primary-color-transparent: rgba(95,151,246, 0.09)
+}
+
+.sidebar {
+  background-color: var(--material-secondary-background-color);
+  padding: 0px;
+}
+
+.mono_font {
+  font-family: 'Roboto Mono', monospace;
+}
+
+vaadin-tab[selected][orientation=vertical] {
+  background: var(--material-primary-color-transparent);
+  border-top-right-radius: 1000px;
+  border-bottom-right-radius: 1000px;
+
+}
+vaadin-tab[orientation=vertical]:hover {
+  border-top-right-radius: 1000px;
+  border-bottom-right-radius: 1000px;
+
+}
+vaadin-text-field {
+  background-color: var(--material-tertiary-background-color);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  padding-top: 8px;
+  margin-top: auto;
+  margin-bottom: auto;
+  /* line-height: 10px; */
+}
