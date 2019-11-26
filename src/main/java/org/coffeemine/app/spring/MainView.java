@@ -1,8 +1,6 @@
 package org.coffeemine.app.spring;
 
-import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -15,17 +13,11 @@ import com.vaadin.flow.theme.material.Material;
 @CssImport("./styles/shared-styles.css")
 @PageTitle("CoffeeMine")
 @PWA(name = "CoffeeMine, your OpenSource Project Management Tool", shortName = "CoffeeMine")
-public class MainView extends AppLayout {
+public class MainView extends View {
 
     public MainView() {
-        addToNavbar(new TopBar());
-        final var content_div = new Div();
-        setContent(content_div);
-        content_div.add(new H1("CoffeeMine Boards"));
-
-        final var sidebar = new SideBar();
-        addToDrawer(sidebar);
-
+        super();
+        add(new H1("CoffeeMine Boards"));
     }
 
 }

@@ -6,8 +6,6 @@ import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
-import com.vaadin.flow.router.Route;
-
 public class TopBar extends HorizontalLayout {
 
     public TopBar() {
