@@ -26,7 +26,7 @@ public class SideBar extends VerticalLayout {
         // miscLayout.add(closeButton);
         miscLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
 
-        Tabs routingTabs = RoutingTabs.getTabs();
+        Tabs routingTabs = new RoutingTabs();
         routingTabs.setWidthFull();
         routingTabs.setOrientation(Tabs.Orientation.VERTICAL);
         tabLayout.add(routingTabs);
