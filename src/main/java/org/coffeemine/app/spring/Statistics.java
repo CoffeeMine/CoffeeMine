@@ -6,7 +6,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.router.Route;
 
 @Route
@@ -24,32 +24,25 @@ public class Statistics extends VerticalLayout {
         content_div.add(layout);
         this.add(content_div);
 
-        TextField ipb = new TextField();
-        ipb.setEnabled(false);
+        Span ipb = new Span("");
         layout.addFormItem(ipb, "Initially Planned Budget");
 
-        TextField av = new TextField();
-        av.setEnabled(false);
+        Span av = new Span("");
         layout.addFormItem(av, "Actual Value");
 
-        TextField pv = new TextField();
-        pv.setEnabled(false);
+        Span pv = new Span("");
         layout.addFormItem(pv, "Planned Value");
 
-        TextField cv = new TextField();
-        cv.setEnabled(false);
+        Span cv = new Span("");
         layout.addFormItem(cv, "Cost Variance");
 
-        TextField sv = new TextField();
-        sv.setEnabled(false);
+        Span sv = new Span("");
         layout.addFormItem(sv, "Schedule Variance");
 
-        TextField cpi = new TextField();
-        cpi.setEnabled(false);
+        Span cpi = new Span("");
         layout.addFormItem(cpi, "Cost Performance Index");
 
-        TextField spi = new TextField();
-        spi.setEnabled(false);
+        Span spi = new Span("");
         layout.addFormItem(spi, "Schedule Performance Index");
 
         H3 rm = new H3("Risk Matrix");
@@ -58,32 +51,25 @@ public class Statistics extends VerticalLayout {
         FormLayout matrixLayout = new FormLayout();
         content_div.add(matrixLayout);
 
-        TextField initiallyPlannedBudget = new TextField();
-        initiallyPlannedBudget.setEnabled(false);
+        Span initiallyPlannedBudget = new Span("");
         matrixLayout.addFormItem(initiallyPlannedBudget, "Initially Planned Budget");
 
-        TextField actualValue = new TextField();
-        actualValue.setEnabled(false);
+        Span actualValue = new Span("");
         matrixLayout.addFormItem(actualValue, "Actual Value");
 
-        TextField plannedValue = new TextField();
-        plannedValue.setEnabled(false);
+        Span plannedValue = new Span("");
         matrixLayout.addFormItem(plannedValue, "Planned Value");
 
-        TextField costVariance = new TextField();
-        costVariance.setEnabled(false);
+        Span costVariance = new Span("");
         matrixLayout.addFormItem(costVariance, "Cost Variance");
 
-        TextField scheduleVariance = new TextField();
-        scheduleVariance.setEnabled(false);
+        Span scheduleVariance = new Span("");
         matrixLayout.addFormItem(scheduleVariance, "Schedule Variance");
 
-        TextField costPerformance = new TextField();
-        costPerformance.setEnabled(false);
+        Span costPerformance = new Span("");
         matrixLayout.addFormItem(costPerformance, "Cost Performance Index");
 
-        TextField schedulePerformance = new TextField();
-        schedulePerformance.setEnabled(false);
+        Span schedulePerformance = new Span("");
         matrixLayout.addFormItem(schedulePerformance, "Schedule Performance Index");
 
     }
