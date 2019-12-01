@@ -1,0 +1,39 @@
+@import "shared-styles.css";
+
+:host, [theme ~= dark] {
+	/* selected box */
+	--fc-highlight-background:   rgba(255,255,255,0.1);
+
+	/* current day box */
+	--fc-unthemed_tdfc-today-background: rgba(255,255,255,0.15);
+
+	/* event styling */
+	--fc-event-border-radius: 2px;
+	
+	/* border colors */
+	--fc_fc-row_fc-content-skeleton_table-border-color: black;
+	--fc_fc-row_fc-content-skeleton_td-border-color: black;
+	--fc_fc-row_fc-mirror-skeleton_td-border-color: black;
+	--fc-h-eventfc-selected_fc-resizer-border-color: black;
+	--fc-row_fc-bgevent-skeleton_td-border-color: black;
+	--fc-row_fc-highlight-skeleton_td-border-color: black;
+	--fc-time-grid-eventfc-selected_fc-resizer-border-color: black;
+	--fc-unthemed_fc-content-border-color: black;
+	--fc-unthemed_fc-divider-border-color: black;
+	--fc-unthemed_fc-list-heading_td-border-color: black;
+	--fc-unthemed_fc-list-view-border-color: black;
+	--fc-unthemed_fc-popover-border-color: black;
+	--fc-unthemed_fc-row-border-color: black;
+	--fc-unthemed_tbody-border-color: black;
+	--fc-unthemed_td-border-color: black;
+	--fc-unthemed_th-border-color: var(--material-secondary-background-color);
+	--fc-unthemed_thead-border-color: black;
+
+	/* box height */
+	--fc-dayGrid-view_fc-body_fc-row-min-height: 100px;
+	--fc-timeGrid-view_fc-day-grid_fc-row-min-height: 100px;
+}
+
+full-calendar {
+	background: var(--material-secondary-background-color);
+}
