@@ -7,25 +7,43 @@ import java.util.Map;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.router.AfterNavigationEvent;
+import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.RouteData;
 
-public class RoutingTabs extends Tabs {
+public class RoutingTabs extends Tabs implements AfterNavigationObserver {
+
+    private Map<Tab, RouteData> tabRoute;
+    private Map<RouteData, Tab> routeTab;
 
     public RoutingTabs() {
         List<RouteData> routes = UI.getCurrent().getRouter().getRegistry().getRegisteredRoutes();
 
-        Map<Tab, RouteData> tabRoute = new HashMap<>();
+        this.tabRoute = new HashMap<>();
+        this.routeTab = new HashMap<>();
 
         routes.forEach(r -> {
             Tab tab = new Tab(r.getNavigationTarget().getSimpleName());
             this.add(tab);
-            tabRoute.put(tab, r);
+            this.tabRoute.put(tab, r);
+            this.routeTab.put(r, tab);
         });
 
         this.addSelectedChangeListener(e -> {
             this.getUI().ifPresent(ui -> {
-                ui.navigate(tabRoute.get(this.getSelectedTab()).getNavigationTarget());
+                ui.navigate(this.tabRoute.get(this.getSelectedTab()).getNavigationTarget());
             });
         });
+    }
+
+    @Override
+    public void afterNavigation(AfterNavigationEvent event) {
+        var currentPath = event.getLocation().getPath();
+        var routes = UI.getCurrent().getRouter().getRegistry().getRegisteredRoutes();
+        for (var x : routes) {
+            if (x.getUrl().equals(currentPath)) {
+                this.setSelectedTab(this.routeTab.get(x));
+            }
+        }
     }
 }
