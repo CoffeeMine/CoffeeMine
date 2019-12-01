@@ -43,3 +43,7 @@ vaadin-form-item span {
   top: 5px;
   background: var(--material-tertiary-background-color);
 }
+
+H1 {
+  margin-top: 10px;
+}
