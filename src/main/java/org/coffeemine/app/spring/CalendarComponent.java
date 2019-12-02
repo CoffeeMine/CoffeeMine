@@ -1,6 +1,7 @@
 package org.coffeemine.app.spring;
 
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.vaadin.stefan.fullcalendar.CalendarViewImpl;
@@ -10,6 +11,7 @@ import org.vaadin.stefan.fullcalendar.FullCalendar;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 
+@CssImport("./styles/material-full-calendar.css")
 public class CalendarComponent extends VerticalLayout {
 
     private static FullCalendar systemCalendar;

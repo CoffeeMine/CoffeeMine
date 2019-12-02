@@ -23,17 +23,27 @@ vaadin-tab[selected][orientation=vertical] {
   border-bottom-right-radius: 1000px;
 
 }
+
 vaadin-tab[orientation=vertical]:hover {
   border-top-right-radius: 1000px;
   border-bottom-right-radius: 1000px;
 
 }
-vaadin-text-field {
-  background-color: var(--material-tertiary-background-color);
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  padding-top: 8px;
-  margin-top: auto;
-  margin-bottom: auto;
-  /* line-height: 10px; */
+
+vaadin-form-item span {
+  display: inline-block;
+  width: 100%;
+  max-width: 150px;
+  padding: 10px 30px 10px 30px;
+  border-radius: 8px 8px 0px 0px;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: var(--material-primary-color);
+  position: relative;
+  top: 5px;
+  background: var(--material-tertiary-background-color);
+}
+
+H1 {
+  margin-top: 10px;
 }

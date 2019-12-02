@@ -28,7 +28,7 @@ public class TopBar extends HorizontalLayout {
 
         brandLayout.add(brandName);
 
-        tabLayout.add(RoutingTabs.getTabs());
+        tabLayout.add(new RoutingTabs());
 
         Button AccountButton = new Button("Account");
 

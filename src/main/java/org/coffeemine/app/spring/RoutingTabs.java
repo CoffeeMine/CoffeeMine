@@ -1,6 +1,5 @@
 package org.coffeemine.app.spring;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,33 +7,43 @@ import java.util.Map;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.router.AfterNavigationEvent;
+import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.RouteData;
-import com.vaadin.flow.router.Router;
 
-public class RoutingTabs {
+public class RoutingTabs extends Tabs implements AfterNavigationObserver {
 
-    public static Tabs getTabs() {
-        Router router = UI.getCurrent().getRouter();
-        List<RouteData> routes = router.getRegistry().getRegisteredRoutes();
+    private Map<Tab, RouteData> tabRoute;
+    private Map<RouteData, Tab> routeTab;
 
-        Map<Tab, RouteData> tabRoute = new HashMap<>();
-        Tabs routingTabs = new Tabs();
+    public RoutingTabs() {
+        List<RouteData> routes = UI.getCurrent().getRouter().getRegistry().getRegisteredRoutes();
+
+        this.tabRoute = new HashMap<>();
+        this.routeTab = new HashMap<>();
 
         routes.forEach(r -> {
             Tab tab = new Tab(r.getNavigationTarget().getSimpleName());
-            routingTabs.add(tab);
-            tabRoute.put(tab, r);
+            this.add(tab);
+            this.tabRoute.put(tab, r);
+            this.routeTab.put(r, tab);
         });
 
-        routingTabs.addSelectedChangeListener(e -> {
-            routingTabs.getUI().ifPresent(ui -> {
-                routingTabs.setSelectedIndex(routingTabs.getSelectedIndex());
-                ui.navigate(tabRoute.get(routingTabs.getSelectedTab()).getNavigationTarget());
+        this.addSelectedChangeListener(e -> {
+            this.getUI().ifPresent(ui -> {
+                ui.navigate(this.tabRoute.get(this.getSelectedTab()).getNavigationTarget());
             });
         });
+    }
 
-        routingTabs.setSelectedIndex(routingTabs.getSelectedIndex());
-
-        return routingTabs;
+    @Override
+    public void afterNavigation(AfterNavigationEvent event) {
+        var currentPath = event.getLocation().getPath();
+        var routes = UI.getCurrent().getRouter().getRegistry().getRegisteredRoutes();
+        for (var x : routes) {
+            if (x.getUrl().equals(currentPath)) {
+                this.setSelectedTab(this.routeTab.get(x));
+            }
+        }
     }
 }
