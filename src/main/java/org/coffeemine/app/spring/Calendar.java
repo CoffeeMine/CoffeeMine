@@ -8,13 +8,13 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import org.vaadin.stefan.fullcalendar.CalendarViewImpl;
 import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 import com.vaadin.flow.router.Route;
 
-import javax.security.auth.message.callback.PrivateKeyCallback;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,11 +24,15 @@ import java.time.LocalDateTime;
 class Calendar extends View{
     private FullCalendar systemCalendar;
     private Text date;
+    HorizontalLayout calendarController;
+    VerticalLayout calendar;
+    FormLayout newForm;
 
     Calendar(){
         super();
-        HorizontalLayout calendarController = new HorizontalLayout();
-        VerticalLayout calendar = new VerticalLayout();
+        this.calendarController = new HorizontalLayout();
+        this.calendar = new VerticalLayout();
+        this.newForm = new FormLayout();
 
         Button today = new Button("Today", event -> systemCalendar.today());
         Button previous = new Button("<< Previous", event -> systemCalendar.previous());
@@ -36,7 +40,7 @@ class Calendar extends View{
         Select<String> selectView = new Select<>("Month", "Week", "Day");
         selectView.setPlaceholder("View as..");
         selectView.addValueChangeListener(event -> this.changeCalendarView(event.getValue()));
-        Button newTask = new Button("New task", event -> this.createNewTask());
+        Button newTask = new Button("New task", event -> this.newTaskForm());
         DatePicker datePicker = new DatePicker();
 
         datePicker.setPlaceholder("Date within this month");
@@ -60,6 +64,7 @@ class Calendar extends View{
         systemCalendar.setBusinessHours();
 
         calendar.add(calendarController);
+        calendar.add(newForm);
         calendar.add(date);
         calendar.add(systemCalendar);
 
@@ -95,11 +100,37 @@ class Calendar extends View{
                 "This is a demo task");
         systemCalendar.addEntries(newEvent);
         Notification.show("Task " + "<Nice Calendar View>" + " is now added");
+        calendar.remove(newForm);
     }
 
-    FormLayout newTaskForm() {
-        FormLayout newForm = new FormLayout();
-        newForm.addFormItem(new TextField(), "Task Name");
-        return newForm;
+    void newTaskForm() {
+        TextField taskName = new TextField();
+        DatePicker startTime = new DatePicker();
+        startTime.setValue(LocalDate.now());
+        DatePicker endTime = new DatePicker();
+        endTime.setValue(LocalDate.now());
+        TextArea description = new TextArea();
+        description.setPlaceholder("Please provide task description here");
+        Select<String> assignPeople = new Select<>("Chen", "Bhavya", "Ryan", "Ruthger", "Zhijie");
+        assignPeople.setPlaceholder("Assigning to..");
+        Select<String> assignSprint = new Select<>("Sprint 1", "Sprint 2", "Sprint 3");
+        assignSprint.setPlaceholder("Assigning to sprint..");
+        //selectView.addValueChangeListener(event ->);
+        Button save = new Button("Create");
+        Button reset = new Button("Reset");
+        save.addClickListener(event -> this.createNewTask());
+        //reset.addClickListener(event -> { });
+
+        newForm.removeAll();
+        newForm.addFormItem(taskName, "Task Name");
+        newForm.addFormItem(assignPeople, "Task assign");
+        newForm.addFormItem(startTime,"Start Time");
+        newForm.addFormItem(endTime,"End Time");
+        newForm.addFormItem(assignSprint, "Sprint assign");
+        newForm.addFormItem(description, "Task Description");
+        newForm.add(save, reset);
+
+        calendar.remove(newForm);
+        calendar.addComponentAtIndex(1, newForm);
     }
 }
