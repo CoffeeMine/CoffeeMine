@@ -1,10 +1,13 @@
 package org.coffeemine.app.spring;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
+
+import java.time.LocalDate;
 
 class CalendarController extends HorizontalLayout {
     CalendarController(){
@@ -16,12 +19,24 @@ class CalendarController extends HorizontalLayout {
         selectView.setPlaceholder("View as..");
         selectView.addValueChangeListener(event -> CalendarComponent.changeCalendarView(event.getValue()));
         Button newTask = new Button("New task", event -> CalendarComponent.createNewTask());
+        DatePicker datePicker = new DatePicker();
+
+        datePicker.setPlaceholder("Date within this month");
+        LocalDate nowDate = LocalDate.now();
+
+        datePicker.setClearButtonVisible(true);
+
+        datePicker.addValueChangeListener( event -> {
+            LocalDate newDate = event.getValue();
+            CalendarComponent.calendarGoToDate(newDate);
+        });
 
         add(previous);
         add(today);
         add(next);
         add(selectView);
         add(newTask);
+        add(datePicker);
     }
 
     FormLayout newTaskForm() {

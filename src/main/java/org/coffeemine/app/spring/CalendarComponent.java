@@ -8,6 +8,7 @@ import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class CalendarComponent extends VerticalLayout {
@@ -65,5 +66,9 @@ public class CalendarComponent extends VerticalLayout {
                 "This is a demo task");
         systemCalendar.addEntries(newEvent);
         Notification.show("Task " + "<Nice Calendar View>" + " is now added");
+    }
+
+    static void calendarGoToDate(LocalDate date) {
+        systemCalendar.gotoDate(date);
     }
 }
