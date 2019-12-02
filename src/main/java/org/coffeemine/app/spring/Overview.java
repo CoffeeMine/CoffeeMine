@@ -13,9 +13,9 @@ import com.vaadin.flow.theme.material.Material;
 @CssImport("./styles/shared-styles.css")
 @PageTitle("CoffeeMine")
 @PWA(name = "CoffeeMine, your OpenSource Project Management Tool", shortName = "CoffeeMine")
-public class MainView extends View {
+public class Overview extends View {
 
-    public MainView() {
+    public Overview() {
         super();
         add(new H1("CoffeeMine Boards"));
     }
