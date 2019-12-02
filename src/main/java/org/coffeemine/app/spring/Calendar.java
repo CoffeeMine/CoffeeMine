@@ -4,9 +4,12 @@ import com.vaadin.flow.router.Route;
 
 @Route
 public class Calendar extends View {
+    CalendarForm calendarForm;
+
     Calendar(){
         super();
-        add(new CalendarController());
-        add(new CalendarComponent());
+        calendarForm = new CalendarForm();
+        add(new CalendarComponent(calendarForm));
+        add(calendarForm);
     }
 }
