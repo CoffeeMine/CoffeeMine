@@ -3,6 +3,7 @@ package org.coffeemine.app.spring;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Route
+@CssImport("./styles/material-full-calendar.css")
 class Calendar extends View{
     private FullCalendar systemCalendar;
     private Text date;
