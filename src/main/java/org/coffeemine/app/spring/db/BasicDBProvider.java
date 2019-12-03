@@ -65,6 +65,11 @@ public class BasicDBProvider implements DBProvider {
     }
 
     @Override
+    public Stream<Fragment> getFragments4User(User user) {
+        return fragments.stream().filter(fragment -> fragment.getUsers().contains(user.getId()));
+    }
+
+    @Override
     public ArrayList<User> getUsers() {
         return users;
     }
