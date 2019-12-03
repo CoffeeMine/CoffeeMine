@@ -6,7 +6,6 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -45,11 +44,7 @@ public class LoginScreen extends Div {
         centeringLayout.add(loginForm);
         centeringLayout.setAlignItems(FlexComponent.Alignment.CENTER);
 
-        // information text about logging in
-        Div loginInformation = buildLoginInformation();
-
         add(centeringLayout);
-        add(loginInformation);
     }
 
     private Component buildLoginForm() {
@@ -83,16 +78,6 @@ public class LoginScreen extends Div {
             showNotification(new Notification("Hint: Try anything"));
         }));
         return loginForm;
-    }
-
-    private Div buildLoginInformation() {
-        final var login_info = new Div();
-        login_info.setClassName("login-information");
-        final var loginInfoText = new Label(
-                "<h1>Login Information</h1>"
-                        + "Log in as &quot;admin&quot; to have full access. Log in with any other username to have normal access");
-        login_info.add(loginInfoText);
-        return login_info;
     }
 
     private void login() {

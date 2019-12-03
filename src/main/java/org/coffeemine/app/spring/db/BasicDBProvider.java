@@ -1,5 +1,7 @@
 package org.coffeemine.app.spring.db;
 
+import elemental.json.JsonObject;
+import elemental.json.impl.JreJsonFactory;
 import org.coffeemine.app.spring.data.*;
 
 import java.util.ArrayList;
@@ -14,7 +16,32 @@ public class BasicDBProvider implements DBProvider {
     private ArrayList<Project> projects = new ArrayList<>();
     private ArrayList<Sprint> sprints = new ArrayList<>();
     private ArrayList<Task> tasks = new ArrayList<>();
+    private ArrayList<Fragment> fragments = new ArrayList<>();
     private ArrayList<User> users = new ArrayList<>();
+
+    @Override
+    public void importJSONProject(String json) {
+        final var factory = new JreJsonFactory();
+        final JsonObject obj = factory.parse(json);
+
+        projects.add(new Project().readJson(obj));
+
+        final var jtasks = obj.getArray("tasks");
+        tasks.ensureCapacity(jtasks.length());
+        for (int i = 0; i < jtasks.length(); ++i)
+            tasks.add(new Task().readJson(jtasks.getObject(i)));
+
+        final var jfrags = obj.getArray("fragments");
+        fragments.ensureCapacity(jfrags.length());
+        for (int i = 0; i < jfrags.length(); ++i)
+            fragments.add(new Fragment().readJson(jfrags.getObject(i)));
+
+    }
+
+    @Override
+    public ArrayList<Project> getProjects() {
+        return projects;
+    }
 
     @Override
     public Stream<ISprint> getSprints4Project(Project project) {
@@ -51,7 +78,7 @@ public class BasicDBProvider implements DBProvider {
     }
 
 
-    static BasicDBProvider getInstance(){
+    public static DBProvider getInstance(){
         return instance;
     }
 }

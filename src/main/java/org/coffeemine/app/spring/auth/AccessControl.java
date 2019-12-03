@@ -1,5 +1,7 @@
 package org.coffeemine.app.spring.auth;
 
+import org.coffeemine.app.spring.data.User;
+
 /**
  * Simple interface for authentication and authorization checks.
  */
@@ -9,7 +11,5 @@ public interface AccessControl {
 
     boolean isUserSignedIn();
 
-    boolean isUserInRole(String role);
-
-    String getPrincipalName();
+    boolean isUserInRole(User.Status role);
 }

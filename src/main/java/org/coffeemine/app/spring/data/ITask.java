@@ -1,10 +1,11 @@
 package org.coffeemine.app.spring.data;
 
+import com.vaadin.flow.component.JsonSerializable;
+
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public interface ITask extends Serializable {
+public interface ITask extends JsonSerializable {
     int getId();
     @NotNull String getName();
     void setName(@NotNull String name);

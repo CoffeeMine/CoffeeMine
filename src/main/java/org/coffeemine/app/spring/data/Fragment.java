@@ -1,10 +1,56 @@
 package org.coffeemine.app.spring.data;
 
-import java.util.ArrayList;
-import java.util.Date;
+import com.vaadin.flow.component.JsonSerializable;
+import elemental.json.JsonObject;
 
-public class Fragment {
-    Date begin;
-    Date end;
-    ArrayList<User> users;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.time.format.FormatStyle;
+import java.util.ArrayList;
+
+import static java.time.format.DateTimeFormatter.ofLocalizedDate;
+
+public class Fragment implements JsonSerializable {
+    LocalDate begin = LocalDate.EPOCH;
+    LocalDate end = LocalDate.EPOCH;
+    ArrayList<Integer> users = new ArrayList<>();
+
+    public LocalDate getBegin() {
+        return begin;
+    }
+
+    public LocalDate getEnd() {
+        return end;
+    }
+
+    public void setBegin(LocalDate begin) {
+        this.begin = begin;
+    }
+
+    public void setEnd(LocalDate end) {
+        this.end = end;
+    }
+
+    public ArrayList<Integer> getUsers() {
+        return users;
+    }
+
+    @Override
+    public JsonObject toJson() {
+        return null;
+    }
+
+    @Override
+    public Fragment readJson(JsonObject value) {
+        final var f = ofLocalizedDate(FormatStyle.SHORT);;
+        begin = ZonedDateTime.parse(value.getString("begin"), f).toLocalDate();
+        end = ZonedDateTime.parse(value.getString("end"), f).toLocalDate();
+
+        final var jusers = value.getArray("users");
+        users.ensureCapacity(jusers.length());
+        for (int i = 0; i < jusers.length(); ++i)
+            users.add(((int) jusers.getNumber(i)));
+
+        return this;
+    }
 }

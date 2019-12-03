@@ -1,10 +1,9 @@
 package org.coffeemine.app.spring.data;
 
-import java.io.Serializable;
-
-public class User implements Serializable {
+public class User {
     public enum Status {
         EXTERNAL,
+        ADMIN,
         ENABLED,
         DISABLED,
     }
