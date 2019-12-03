@@ -10,17 +10,16 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.Route;
 import org.vaadin.stefan.fullcalendar.CalendarViewImpl;
 import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
-import com.vaadin.flow.router.Route;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Route
-
 class Calendar extends View{
     private FullCalendar systemCalendar;
     private Text date;
@@ -111,7 +110,7 @@ class Calendar extends View{
         endTime.setValue(LocalDate.now());
         TextArea description = new TextArea();
         description.setPlaceholder("Please provide task description here");
-        Select<String> assignPeople = new Select<>("Chen", "Bhavya", "Ryan", "Ruthger", "Zhijie");
+        Select<String> assignPeople = new Select<>("Bob", "John", "Rick", "Mahaa", "Tylo");
         assignPeople.setPlaceholder("Assigning to..");
         Select<String> assignSprint = new Select<>("Sprint 1", "Sprint 2", "Sprint 3");
         assignSprint.setPlaceholder("Assigning to sprint..");
