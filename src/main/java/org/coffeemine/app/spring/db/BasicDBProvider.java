@@ -60,6 +60,11 @@ public class BasicDBProvider implements DBProvider {
     }
 
     @Override
+    public Stream<Fragment> getFragments4Task(ITask task) {
+        return fragments.stream().filter(fragment -> task.getFragments().contains(fragment.getId()));
+    }
+
+    @Override
     public ArrayList<User> getUsers() {
         return users;
     }

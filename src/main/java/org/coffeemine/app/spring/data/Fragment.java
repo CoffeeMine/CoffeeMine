@@ -11,9 +11,14 @@ import java.util.ArrayList;
 import static java.time.format.DateTimeFormatter.ofLocalizedDate;
 
 public class Fragment implements JsonSerializable {
-    LocalDate begin = LocalDate.EPOCH;
-    LocalDate end = LocalDate.EPOCH;
-    ArrayList<Integer> users = new ArrayList<>();
+    private int id;
+    private LocalDate begin = LocalDate.EPOCH;
+    private LocalDate end = LocalDate.EPOCH;
+    private ArrayList<Integer> users = new ArrayList<>();
+
+    public int getId() {
+        return id;
+    }
 
     public LocalDate getBegin() {
         return begin;
@@ -42,6 +47,8 @@ public class Fragment implements JsonSerializable {
 
     @Override
     public Fragment readJson(JsonObject value) {
+        id = (int) value.getNumber("id");
+
         final var f = ofLocalizedDate(FormatStyle.SHORT);;
         begin = ZonedDateTime.parse(value.getString("begin"), f).toLocalDate();
         end = ZonedDateTime.parse(value.getString("end"), f).toLocalDate();
