@@ -29,33 +29,37 @@ class Calendar extends View{
     private Text date;
     HorizontalLayout calendarController;
     VerticalLayout calendar;
-    FormLayout newForm;
 
     Calendar(){
         super();
         this.calendarController = new HorizontalLayout();
         this.calendar = new VerticalLayout();
-        this.newForm = new FormLayout();
 
         Button today = new Button("Today", event -> systemCalendar.today());
         Button previous = new Button("<< Previous", event -> systemCalendar.previous());
         Button next = new Button("next >>",event -> systemCalendar.next());
-        Select<String> selectView = new Select<>("Month", "Week", "Day");
-        selectView.setPlaceholder("View as..");
-        selectView.addValueChangeListener(event -> this.changeCalendarView(event.getValue()));
-        Button newTask = new Button("New task", event -> this.newTaskForm());
-        newTask.getStyle().set("margin-left","auto");
-        DatePicker datePicker = new DatePicker();
 
+        DatePicker datePicker = new DatePicker();
         datePicker.setPlaceholder("Date within this month");
         datePicker.setClearButtonVisible(true);
         datePicker.addValueChangeListener(event -> systemCalendar.gotoDate(event.getValue()));
 
+        Select<String> selectView = new Select<>("Month", "Week", "Day");
+        selectView.setPlaceholder("View as..");
+        selectView.addValueChangeListener(event -> this.changeCalendarView(event.getValue()));
+
+        Button newSprint = new Button("New sprint", event -> EventCreation.TaskCreation());
+        newSprint.getStyle().set("right","auto");
+
+        Button newTask = new Button("New task", event -> this.createNewTask());
+        newTask.getStyle().set("margin-left","auto");
+
         calendarController.add(previous);
         calendarController.add(today);
         calendarController.add(next);
-        calendarController.add(selectView);
         calendarController.add(datePicker);
+        calendarController.add(selectView);
+        calendarController.add(newSprint);
         calendarController.add(newTask);
 
         systemCalendar = new FullCalendar();
@@ -66,12 +70,10 @@ class Calendar extends View{
         systemCalendar.setBusinessHours();
 
         calendar.add(calendarController);
-        calendar.add(newForm);
         calendar.add(date);
         calendar.add(systemCalendar);
 
         add(calendar);
-
     }
 
     void changeCalendarView(String viewName){
@@ -103,42 +105,5 @@ class Calendar extends View{
                 "This is a demo task");
         systemCalendar.addEntries(newEvent);
         Notification.show("Task " + "<Nice Calendar View>" + " is now added");
-    }
-
-    void newTaskForm() {
-        Dialog dialog = new Dialog();
-        dialog.add(new Label("Close me with the esc-key or an outside click"));
-
-        TextField taskName = new TextField();
-        DatePicker startTime = new DatePicker();
-        startTime.setValue(LocalDate.now());
-        DatePicker endTime = new DatePicker();
-        endTime.setValue(LocalDate.now());
-        TextArea description = new TextArea();
-        description.setPlaceholder("Please provide task description here");
-        Select<String> assignPeople = new Select<>("Bob", "John", "Rick", "Mahaa", "Tylo");
-        assignPeople.setPlaceholder("Assigning to..");
-        Select<String> assignSprint = new Select<>("Sprint 1", "Sprint 2", "Sprint 3");
-        assignSprint.setPlaceholder("Assigning to sprint..");
-        //selectView.addValueChangeListener(event ->);
-        Button save = new Button("Create");
-        Button reset = new Button("Reset");
-        save.addClickListener(event -> {
-            this.createNewTask();
-            dialog.close();
-        });
-        //reset.addClickListener(event -> { });
-
-        newForm.removeAll();
-        newForm.addFormItem(taskName, "Task Name");
-        newForm.addFormItem(assignPeople, "Task assign");
-        newForm.addFormItem(startTime,"Start Time");
-        newForm.addFormItem(endTime,"End Time");
-        newForm.addFormItem(assignSprint, "Sprint assign");
-        newForm.addFormItem(description, "Task Description");
-        newForm.add(save, reset);
-
-        dialog.add(newForm);
-        dialog.open();
     }
 }
