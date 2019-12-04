@@ -4,7 +4,9 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -42,11 +44,10 @@ class Calendar extends View{
         selectView.setPlaceholder("View as..");
         selectView.addValueChangeListener(event -> this.changeCalendarView(event.getValue()));
         Button newTask = new Button("New task", event -> this.newTaskForm());
+        newTask.getStyle().set("margin-left","auto");
         DatePicker datePicker = new DatePicker();
 
         datePicker.setPlaceholder("Date within this month");
-        LocalDate nowDate = LocalDate.now();
-
         datePicker.setClearButtonVisible(true);
         datePicker.addValueChangeListener(event -> systemCalendar.gotoDate(event.getValue()));
 
@@ -54,8 +55,8 @@ class Calendar extends View{
         calendarController.add(today);
         calendarController.add(next);
         calendarController.add(selectView);
-        calendarController.add(newTask);
         calendarController.add(datePicker);
+        calendarController.add(newTask);
 
         systemCalendar = new FullCalendar();
         date = new Text(LocalDateTime.now().getYear() + "  "
@@ -70,6 +71,7 @@ class Calendar extends View{
         calendar.add(systemCalendar);
 
         add(calendar);
+
     }
 
     void changeCalendarView(String viewName){
@@ -101,10 +103,12 @@ class Calendar extends View{
                 "This is a demo task");
         systemCalendar.addEntries(newEvent);
         Notification.show("Task " + "<Nice Calendar View>" + " is now added");
-        calendar.remove(newForm);
     }
 
     void newTaskForm() {
+        Dialog dialog = new Dialog();
+        dialog.add(new Label("Close me with the esc-key or an outside click"));
+
         TextField taskName = new TextField();
         DatePicker startTime = new DatePicker();
         startTime.setValue(LocalDate.now());
@@ -119,7 +123,10 @@ class Calendar extends View{
         //selectView.addValueChangeListener(event ->);
         Button save = new Button("Create");
         Button reset = new Button("Reset");
-        save.addClickListener(event -> this.createNewTask());
+        save.addClickListener(event -> {
+            this.createNewTask();
+            dialog.close();
+        });
         //reset.addClickListener(event -> { });
 
         newForm.removeAll();
@@ -131,7 +138,7 @@ class Calendar extends View{
         newForm.addFormItem(description, "Task Description");
         newForm.add(save, reset);
 
-        calendar.remove(newForm);
-        calendar.addComponentAtIndex(1, newForm);
+        dialog.add(newForm);
+        dialog.open();
     }
 }
