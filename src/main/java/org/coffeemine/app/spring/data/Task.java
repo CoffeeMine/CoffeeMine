@@ -2,6 +2,7 @@ package org.coffeemine.app.spring.data;
 
 import elemental.json.JsonObject;
 import elemental.json.impl.JreJsonFactory;
+import org.dizitart.no2.Document;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -116,4 +117,27 @@ public class Task implements ITask {
         return this;
     }
 
+    @Override
+    public Document asNO2Doc() {
+        return Document.createDocument("id", id)
+                .put("name", name)
+                .put("description", description)
+                .put("assignees", assignees)
+                .put("fragments", fragments)
+                .put("commits", commits);
+    }
+
+    @Override
+    public Task fromNO2Doc(Document doc) {
+        if(doc == null)
+            return null;
+
+        id = doc.get("id", Integer.class);
+        name = doc.get("name", String.class);
+        description = doc.get("description", String.class);
+        assignees = ((ArrayList<Integer>) doc.get("assignees"));
+        fragments = ((ArrayList<Integer>) doc.get("fragments"));
+        commits = ((ArrayList<String>) doc.get("commits"));
+        return this;
+    }
 }

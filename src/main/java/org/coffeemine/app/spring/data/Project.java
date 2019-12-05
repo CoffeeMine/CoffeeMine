@@ -3,10 +3,12 @@ package org.coffeemine.app.spring.data;
 import com.vaadin.flow.component.JsonSerializable;
 import elemental.json.JsonObject;
 import elemental.json.impl.JreJsonFactory;
+import org.coffeemine.app.spring.db.NO2Serializable;
+import org.dizitart.no2.Document;
 
 import java.util.ArrayList;
 
-public class Project implements JsonSerializable {
+public class Project implements JsonSerializable, NO2Serializable {
     private String name = "Unnamed";
     private ArrayList<Integer> sprints = new ArrayList<>();
 
@@ -47,6 +49,22 @@ public class Project implements JsonSerializable {
         for (int i = 0; i < jsprints.length(); ++i)
             sprints.add(((int) jsprints.getNumber(i)));
 
+        return this;
+    }
+
+    @Override
+    public Document asNO2Doc() {
+        return Document.createDocument("name", name)
+                .put("sprints", sprints);
+    }
+
+    @Override
+    public Project fromNO2Doc(Document doc) {
+        if(doc == null)
+            return null;
+
+        name = doc.get("name", String.class);
+        sprints = ((ArrayList<Integer>) doc.get("sprints"));
         return this;
     }
 }
