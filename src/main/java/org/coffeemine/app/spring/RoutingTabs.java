@@ -11,7 +11,7 @@ import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.RouteData;
 
-import org.coffeemine.app.spring.annonations.Routable;
+import org.coffeemine.app.spring.annonations.NavbarRoutable;
 
 public class RoutingTabs extends Tabs implements AfterNavigationObserver {
 
@@ -25,7 +25,7 @@ public class RoutingTabs extends Tabs implements AfterNavigationObserver {
         this.routeTab = new HashMap<>();
 
         routes.forEach(r -> {
-            if (r.getNavigationTarget().isAnnotationPresent(Routable.class)) {
+            if (r.getNavigationTarget().isAnnotationPresent(NavbarRoutable.class)) {
                 Tab tab = new Tab(r.getNavigationTarget().getSimpleName());
 
                 this.add(tab);
@@ -46,7 +46,7 @@ public class RoutingTabs extends Tabs implements AfterNavigationObserver {
         var currentPath = event.getLocation().getPath();
         var routes = UI.getCurrent().getRouter().getRegistry().getRegisteredRoutes();
         for (var x : routes) {
-            if (x.getUrl().equals(currentPath) && x.getNavigationTarget().isAnnotationPresent(Routable.class)) {
+            if (x.getUrl().equals(currentPath) && x.getNavigationTarget().isAnnotationPresent(NavbarRoutable.class)) {
                 this.setSelectedTab(this.routeTab.get(x));
             }
         }
