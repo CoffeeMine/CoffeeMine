@@ -44,6 +44,11 @@ vaadin-form-item span {
   background: var(--material-tertiary-background-color);
 }
 
+vaadin-login-form-wrapper {
+  background: var(--material-tertiary-background-color);
+  border-radius: 5px;
+}
+
 H1 {
   margin-top: 10px;
 }
