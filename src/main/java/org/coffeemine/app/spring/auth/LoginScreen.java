@@ -23,7 +23,7 @@ public class LoginScreen extends VerticalLayout {
         layout.add(login);
         this.add(layout);
 
-        BasicAccessControl loginControl = new BasicAccessControl();
+        BasicAccessControl loginControl = BasicAccessControl.getInstance();
 
         login.addLoginListener(e -> {
             if (loginControl.signIn(e.getUsername(), e.getPassword())) {
