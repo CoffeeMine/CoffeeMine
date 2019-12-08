@@ -52,3 +52,13 @@ vaadin-login-form-wrapper {
 H1 {
   margin-top: 10px;
 }
+.lettericon {
+  background: var(--material-primary-color);
+  border-radius: 0.8em;
+  display: inline-block;
+  line-height: 1.6em;
+  text-align: center;
+  width: 1.6em; 
+  font-size: var(--material-h2-font-size);
+  box-shadow: inset 5px 7px 38px -5px rgba(0,0,0,0.50);
+}
