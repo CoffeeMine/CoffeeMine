@@ -1,7 +1,6 @@
 package org.coffeemine.app.spring;
 
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -30,15 +29,35 @@ public class TopBar extends HorizontalLayout {
 
         tabLayout.add(new RoutingTabs());
 
-        Button AccountButton = new Button("Account");
+        AccountPopUp accountInfo = new AccountPopUp();
 
-        AccountButton.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
+        // TODO: Currently we're drawing a fullsize Div over the screen to detect clicks
+        // anywhere, but this is not pretty, fix this natively in the future.
+        Div clickhack = new Div();
+        clickhack.addClassName("clickhack");
+        clickhack.setVisible(false);
+
+        String userName = "John Bob";
+        LetterIcon AccountButton = new LetterIcon(userName.substring(0, 1));
+        AccountButton.getStyle().set("font-size", "30px");
+
+        clickhack.addClickListener(e -> {
+            clickhack.setVisible(false);
+            accountInfo.setVisible(false);
+        });
+
         AccountButton.addClickListener(e -> {
-            // TODO: add functionality.
+            if (!accountInfo.isVisible()) {
+                clickhack.setVisible(true);
+                accountInfo.setVisible(true);
+            } else {
+                clickhack.setVisible(false);
+                accountInfo.setVisible(false);
+            }
         });
 
         miscLayout.add(AccountButton);
 
-        this.add(brandLayout, tabLayout, miscLayout);
+        this.add(brandLayout, tabLayout, miscLayout, clickhack, accountInfo);
     }
 }
