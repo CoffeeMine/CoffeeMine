@@ -1,5 +1,3 @@
-@import "shared-styles.css";
-
 :host, [theme ~= dark] {
 	/* selected box */
 	--fc-highlight-background:   rgba(255,255,255,0.1);

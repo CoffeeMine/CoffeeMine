@@ -4,7 +4,7 @@ project (CoffeeMine_JSONValidator)
 set (CMAKE_CXX_STANDARD 17)
 
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/CMake/Modules")
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../src/dist)
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../resources/META-INF/resources/wasm-parts)
 
 include_directories (${PROJECT_SOURCE_DIR}/thirdparty/rapidjson/include)
 

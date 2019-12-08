@@ -8,6 +8,7 @@ import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.material.Material;
+import org.coffeemine.app.spring.components.JSONUploadSection.JSONUploadSection;
 
 @Route(value = "")
 @RouteAlias(value = "Overview")
@@ -20,6 +21,7 @@ public class Overview extends View {
     public Overview() {
         super();
         add(new H1("CoffeeMine Boards"));
+        add(new JSONUploadSection());
     }
 
 }
