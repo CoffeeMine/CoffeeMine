@@ -16,7 +16,11 @@ import com.vaadin.flow.router.Route;
 @Route(value = "Profile")
 class UserProfile extends VerticalLayout {
     public UserProfile() {
+        this.setHeightFull();
+        this.setPadding(false);
         VerticalLayout userprofile = new VerticalLayout();
+        userprofile.setHeightFull();
+        userprofile.addClassName("userprofile");
         userprofile.setMaxWidth("800px");
         // copy this to center
         userprofile.getStyle().set("margin", "auto");
@@ -25,7 +29,8 @@ class UserProfile extends VerticalLayout {
         back.addClickListener(e -> UI.getCurrent().navigate(Overview.class));
         back.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
         HorizontalLayout usernameTitle = new HorizontalLayout();
-        usernameTitle.getStyle().set("margin", "auto");
+        usernameTitle.getStyle().set("margin-left", "auto");
+        usernameTitle.getStyle().set("margin-right", "auto");
         String accountName = "Account Name";
         H2 title = new H2(accountName);
         title.getStyle().set("padding", "0px");
