@@ -11,4 +11,9 @@ Run `git submodule update --init --recursive` to obtain the submodules
 
 #### Build
 
-Integrated in top-level Maven
+Rather straightforward, given you have CMake and EmSDK setup already. Tested with Clang 9.0.0.
+```sh
+mkdir build
+cd build
+emcmake cmake .. && cmake --build . -j
+```
