@@ -1,5 +1,7 @@
 package org.coffeemine.app.spring.db;
 
+import elemental.json.JsonObject;
+import elemental.json.impl.JreJsonFactory;
 import org.coffeemine.app.spring.data.*;
 import org.dizitart.no2.Nitrite;
 
@@ -41,6 +43,25 @@ public class NitriteDBProvider implements DBProvider {
 
     @Override
     public void importJSONProject(String json) {
+        final var factory = new JreJsonFactory();
+        final JsonObject obj = factory.parse(json);
+
+        db.getCollection("projects").insert(new Project().readJson(obj).asNO2Doc());
+
+        final var jsprints = obj.getArray("sprints");
+        final var db_sprints = db.getCollection("sprints");
+        for (int i = 0; i < jsprints.length(); ++i)
+            db_sprints.insert(new Sprint().readJson(jsprints.getObject(i)).asNO2Doc());
+
+        final var jtasks = obj.getArray("tasks");
+        final var db_tasks = db.getCollection("tasks");
+        for (int i = 0; i < jtasks.length(); ++i)
+            db_tasks.insert(new Task().readJson(jtasks.getObject(i)).asNO2Doc());
+
+        final var jfrags = obj.getArray("fragments");
+        final var db_fragments = db.getCollection("fragments");
+        for (int i = 0; i < jfrags.length(); ++i)
+            db_fragments.insert(new Fragment().readJson(jfrags.getObject(i)).asNO2Doc());
 
     }
 

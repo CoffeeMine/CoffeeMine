@@ -1,20 +1,26 @@
 #include <rapidjson/document.h>
 #include <rapidjson/rapidjson.h>
-#include <rapidjson/schema.h>
-#include <rapidjson/stringbuffer.h>
-#include <rapidjson/writer.h>
+//#include <rapidjson/schema.h>
+//#include <rapidjson/stringbuffer.h>
+//#include <rapidjson/writer.h>
+#include <rapidjson/error/en.h>
+#include <cstring>
+#include <cstdio>
 
-#if 0
-extern "C" int test(const char* json /*, const char* schema */) {
+extern "C" int test(char* json, int json_len, char* out /*, const char* schema */) {
+  json[json_len] = '\0';
   rapidjson::Document d;
-  d.Parse(json);
+  rapidjson::ParseResult ok = d.ParseInsitu(json);
+  if (!ok){
+    return 5;
+      //return std::sprintf(json, "JSON parse error: %s (%zu)\n", rapidjson::GetParseError_En(ok.Code()), ok.Offset());
+  }
 
+  /*
   rapidjson::StringBuffer buf;
   rapidjson::Writer<rapidjson::StringBuffer> w{buf};
   d.Accept(w);
-
   return buf.GetSize();
+  */
+   return 0;
 }
-#endif
-
-extern "C" int test(int v) noexcept { return v + 2; }

@@ -2,11 +2,13 @@ package org.coffeemine.app.spring.data;
 
 import com.vaadin.flow.component.JsonSerializable;
 import elemental.json.JsonObject;
+import elemental.json.impl.JreJsonFactory;
 import org.coffeemine.app.spring.db.NO2Serializable;
 import org.dizitart.no2.Document;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
 
@@ -44,7 +46,17 @@ public class Fragment implements JsonSerializable, NO2Serializable {
 
     @Override
     public JsonObject toJson() {
-        return null;
+        final var factory = new JreJsonFactory();
+        final var ret = factory.createObject();
+        ret.put("id", id);
+        ret.put("begin", begin.format(DateTimeFormatter.BASIC_ISO_DATE));
+        ret.put("end", end.format(DateTimeFormatter.BASIC_ISO_DATE));
+
+        final var users = factory.createArray();
+        for (int i = 0; i < this.users.size(); ++i)
+            users.set(i, this.users.get(i));
+
+        return ret;
     }
 
     @Override
