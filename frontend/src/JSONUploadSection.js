@@ -57,7 +57,6 @@ class JSONUploadSection extends PolymerElement {
 
         this.$.upload._addFile = new Proxy(this.$.upload._addFile, {
             apply: async (target, self, args) => {
-                console.log(args[0]);
                 if((await this.Module.file_exec(args[0], this.Module.f_test))[0] === 0)
                     target.apply(self, args);
             }
