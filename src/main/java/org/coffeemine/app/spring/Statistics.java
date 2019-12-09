@@ -7,7 +7,10 @@ import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.router.Route;
 
+import org.coffeemine.app.spring.annonations.NavbarRoutable;
+
 @Route
+@NavbarRoutable
 public class Statistics extends View {
 
     public Statistics() {
@@ -53,9 +56,6 @@ public class Statistics extends View {
         this.add(radialChartLayout);
         RadialBarChart radialBarChart = new RadialBarChart();
         radialChartLayout.add(radialBarChart);
-
-
-
 
     }
 

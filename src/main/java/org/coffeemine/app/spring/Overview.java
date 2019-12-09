@@ -1,14 +1,9 @@
 package org.coffeemine.app.spring;
 
-import com.vaadin.flow.component.charts.model.Pane;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.html.NativeButton;
-import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
@@ -16,10 +11,11 @@ import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.material.Material;
 
-import java.awt.*;
+import org.coffeemine.app.spring.annonations.NavbarRoutable;
 
 @Route(value = "")
 @RouteAlias(value = "Overview")
+@NavbarRoutable
 @Theme(value = Material.class, variant = Material.DARK)
 @CssImport("./styles/shared-styles.css")
 @PageTitle("CoffeeMine")
@@ -55,9 +51,6 @@ public class Overview extends View {
 
         Taskbox six = new Taskbox("Task six", "Lorem ipsum");
         taskLayout.add(six);
-
-
-
 
     }
 
