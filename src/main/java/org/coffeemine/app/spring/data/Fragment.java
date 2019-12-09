@@ -2,15 +2,19 @@ package org.coffeemine.app.spring.data;
 
 import com.vaadin.flow.component.JsonSerializable;
 import elemental.json.JsonObject;
+import elemental.json.impl.JreJsonFactory;
+import org.coffeemine.app.spring.db.NO2Serializable;
+import org.dizitart.no2.Document;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
 
 import static java.time.format.DateTimeFormatter.ofLocalizedDate;
 
-public class Fragment implements JsonSerializable {
+public class Fragment implements JsonSerializable, NO2Serializable {
     private int id;
     private LocalDate begin = LocalDate.EPOCH;
     private LocalDate end = LocalDate.EPOCH;
@@ -42,7 +46,17 @@ public class Fragment implements JsonSerializable {
 
     @Override
     public JsonObject toJson() {
-        return null;
+        final var factory = new JreJsonFactory();
+        final var ret = factory.createObject();
+        ret.put("id", id);
+        ret.put("begin", begin.format(DateTimeFormatter.BASIC_ISO_DATE));
+        ret.put("end", end.format(DateTimeFormatter.BASIC_ISO_DATE));
+
+        final var users = factory.createArray();
+        for (int i = 0; i < this.users.size(); ++i)
+            users.set(i, this.users.get(i));
+
+        return ret;
     }
 
     @Override
@@ -58,6 +72,23 @@ public class Fragment implements JsonSerializable {
         for (int i = 0; i < jusers.length(); ++i)
             users.add(((int) jusers.getNumber(i)));
 
+        return this;
+    }
+
+    @Override
+    public Document asNO2Doc() {
+        return Document.createDocument("id", id)
+                .put("begin", begin)
+                .put("end",  end)
+                .put("users", users);
+    }
+
+    @Override
+    public Fragment fromNO2Doc(Document doc) {
+        id = doc.get("id", Integer.class);
+        begin = doc.get("begin", LocalDate.class);
+        end = doc.get("end", LocalDate.class);
+        users = ((ArrayList<Integer>) doc.get("users"));
         return this;
     }
 }

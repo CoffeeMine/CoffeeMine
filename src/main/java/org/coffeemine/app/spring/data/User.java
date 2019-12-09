@@ -1,6 +1,10 @@
 package org.coffeemine.app.spring.data;
 
-public class User {
+import org.coffeemine.app.spring.db.NO2Serializable;
+import org.dizitart.no2.Document;
+
+public class User implements NO2Serializable {
+
     public enum Status {
         EXTERNAL,
         ADMIN,
@@ -15,6 +19,21 @@ public class User {
 
     private String account_name;
     private String account_passhash;
+
+    public User(){}
+
+    public User(int id, String name, Status status) {
+        this(id, name, status, 0.0f, null, null);
+    }
+
+    public User(int id, String name, Status status, float hourly_salary, String account_name, String account_passhash) {
+        this.id = id;
+        this.name = name;
+        this.hourly_salary = hourly_salary;
+        this.status = status;
+        this.account_name = account_name;
+        this.account_passhash = account_passhash;
+    }
 
     public int getId() {
         return id;
@@ -58,5 +77,29 @@ public class User {
 
     public void setAccountPasshash(String account_passhash) {
         this.account_passhash = account_passhash;
+    }
+
+    @Override
+    public Document asNO2Doc() {
+        return Document.createDocument("id", id)
+                .put("name", name)
+                .put("salary", hourly_salary)
+                .put("status", status)
+                .put("account_name", account_name)
+                .put("account_passhash", account_passhash);
+    }
+
+    @Override
+    public User fromNO2Doc(Document doc) {
+        if(doc == null)
+            return null;
+
+        id = doc.get("id", Integer.class);
+        name = doc.get("name", String.class);
+        hourly_salary = doc.get("salary", Float.class);
+        status = doc.get("status", User.Status.class);
+        account_name = doc.get("account_name", String.class);
+        account_passhash = doc.get("account_passhash", String.class);
+        return this;
     }
 }

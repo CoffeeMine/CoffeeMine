@@ -5,6 +5,7 @@ import elemental.json.impl.JreJsonFactory;
 import org.coffeemine.app.spring.data.*;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -18,6 +19,7 @@ public class BasicDBProvider implements DBProvider {
     private ArrayList<Task> tasks = new ArrayList<>();
     private ArrayList<Fragment> fragments = new ArrayList<>();
     private ArrayList<User> users = new ArrayList<>();
+
 
     @Override
     public void importJSONProject(String json) {
@@ -39,8 +41,8 @@ public class BasicDBProvider implements DBProvider {
     }
 
     @Override
-    public ArrayList<Project> getProjects() {
-        return projects;
+    public Stream<Project> getProjects() {
+        return projects.stream();
     }
 
     @Override
@@ -50,8 +52,10 @@ public class BasicDBProvider implements DBProvider {
 
     @Override
     public Stream<ITask> getTasks4Project(Project project) {
-        final var sprints = getSprints4Project(project);
-        return tasks.stream().filter(task -> sprints.anyMatch(s -> s.getTasks().contains(task.getId()))).map(t -> t);
+        final var task_ids = getSprints4Project(project)
+                .flatMap(s -> s.getTasks().stream())
+                .collect(Collectors.toList());
+        return tasks.stream().filter(task -> task_ids.contains(task.getId())).map(t -> t);
     }
 
     @Override
@@ -70,13 +74,18 @@ public class BasicDBProvider implements DBProvider {
     }
 
     @Override
-    public ArrayList<User> getUsers() {
-        return users;
+    public Stream<User> getUsers() {
+        return users.stream();
     }
 
     @Override
     public User getUser(int id) {
         return users.stream().filter(u -> u.getId() == id).findFirst().orElse(null);
+    }
+
+    @Override
+    public void addUser(User user) {
+        users.add(user);
     }
 
     @Override
