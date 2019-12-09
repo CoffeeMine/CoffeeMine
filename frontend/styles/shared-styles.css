@@ -107,3 +107,7 @@ H1, H2, H3, H4 {
   border-radius: 15px;
   padding: 0px 35px 0px 35px;
 }
+
+.userprofile {
+  background-color: var(--material-secondary-background-color);
+}
