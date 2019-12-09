@@ -1,8 +1,10 @@
 package org.coffeemine.app.spring.components.JSONUploadSection;
 
+import com.vaadin.flow.component.ClientCallable;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.JsModule;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.polymertemplate.Id;
 import com.vaadin.flow.component.polymertemplate.PolymerTemplate;
 import com.vaadin.flow.component.upload.Upload;
@@ -33,5 +35,10 @@ public class JSONUploadSection extends PolymerTemplate<TemplateModel> {
                 ex.printStackTrace();
             }
         });
+    }
+
+    @ClientCallable
+    void errorNotify(){
+        Notification.show("Invalid file");
     }
 }

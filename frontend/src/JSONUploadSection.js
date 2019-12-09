@@ -59,6 +59,8 @@ class JSONUploadSection extends PolymerElement {
             apply: async (target, self, args) => {
                 if((await this.Module.file_exec(args[0], this.Module.f_test))[0] === 0)
                     target.apply(self, args);
+                else
+                    this.$server.errorNotify();
             }
         });
     }
