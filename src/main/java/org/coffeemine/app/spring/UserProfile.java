@@ -62,6 +62,7 @@ class UserProfile extends VerticalLayout {
         lorem.getStyle().set("margin-bottom", "auto");
         // circle capital letter L
         LetterIcon L = new LetterIcon("L");
+        L.getStyle().set("font-size", "30px");
         currentProjects.add(L, lorem);
         userprofile.add(save);
         userprofile.add(currentProject);
