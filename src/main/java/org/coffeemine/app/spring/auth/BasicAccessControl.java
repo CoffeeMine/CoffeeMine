@@ -7,9 +7,14 @@ import org.coffeemine.app.spring.db.NitriteDBProvider;
 public class BasicAccessControl implements AccessControl {
     private DBProvider db;
     private Integer acc_id = null;
+    private static final BasicAccessControl instance = new BasicAccessControl();
 
-    public BasicAccessControl() {
+    private BasicAccessControl() {
         db = NitriteDBProvider.getInstance();
+    }
+
+    public static BasicAccessControl getInstance() {
+        return instance;
     }
 
     @Override
