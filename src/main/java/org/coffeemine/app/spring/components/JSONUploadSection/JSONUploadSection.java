@@ -21,13 +21,13 @@ public class JSONUploadSection extends PolymerTemplate<TemplateModel> {
 
     @Id("upload")
     private Upload upload;
-    @Id("import")
-    private Button button;
 
-    public JSONUploadSection() {
+    public JSONUploadSection(Button button) {
         super();
         upload.setReceiver(memory_buffer);
         upload.setMaxFiles(1);
+        upload.setAcceptedFileTypes("application/json");
+
         button.addClickListener(e -> {
             try {
                 NitriteDBProvider.getInstance().importJSONProject(new String(memory_buffer.getInputStream().readAllBytes()));

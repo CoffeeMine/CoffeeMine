@@ -14,7 +14,7 @@ function readFileAsync(file) {
 class JSONUploadSection extends PolymerElement {
 
     static get template() {
-        return html`<vaadin-upload id="upload"></vaadin-upload><vaadin-button id="import">Import</vaadin-button>`;
+        return html`<vaadin-upload id="upload"></vaadin-upload>`;
     }
 
     static get is() {
