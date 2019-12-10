@@ -1,9 +1,10 @@
-package org.coffeemine.app.spring;
+package org.coffeemine.app.spring.components;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.*;
+import org.coffeemine.app.spring.view.View;
 
-public class Taskbox extends View{
+public class Taskbox extends View {
 
     public Taskbox(String taskTitle, String taskDescription){
 

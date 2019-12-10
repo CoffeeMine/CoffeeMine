@@ -1,4 +1,4 @@
-package org.coffeemine.app.spring;
+package org.coffeemine.app.spring.view;
 
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
@@ -8,6 +8,8 @@ import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import org.coffeemine.app.spring.components.LetterIcon;
+import org.coffeemine.app.spring.userprofile.UserProfile;
 
 class AccountPopUp extends VerticalLayout {
 

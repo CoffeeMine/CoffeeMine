@@ -1,4 +1,4 @@
-package org.coffeemine.app.spring;
+package org.coffeemine.app.spring.components;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;

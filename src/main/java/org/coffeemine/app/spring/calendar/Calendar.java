@@ -1,4 +1,4 @@
-package org.coffeemine.app.spring;
+package org.coffeemine.app.spring.calendar;
 
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
@@ -11,6 +11,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.Route;
 
+import org.coffeemine.app.spring.components.SprintCreation;
+import org.coffeemine.app.spring.components.TaskCreation;
+import org.coffeemine.app.spring.view.View;
 import org.coffeemine.app.spring.annonations.NavbarRoutable;
 import org.vaadin.stefan.fullcalendar.CalendarViewImpl;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
@@ -21,7 +24,7 @@ import java.time.LocalDateTime;
 @Route
 @NavbarRoutable
 @CssImport("./styles/material-full-calendar.css")
-class Calendar extends View{
+class Calendar extends View {
     private FullCalendar systemCalendar;
     private Text date;
     HorizontalLayout calendarController;

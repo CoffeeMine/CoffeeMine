@@ -1,4 +1,4 @@
-package org.coffeemine.app.spring;
+package org.coffeemine.app.spring.view;
 
 import java.util.HashMap;
 import java.util.List;
