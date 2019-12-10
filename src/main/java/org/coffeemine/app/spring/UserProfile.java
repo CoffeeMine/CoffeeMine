@@ -12,9 +12,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
-//bbbb
 @Route(value = "Profile")
-class UserProfile extends VerticalLayout {
+class UserProfile extends VerticalLayout implements ProtectedView {
     public UserProfile() {
         this.setHeightFull();
         this.setPadding(false);
