@@ -4,25 +4,22 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.frontend.TaskCreatePackageJson;
-import org.coffeemine.app.spring.data.Sprint;
-import org.coffeemine.app.spring.data.Task;
+
+import org.coffeemine.app.spring.annonations.NavbarRoutable;
 import org.vaadin.stefan.fullcalendar.CalendarViewImpl;
-import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 
-import java.io.Console;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 
 @Route
+@NavbarRoutable
 @CssImport("./styles/material-full-calendar.css")
 class Calendar extends View{
     private FullCalendar systemCalendar;
@@ -65,6 +62,7 @@ class Calendar extends View{
         calendarController.add(newEventCreation);
 
         systemCalendar = new FullCalendar();
+        systemCalendar.getStyle().set("z-index", "0");
         date = new Text(LocalDateTime.now().getYear() + "  "
                 + LocalDateTime.now().getMonth().toString() + "  " +
                 LocalDateTime.now().getDayOfMonth());
