@@ -1,4 +1,4 @@
-package org.coffeemine.app.spring;
+package org.coffeemine.app.spring.view;
 
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
@@ -11,6 +11,7 @@ import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.material.Material;
 
+import org.coffeemine.app.spring.components.Taskbox;
 import org.coffeemine.app.spring.annonations.NavbarRoutable;
 
 @Route(value = "")

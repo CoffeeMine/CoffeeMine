@@ -1,9 +1,10 @@
-package org.coffeemine.app.spring;
+package org.coffeemine.app.spring.view;
 
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import org.coffeemine.app.spring.components.LetterIcon;
 
 public class TopBar extends HorizontalLayout {
 

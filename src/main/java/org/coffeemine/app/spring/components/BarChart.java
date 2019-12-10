@@ -1,4 +1,4 @@
-package org.coffeemine.app.spring;
+package org.coffeemine.app.spring.components;
 
 import com.github.appreciated.apexcharts.ApexCharts;
 import com.github.appreciated.apexcharts.ApexChartsBuilder;
@@ -8,6 +8,7 @@ import com.github.appreciated.apexcharts.config.plotoptions.builder.BarBuilder;
 import com.github.appreciated.apexcharts.config.tooltip.builder.YBuilder;
 import com.github.appreciated.apexcharts.config.yaxis.builder.TitleBuilder;
 import com.github.appreciated.apexcharts.helper.Series;
+import org.coffeemine.app.spring.view.View;
 
 public class BarChart extends View {
 

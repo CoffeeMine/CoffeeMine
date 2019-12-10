@@ -1,4 +1,4 @@
-package org.coffeemine.app.spring;
+package org.coffeemine.app.spring.userprofile;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -11,9 +11,12 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import org.coffeemine.app.spring.auth.ProtectedView;
+import org.coffeemine.app.spring.components.LetterIcon;
+import org.coffeemine.app.spring.view.Overview;
 
 @Route(value = "Profile")
-class UserProfile extends VerticalLayout implements ProtectedView {
+public class UserProfile extends VerticalLayout implements ProtectedView {
     public UserProfile() {
         this.setHeightFull();
         this.setPadding(false);

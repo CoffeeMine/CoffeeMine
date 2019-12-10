@@ -1,4 +1,4 @@
-package org.coffeemine.app.spring.components.JSONUploadSection;
+package org.coffeemine.app.spring.components;
 
 import com.vaadin.flow.component.ClientCallable;
 import com.vaadin.flow.component.Tag;

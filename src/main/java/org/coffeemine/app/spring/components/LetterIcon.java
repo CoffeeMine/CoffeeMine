@@ -1,9 +1,9 @@
-package org.coffeemine.app.spring;
+package org.coffeemine.app.spring.components;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Span;
 
-class LetterIcon extends Span {
+public class LetterIcon extends Span {
 
     public LetterIcon() {
         super();

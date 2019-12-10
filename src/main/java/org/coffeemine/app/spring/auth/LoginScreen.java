@@ -5,8 +5,7 @@ import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
-import org.coffeemine.app.spring.Overview;
-import org.coffeemine.app.spring.auth.BasicAccessControl;
+import org.coffeemine.app.spring.view.Overview;
 
 @Route(value = "login")
 public class LoginScreen extends VerticalLayout {
