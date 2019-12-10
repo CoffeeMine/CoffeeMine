@@ -4,22 +4,22 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.frontend.TaskCreatePackageJson;
+import org.coffeemine.app.spring.data.Sprint;
+import org.coffeemine.app.spring.data.Task;
 import org.vaadin.stefan.fullcalendar.CalendarViewImpl;
 import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 
+import java.io.Console;
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Route
@@ -48,19 +48,21 @@ class Calendar extends View{
         selectView.setPlaceholder("View as..");
         selectView.addValueChangeListener(event -> this.changeCalendarView(event.getValue()));
 
-        Button newSprint = new Button("New sprint", event -> EventCreation.TaskCreation());
-        newSprint.getStyle().set("right","auto");
+        Button newSprint = new Button("New sprint", event -> this.createNewSprint());
 
         Button newTask = new Button("New task", event -> this.createNewTask());
-        newTask.getStyle().set("margin-left","auto");
+
+        Div newEventCreation = new Div();
+        newEventCreation.add(newSprint);
+        newEventCreation.add(newTask);
+        newEventCreation.getStyle().set("marginLeft","auto");
 
         calendarController.add(previous);
         calendarController.add(today);
         calendarController.add(next);
         calendarController.add(datePicker);
         calendarController.add(selectView);
-        calendarController.add(newSprint);
-        calendarController.add(newTask);
+        calendarController.add(newEventCreation);
 
         systemCalendar = new FullCalendar();
         date = new Text(LocalDateTime.now().getYear() + "  "
@@ -93,17 +95,14 @@ class Calendar extends View{
         }
     }
 
+    void createNewSprint(){
+        SprintCreation newSprint = new SprintCreation();
+        newSprint.sprintCreating(systemCalendar);
+
+    }
+
     void createNewTask(){
-        Entry newEvent = new Entry(
-                "0101",
-                "Nice Calendar View",
-                LocalDateTime.now(),
-                LocalDateTime.of(2019,11,28,12,00),
-                true,
-                true,
-                " Deep blue",
-                "This is a demo task");
-        systemCalendar.addEntries(newEvent);
-        Notification.show("Task " + "<Nice Calendar View>" + " is now added");
+        TaskCreation newTask = new TaskCreation();
+        newTask.taskCreating(systemCalendar);
     }
 }
