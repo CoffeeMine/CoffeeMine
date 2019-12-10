@@ -16,4 +16,6 @@ public interface DBProvider {
     User getUser(int id);
     void addUser(User user);
     Integer account_id(String name, String hashpass);
+
+    Integer idFor(Class<?> c);
 }

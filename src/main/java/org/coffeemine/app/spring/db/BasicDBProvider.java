@@ -5,6 +5,7 @@ import elemental.json.impl.JreJsonFactory;
 import org.coffeemine.app.spring.data.*;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -96,6 +97,24 @@ public class BasicDBProvider implements DBProvider {
         return acc.isPresent() ? acc.get().getId() : null;
     }
 
+    @Override
+    public Integer idFor(Class<?> c) {
+        final Integer v = new Random().nextInt();
+
+        if(c.equals(User.class))
+            return getUsers().map(User::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
+
+        if(c.equals(Sprint.class))
+            return sprints.stream().map(ISprint::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
+
+        if(c.equals(Task.class))
+            return tasks.stream().map(ITask::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
+
+        if(c.equals(Fragment.class))
+            return fragments.stream().map(Fragment::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
+
+        throw new UnsupportedOperationException();
+    }
 
     public static DBProvider getInstance(){
         return instance;

@@ -5,6 +5,7 @@ import elemental.json.impl.JreJsonFactory;
 import org.coffeemine.app.spring.data.*;
 import org.dizitart.no2.Nitrite;
 
+import java.util.Random;
 import java.util.stream.Stream;
 
 import static org.dizitart.no2.filters.Filters.*;
@@ -71,6 +72,21 @@ public class NitriteDBProvider implements DBProvider {
                 .find().toList().stream().map(d -> new Project().fromNO2Doc(d));
     }
 
+    private Stream<ISprint> getSprints() {
+        return db.getCollection("sprints")
+                .find().toList().stream().map(d -> new Sprint().fromNO2Doc(d));
+    }
+
+    private Stream<ITask> getTasks() {
+        return db.getCollection("tasks")
+                .find().toList().stream().map(d -> new Task().fromNO2Doc(d));
+    }
+
+    private Stream<Fragment> getFragments() {
+        return db.getCollection("fragments")
+                .find().toList().stream().map(d -> new Fragment().fromNO2Doc(d));
+    }
+
     @Override
     public Stream<ISprint> getSprints4Project(Project project) {
         return db.getCollection("sprints")
@@ -134,5 +150,25 @@ public class NitriteDBProvider implements DBProvider {
         if(res.totalCount() > 1)
             throw new RuntimeException("DB has multiple users with the same names and passwords");
         return null;
+    }
+
+    @Override
+    public Integer idFor(Class<?> c) {
+        final Integer v = new Random().nextInt();
+
+        if(c.equals(User.class))
+            return getUsers().map(User::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
+
+
+        if(c.equals(Sprint.class))
+            return getSprints().map(ISprint::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
+
+        if(c.equals(Task.class))
+            return getTasks().map(ITask::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
+
+        if(c.equals(Fragment.class))
+            return getFragments().map(Fragment::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
+
+        throw new UnsupportedOperationException();
     }
 }
