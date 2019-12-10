@@ -1,4 +1,4 @@
-package org.coffeemine.app.spring.stastics;
+package org.coffeemine.app.spring.statistics;
 
 import java.util.Date;
 

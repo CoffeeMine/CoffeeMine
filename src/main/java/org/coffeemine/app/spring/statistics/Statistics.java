@@ -1,4 +1,4 @@
-package org.coffeemine.app.spring.stastics;
+package org.coffeemine.app.spring.statistics;
 
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
@@ -6,11 +6,10 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.router.Route;
-
+import org.coffeemine.app.spring.annonations.NavbarRoutable;
 import org.coffeemine.app.spring.components.BarChart;
 import org.coffeemine.app.spring.components.RadialBarChart;
 import org.coffeemine.app.spring.view.View;
-import org.coffeemine.app.spring.annonations.NavbarRoutable;
 
 @Route
 @NavbarRoutable
