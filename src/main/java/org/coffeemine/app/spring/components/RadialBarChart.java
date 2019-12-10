@@ -1,10 +1,11 @@
-package org.coffeemine.app.spring;
+package org.coffeemine.app.spring.components;
 
 import com.github.appreciated.apexcharts.ApexCharts;
 import com.github.appreciated.apexcharts.ApexChartsBuilder;
 import com.github.appreciated.apexcharts.config.builder.ChartBuilder;
 import com.github.appreciated.apexcharts.config.builder.TitleSubtitleBuilder;
 import com.github.appreciated.apexcharts.config.chart.Type;
+import org.coffeemine.app.spring.view.View;
 
 public class RadialBarChart extends View {
 
