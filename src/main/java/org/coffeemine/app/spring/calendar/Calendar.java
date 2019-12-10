@@ -33,6 +33,7 @@ class Calendar extends View {
     Calendar(){
         super();
         this.calendarController = new HorizontalLayout();
+        this.calendarController.setWidthFull();
         this.calendar = new VerticalLayout();
 
         Button today = new Button("Today", event -> systemCalendar.today());
@@ -55,7 +56,7 @@ class Calendar extends View {
         Div newEventCreation = new Div();
         newEventCreation.add(newSprint);
         newEventCreation.add(newTask);
-        newEventCreation.getStyle().set("marginLeft","auto");
+        newEventCreation.getStyle().set("margin-left","auto");
 
         calendarController.add(previous);
         calendarController.add(today);
