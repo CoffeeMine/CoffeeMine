@@ -37,6 +37,20 @@ public class TrackItem {
     private LocalDateTime opened;
     private LocalDateTime resolved;
 
+    public TrackItem(int id, String name, String description, int reporter, int assignee, Type type, boolean confirmed,
+                     Status status, Resolution resolution, LocalDateTime opened, LocalDateTime resolved) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.reporter = reporter;
+        this.assignee = assignee;
+        this.type = type;
+        this.confirmed = confirmed;
+        this.status = status;
+        this.resolution = resolution;
+        this.opened = opened;
+        this.resolved = resolved;
+    }
 
     public int getId() {
         return id;
@@ -73,4 +87,53 @@ public class TrackItem {
     public void setAssignee(int assignee) {
         this.assignee = assignee;
     }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public boolean isConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(boolean confirmed) {
+        this.confirmed = confirmed;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public Resolution getResolution() {
+        return resolution;
+    }
+
+    public void setResolution(Resolution resolution) {
+        this.resolution = resolution;
+    }
+
+    public LocalDateTime getOpened() {
+        return opened;
+    }
+
+    public void setOpened(LocalDateTime opened) {
+        this.opened = opened;
+    }
+
+    public LocalDateTime getResolved() {
+        return resolved;
+}
+
+    public void setResolved(LocalDateTime resolved) {
+        this.resolved = resolved;
+    }
+
 }
