@@ -60,7 +60,8 @@ public class SprintCreation {
         create.addClickListener(event -> {
             newSprint.setStart(startTime.getValue());
             newSprint.setEnd((endTime.getValue()));
-            Notification.show("Sprint " + "X" + " is now added");
+            Notification sprintNotification = new Notification("Sprint " + "X" + " is now added",1500, Notification.Position.BOTTOM_CENTER);
+            sprintNotification.open();
             dialog.close();
         });
         //reset.addClickListener(event -> { });
