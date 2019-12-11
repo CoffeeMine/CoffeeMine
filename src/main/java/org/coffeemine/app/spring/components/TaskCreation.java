@@ -53,7 +53,8 @@ public class TaskCreation {
         create.addClickListener(event -> {
             newTask.setName(taskName.getValue());
             newTask.setDescription(description.getValue());
-            Notification.show("Task " + newTask.getName() + " is now added");
+            Notification sprintNotification = new Notification("Task " + newTask.getName() + " is now added",1500, Notification.Position.BOTTOM_CENTER);
+            sprintNotification.open();
             dialog.close();
         });
         //reset.addClickListener(event -> { });
