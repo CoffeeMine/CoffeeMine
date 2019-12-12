@@ -22,15 +22,18 @@ public class TaskCreation extends EventForm{
 
     public void taskCreating(FullCalendar AddedCalendar) {
         taskCreating();
-        getSave().addClickListener(event -> AddedCalendar.addEntries(new Entry(
-                "0101",
-                task.getName(),
-                LocalDateTime.now(),
-                LocalDateTime.of(2019, 11, 28, 12, 00),
-                true,
-                true,
-                " Deep blue",
-                task.getDescription())));
+        getSave().addClickListener(event -> {
+            Entry newEntry = new Entry(
+                    "0101",
+                    task.getName(),
+                    LocalDateTime.now(),
+                    LocalDateTime.of(2019, 11, 28, 12, 00),
+                    true,
+                    true,
+                    " Deep blue",
+                    task.getDescription());
+            AddedCalendar.addEntry(newEntry);
+        });
     }
 
     public void taskCreating() {
