@@ -6,7 +6,7 @@ import org.coffeemine.app.spring.db.NitriteDBProvider;
 
 public class BasicAccessControl implements AccessControl {
     private DBProvider db;
-    private Integer acc_id = null;
+    private Integer userId = null;
     private static final BasicAccessControl instance = new BasicAccessControl();
 
     private BasicAccessControl() {
@@ -19,17 +19,22 @@ public class BasicAccessControl implements AccessControl {
 
     @Override
     public boolean signIn(String username, String password) {
-        return ((acc_id = db.account_id(username, password)) != null);
+        return ((userId = db.account_id(username, password)) != null);
     }
 
     @Override
     public boolean isUserSignedIn() {
-        return acc_id != null;
+        return userId != null;
     }
 
     @Override
     public boolean isUserInRole(User.Status role) {
-        return acc_id != null && db.getUser(acc_id).getStatus() == role;
+        return userId != null && db.getUser(userId).getStatus() == role;
+    }
+
+    @Override
+    public int getUserId() {
+        return userId;
     }
 
 }

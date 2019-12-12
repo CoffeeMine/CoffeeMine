@@ -12,4 +12,6 @@ public interface AccessControl {
     boolean isUserSignedIn();
 
     boolean isUserInRole(User.Status role);
+
+    int getUserId();
 }
