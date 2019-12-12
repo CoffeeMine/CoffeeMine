@@ -11,8 +11,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.Route;
 
-import org.coffeemine.app.spring.components.SprintCreation;
-import org.coffeemine.app.spring.components.TaskCreation;
+import org.coffeemine.app.spring.components.eventform.SprintCreation;
+import org.coffeemine.app.spring.components.eventform.TaskCreation;
+import org.coffeemine.app.spring.components.eventform.TaskModification;
 import org.coffeemine.app.spring.view.View;
 import org.coffeemine.app.spring.annonations.NavbarRoutable;
 import org.vaadin.stefan.fullcalendar.CalendarViewImpl;
@@ -72,6 +73,7 @@ class Calendar extends View {
                 LocalDateTime.now().getDayOfMonth());
         systemCalendar.setFirstDay(DayOfWeek.MONDAY);
         systemCalendar.setBusinessHours();
+        systemCalendar.addEntryClickedListener(event -> this.editTask());
 
         calendar.add(calendarController);
         calendar.add(date);
@@ -106,5 +108,10 @@ class Calendar extends View {
     void createNewTask(){
         TaskCreation newTask = new TaskCreation();
         newTask.taskCreating(systemCalendar);
+    }
+
+    void editTask(){
+        TaskModification taskEdit = new TaskModification("0101");
+        taskEdit.taskEditing();
     }
 }
