@@ -3,23 +3,12 @@ package org.coffeemine.app.spring.components.eventform;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.component.textfield.NumberField;
-import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
 import org.coffeemine.app.spring.data.Sprint;
-import org.coffeemine.app.spring.data.Task;
 import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 
-import javax.print.attribute.standard.DialogOwner;
-import java.security.PrivateKey;
-import java.text.Normalizer;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class SprintCreation extends EventForm{
     private Sprint newSprint;
