@@ -26,7 +26,6 @@ public class LoginScreen extends VerticalLayout {
 
         login.addLoginListener(e -> {
             if (loginControl.signIn(e.getUsername(), e.getPassword())) {
-                CurrentUser.set(loginControl.getUserId());
                 this.getUI().ifPresent(ui -> ui.navigate(Overview.class));
             } else {
                 login.setError(true);

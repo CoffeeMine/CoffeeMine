@@ -21,7 +21,12 @@ public class BasicAccessControl implements AccessControl {
 
     @Override
     public boolean signIn(String username, String password) {
-        return ((userId = db.account_id(username, password)) != null);
+        if ((userId = db.account_id(username, password)) != null) {
+            CurrentUser.set(userId);
+
+            return true;
+        }
+        return false;
     }
 
     @Override
