@@ -42,6 +42,7 @@ public class TaskModification extends EventForm{
         Button reset = new Button("Reset");
 
         //Adding the elements for the form
+        getNewForm().add("Modifying Task #"+currentTask.getId()+" "+currentTask.getName());
         getNewForm().addFormItem(taskName, "Task Name");
         getNewForm().addFormItem(taskId, "Task ID");
         getNewForm().addFormItem(assignSprint, "Sprint assign");

@@ -1,8 +1,6 @@
 package org.coffeemine.app.spring.components.eventform;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.NumberField;
@@ -56,6 +54,7 @@ public class TaskCreation extends EventForm{
         });
         Button reset = new Button("Reset");
 
+        getNewForm().add("New Task");
         getNewForm().addFormItem(taskName, "Task Name");
         getNewForm().addFormItem(taskId, "Task ID");
         getNewForm().addFormItem(assignPeople, "Task assign");
