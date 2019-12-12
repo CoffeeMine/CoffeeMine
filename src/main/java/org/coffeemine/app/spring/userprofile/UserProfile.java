@@ -11,8 +11,12 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+
+import org.coffeemine.app.spring.auth.BasicAccessControl;
+import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.auth.ProtectedView;
 import org.coffeemine.app.spring.components.LetterIcon;
+import org.coffeemine.app.spring.data.User;
 import org.coffeemine.app.spring.view.Overview;
 
 @Route(value = "Profile")
@@ -33,13 +37,16 @@ public class UserProfile extends VerticalLayout implements ProtectedView {
         HorizontalLayout usernameTitle = new HorizontalLayout();
         usernameTitle.getStyle().set("margin-left", "auto");
         usernameTitle.getStyle().set("margin-right", "auto");
-        String accountName = "Account Name";
-        H2 title = new H2(accountName);
+
+        User user = CurrentUser.get();
+        String userName = (user == null) ? "No User" : user.getName();
+
+        H2 title = new H2(userName);
         title.getStyle().set("padding", "0px");
         title.getStyle().set("margin-top", "auto");
         title.getStyle().set("margin-bottom", "auto");
         // circle capital letter A
-        Span letter = new Span(accountName.substring(0, 1));
+        Span letter = new Span(userName.substring(0, 1));
         letter.addClassName("lettericon");
         usernameTitle.add(letter, title);
         userprofile.add(back);
@@ -80,7 +87,7 @@ public class UserProfile extends VerticalLayout implements ProtectedView {
         userprofile.add(save);
         userprofile.add(currentProject);
         userprofile.add(currentProjects);
-        Button logOut = new Button("Log out");
+        Button logOut = new Button("Log out", e -> BasicAccessControl.getInstance().signOut());
         logOut.getStyle().set("margin-left", "auto");
         logOut.addThemeVariants(ButtonVariant.MATERIAL_CONTAINED);
         userprofile.add(logOut);
