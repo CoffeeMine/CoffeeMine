@@ -20,16 +20,19 @@ public class SprintCreation extends EventForm{
 
     public void sprintCreating(FullCalendar AddedCalendar) {
         sprintCreating();
-        getSave().addClickListener(event ->
-                AddedCalendar.addEntries(new Entry(
-                        Integer.toString(newSprint.getId()),
-                        Integer.toString(newSprint.getId()),
-                        newSprint.getStart().atStartOfDay(),
-                        newSprint.getEnd().atStartOfDay(),
-                        true,
-                        true,
-                        "dodgerblue",
-                        "")));
+        getSave().addClickListener(event ->{
+            Entry newEntry = new Entry(
+                    Integer.toString(newSprint.getId()),
+                    Integer.toString(newSprint.getId()),
+                    newSprint.getStart().atStartOfDay(),
+                    newSprint.getEnd().plusDays(1).atStartOfDay(),
+                    true,
+                    true,
+                    "dodgerblue",
+                    "");
+            newEntry.setRenderingMode(Entry.RenderingMode.BACKGROUND);
+            AddedCalendar.addEntry(newEntry);
+        });
     }
 
     public void sprintCreating() {
