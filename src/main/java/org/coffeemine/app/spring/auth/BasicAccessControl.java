@@ -1,5 +1,7 @@
 package org.coffeemine.app.spring.auth;
 
+import com.vaadin.flow.component.UI;
+
 import org.coffeemine.app.spring.data.User;
 import org.coffeemine.app.spring.db.DBProvider;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
@@ -35,6 +37,13 @@ public class BasicAccessControl implements AccessControl {
     @Override
     public int getUserId() {
         return userId;
+    }
+
+    @Override
+    public void signOut() {
+        userId = null;
+        CurrentUser.set(null);
+        UI.getCurrent().getPage().reload();
     }
 
 }

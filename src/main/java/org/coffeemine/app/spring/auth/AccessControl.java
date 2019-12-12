@@ -9,6 +9,8 @@ public interface AccessControl {
 
     boolean signIn(String username, String password);
 
+    void signOut();
+
     boolean isUserSignedIn();
 
     boolean isUserInRole(User.Status role);
