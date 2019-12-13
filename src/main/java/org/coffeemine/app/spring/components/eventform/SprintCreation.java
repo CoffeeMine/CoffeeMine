@@ -12,6 +12,7 @@ import java.time.LocalDate;
 
 public class SprintCreation extends EventForm{
     private Sprint newSprint;
+    private static int SPRINT_COUNTER = 0;
 
     public SprintCreation() {
         super();
@@ -28,7 +29,7 @@ public class SprintCreation extends EventForm{
                     newSprint.getEnd().plusDays(1).atStartOfDay(),
                     true,
                     true,
-                    "dodgerblue",
+                    "red",
                     "");
             newEntry.setRenderingMode(Entry.RenderingMode.BACKGROUND);
             AddedCalendar.addEntry(newEntry);
@@ -43,6 +44,8 @@ public class SprintCreation extends EventForm{
         endTime.setValue(LocalDate.now());
         getSave().setText("Create");
         getSave().addClickListener(event -> {
+            newSprint.setId(SPRINT_COUNTER);
+            SPRINT_COUNTER++;
             newSprint.setStart(startTime.getValue());
             newSprint.setEnd((endTime.getValue()));
             Notification sprintNotification = new Notification("Sprint " + "X" + " is now added",
@@ -64,5 +67,9 @@ public class SprintCreation extends EventForm{
 
     public Sprint getNewSprint() {
         return newSprint;
+    }
+
+    public static String getSprintCounter(){
+        return Integer.toString(SPRINT_COUNTER);
     }
 }

@@ -24,6 +24,10 @@ public class Sprint implements ISprint {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public @NotNull LocalDate getStart() {
         return start;
