@@ -1,9 +1,9 @@
 package org.coffeemine.app.spring.components.eventform;
 
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import org.coffeemine.app.spring.data.Task;
@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 
 public class TaskCreation extends EventForm{
     private Task task;
+    private static int TASK_COUNTER = 0;
 
     public TaskCreation() {
         super();
@@ -24,29 +25,31 @@ public class TaskCreation extends EventForm{
         taskCreating();
         getSave().addClickListener(event -> {
             Entry newEntry = new Entry(
-                    "0101",
+                    Integer.toString(task.getId()),
                     task.getName(),
                     LocalDateTime.now(),
                     LocalDateTime.of(2019, 11, 28, 12, 00),
                     true,
                     true,
-                    " Deep blue",
+                    " dodgerblue",
                     task.getDescription());
             AddedCalendar.addEntry(newEntry);
+            TASK_COUNTER++;
         });
     }
 
     public void taskCreating() {
         TextField taskName = new TextField();
-        NumberField taskId = new NumberField();
+        Text taskId = new Text(SprintCreation.getSprintCounter() + TaskCreation.getTaskCounter());
         TextArea description = new TextArea();
         description.setPlaceholder("Please provide task description here");
         Select<String> assignPeople = new Select<>("Bob", "John", "Rick", "Mahaa", "Tylo");
         assignPeople.setPlaceholder("Assigning to..");
         Select<String> assignSprint = new Select<>("Sprint 1", "Sprint 2", "Sprint 3");
         assignSprint.setPlaceholder("Assigning to sprint..");
-        getSave().setText("Save");
+        getSave().setText("Create");
         getSave().addClickListener(event -> {
+            task.setId(Integer.parseInt(SprintCreation.getSprintCounter() + TaskCreation.getTaskCounter()));
             task.setName(taskName.getValue());
             task.setDescription(description.getValue());
             Notification sprintNotification = new Notification("Task " + task.getName() + " is now added",
@@ -73,5 +76,9 @@ public class TaskCreation extends EventForm{
 
     public void setNewTask(Task newTask) {
         this.task = newTask;
+    }
+
+    public static String getTaskCounter(){
+        return Integer.toString(TASK_COUNTER);
     }
 }
