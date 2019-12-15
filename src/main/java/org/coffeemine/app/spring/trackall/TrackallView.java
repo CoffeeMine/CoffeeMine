@@ -2,7 +2,10 @@ package org.coffeemine.app.spring.trackall;
 
 import ch.carnet.kasparscherrer.VerticalScrollLayout;
 import com.vaadin.flow.component.HasStyle;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -10,11 +13,14 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
 import org.coffeemine.app.spring.annonations.NavbarRoutable;
+import org.coffeemine.app.spring.components.Collapsible;
 import org.coffeemine.app.spring.data.TrackItem;
+import org.coffeemine.app.spring.db.NitriteDBProvider;
 import org.coffeemine.app.spring.view.View;
 
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Route(value = "Tracker")
 @NavbarRoutable
@@ -56,7 +62,7 @@ public class TrackallView extends View {
         item_list.getStyle().set("background-color", "green");
 
         final var scroller =  new VerticalScrollLayout(item_list);
-        scroller.setWidth("375px");
+        scroller.setWidth("30%");
         inner.add(scroller, detailed_pane);
         inner.getStyle().set("width", "100%");
         inner.setHeightFull();
@@ -64,8 +70,7 @@ public class TrackallView extends View {
         outer.setHeightFull();
         add(outer);
 
-        items.add(new ListItem(new TrackItem(3, "Bob is broken", "Bob doesn't work since the update", 3,2, TrackItem.Type.BUG, true, TrackItem.Status.OPEN, TrackItem.Resolution.UNRESOLVED, LocalDateTime.now(), LocalDateTime.now())));
-        items.add(new ListItem(new TrackItem(45, "Change color", "Green is better than yellow", 3,1, TrackItem.Type.FEATURE_REQUEST, true, TrackItem.Status.IN_PROGRESS, TrackItem.Resolution.FIXED, LocalDateTime.now(), LocalDateTime.now())));
+        items.addAll(NitriteDBProvider.getInstance().getTrackItems().map(ListItem::new).collect(Collectors.toList()));
 
         item_list.addSelectedChangeListener(e -> update_details(((ListItem) e.getSelectedTab()).item));
 
@@ -79,8 +84,41 @@ public class TrackallView extends View {
     }
 
     private void update_details(TrackItem ti) {
+        detailed_pane.removeAll();
         if(ti == null){
             // TODO: dflt
+
+            return;
         }
+        final var details_collapse = new Collapsible(false,
+                new VerticalLayout(
+                        new Span("Type: " + ti.getType().name()),
+                        new Span("Status: " + ti.getStatus().name()),
+                        new Span("Confirmation status: " + (ti.isConfirmed() ? "Confirmed" : "Unconfirmed")),
+                        new Span("Resolution: " + ti.getResolution().name())
+                ));
+        final var details_toggle = new Button("Details", e -> details_collapse.toggle());
+        final var description_collapse = new Collapsible(false,
+                new Paragraph("Hello darkness my old friend..."));
+        final var description_toggle = new Button("Description", e -> description_collapse.toggle());
+        final var left_col = new VerticalLayout(details_toggle, details_collapse, description_toggle, description_collapse);
+        left_col.setWidth("150%");
+
+        final var people_collapse = new Collapsible(false,
+                new VerticalLayout(
+                    new Span("Assignee: " + ti.getAssignee()),
+                    new Span("Reporter: " + ti.getReporter()))
+        );
+        final var people_toggle = new Button("People", e -> people_collapse.toggle());
+        final var dates_collapes = new Collapsible(false,
+                new VerticalLayout(
+                        new Span("Created: " + ti.getOpened().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)), //TODO: custom date formatter YYYY-MM-DD hh:mm
+                        new Span("Resolved: " + (ti.getResolved() != null ? ti.getResolved().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : "N/A"))
+                ));
+        final var dates_toggle = new Button("Dates", e -> dates_collapes.toggle());
+        final var right_col = new VerticalLayout(people_toggle, people_collapse, dates_toggle, dates_collapes);
+        final var columns_holder = new HorizontalLayout(left_col, right_col);
+        columns_holder.setWidth("100%");
+        detailed_pane.add(new VerticalLayout(new H3(ti.getName()), columns_holder));
     }
 }
