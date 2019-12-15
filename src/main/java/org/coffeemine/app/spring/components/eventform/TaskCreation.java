@@ -52,13 +52,13 @@ public class TaskCreation extends EventForm{
             task.setName(taskName.getValue());
             task.setDescription(description.getValue());
             NitriteDBProvider.getInstance().addTask(task);
-            Notification sprintNotification = new Notification(
+            Notification notification = new Notification(
                     "Task #" + task.getId() +
                             " " + task.getName() +
                             " is now added",
                     1100,
                     Notification.Position.BOTTOM_CENTER);
-            sprintNotification.open();
+            notification.open();
             getDialog().close();
         });
         Button reset = new Button("Reset");

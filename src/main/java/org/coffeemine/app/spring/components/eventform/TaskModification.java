@@ -7,13 +7,33 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import org.coffeemine.app.spring.data.Task;
+import org.coffeemine.app.spring.db.NitriteDBProvider;
+import org.vaadin.stefan.fullcalendar.Entry;
+import org.vaadin.stefan.fullcalendar.FullCalendar;
 
 public class TaskModification extends EventForm{
     private Task currentTask;
+    private Entry currentEntry;
+    Button delete;
 
-    public TaskModification(String idOfCurrentTask){
+    public TaskModification(Entry currentEntry){
         super();
-        currentTask = new Task();
+        delete = new Button("Delete");
+        currentTask = NitriteDBProvider.getInstance().getTask(Integer.parseInt(currentEntry.getId()));
+        this.currentEntry = currentEntry;
+    }
+
+    public void taskEditing(FullCalendar AddedCalendar){
+        taskEditing();
+        delete.addClickListener(event -> {
+            AddedCalendar.removeEntry(currentEntry);
+            Notification notification = new Notification(
+                    "Task " + currentTask.getName() + " is now deleted",
+                    1100,
+                    Notification.Position.BOTTOM_CENTER);
+            notification.open();
+            getDialog().close();
+        });
     }
 
     public void taskEditing(){
@@ -32,11 +52,11 @@ public class TaskModification extends EventForm{
         getSave().addClickListener(event -> {
             currentTask.setName(taskName.getValue());
             currentTask.setDescription(description.getValue());
-            Notification sprintNotification = new Notification(
+            Notification notification = new Notification(
                     "Task " + currentTask.getName() + " is now saved",
                     1100,
                     Notification.Position.BOTTOM_CENTER);
-            sprintNotification.open();
+            notification.open();
             getDialog().close();
         });
         Button reset = new Button("Reset");
@@ -47,7 +67,7 @@ public class TaskModification extends EventForm{
         getNewForm().addFormItem(taskId, "Task ID");
         getNewForm().addFormItem(assignSprint, "Sprint assign");
         getNewForm().addFormItem(description, "Task Description");
-        getNewForm().add(getSave(), reset);
+        getNewForm().add(getSave(), reset, delete);
 
         getDialog().add(getNewForm());
         getDialog().open();

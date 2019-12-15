@@ -48,11 +48,11 @@ public class SprintCreation extends EventForm{
             sprint.setStart(startTime.getValue());
             sprint.setEnd((endTime.getValue()));
             NitriteDBProvider.getInstance().addSprint(sprint);
-            Notification sprintNotification = new Notification(
+            Notification notification = new Notification(
                     "Sprint " + sprint.getId() + " is now added",
                     1100,
                     Notification.Position.BOTTOM_CENTER);
-            sprintNotification.open();
+            notification.open();
             getDialog().close();
         });
         Button reset = new Button("Reset");

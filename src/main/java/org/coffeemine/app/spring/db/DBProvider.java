@@ -2,7 +2,6 @@ package org.coffeemine.app.spring.db;
 
 import org.coffeemine.app.spring.data.*;
 
-import java.sql.SQLTransactionRollbackException;
 import java.util.stream.Stream;
 
 public interface DBProvider {

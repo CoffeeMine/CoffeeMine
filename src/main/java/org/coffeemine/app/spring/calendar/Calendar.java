@@ -77,7 +77,7 @@ class Calendar extends View {
                 LocalDateTime.now().getDayOfMonth());
         systemCalendar.setFirstDay(DayOfWeek.MONDAY);
         systemCalendar.setBusinessHours();
-        systemCalendar.addEntryClickedListener(event -> this.editTask());
+        systemCalendar.addEntryClickedListener(event -> this.editTask(event.getEntry()));
         Object[] sprints = NitriteDBProvider.getInstance().getSprints().toArray();
         Object[] tasks = NitriteDBProvider.getInstance().getTasks().toArray();
         for (Object sprint : sprints) {
@@ -143,8 +143,8 @@ class Calendar extends View {
         newTask.taskCreating(systemCalendar);
     }
 
-    void editTask(){
-        TaskModification taskEdit = new TaskModification("0101");
-        taskEdit.taskEditing();
+    void editTask(Entry currentEntry){
+        TaskModification taskEdit = new TaskModification(currentEntry);
+        taskEdit.taskEditing(systemCalendar);
     }
 }
