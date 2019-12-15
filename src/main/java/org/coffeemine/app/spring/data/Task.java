@@ -19,6 +19,17 @@ public class Task implements ITask {
     private ArrayList<Integer> fragments = new ArrayList<>();
     private ArrayList<String> commits;
 
+    public Task() { }
+
+    public Task(int id, @NotNull String name, @NotNull String description, @NotNull ArrayList<Integer> assignees, @NotNull ArrayList<Integer> fragments, ArrayList<String> commits) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.assignees = assignees;
+        this.fragments = fragments;
+        this.commits = commits;
+    }
+
     @Override
     public int getId() {
         return id;

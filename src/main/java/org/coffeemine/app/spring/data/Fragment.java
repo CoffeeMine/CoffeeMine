@@ -20,6 +20,15 @@ public class Fragment implements JsonSerializable, NO2Serializable {
     private LocalDate end = LocalDate.EPOCH;
     private ArrayList<Integer> users = new ArrayList<>();
 
+    public Fragment() { }
+
+    public Fragment(int id, LocalDate begin, LocalDate end, ArrayList<Integer> users) {
+        this.id = id;
+        this.begin = begin;
+        this.end = end;
+        this.users = users;
+    }
+
     public int getId() {
         return id;
     }

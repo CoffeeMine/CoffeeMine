@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Meeting implements Serializable {
-    public enum Type {
-        SPRINT
-    }
 
+
+    public enum Type {
+        SPRINT;
+    }
     private int id;
+
     private Type type;
     private int bound_to;
     @NotNull
@@ -25,6 +27,21 @@ public class Meeting implements Serializable {
     private ArrayList<Integer> attendees = new ArrayList<>();
     @NotNull
     private String notes = "";
+
+    public Meeting() {}
+
+    public Meeting(int id, Type type, int bound_to, @NotNull Date planned_start, @NotNull Date planned_end, Date start, Date end, @NotNull ArrayList<String> topics, @NotNull ArrayList<Integer> attendees, @NotNull String notes) {
+        this.id = id;
+        this.type = type;
+        this.bound_to = bound_to;
+        this.planned_start = planned_start;
+        this.planned_end = planned_end;
+        this.start = start;
+        this.end = end;
+        this.topics = topics;
+        this.attendees = attendees;
+        this.notes = notes;
+    }
 
     public int getId() {
         return id;

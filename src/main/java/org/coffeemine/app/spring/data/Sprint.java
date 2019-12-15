@@ -19,6 +19,16 @@ public class Sprint implements ISprint {
     @NotNull
     private ArrayList<Integer> tasks = new ArrayList<>();
 
+    public Sprint() { }
+
+    public Sprint(int id, @NotNull LocalDate start, @NotNull LocalDate end, int meeting_id, @NotNull ArrayList<Integer> tasks) {
+        this.id = id;
+        this.start = start;
+        this.end = end;
+        this.meeting_id = meeting_id;
+        this.tasks = tasks;
+    }
+
     @Override
     public int getId() {
         return id;
