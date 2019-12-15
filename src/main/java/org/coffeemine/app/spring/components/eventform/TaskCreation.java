@@ -7,6 +7,7 @@ import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import org.coffeemine.app.spring.data.Task;
+import org.coffeemine.app.spring.db.NitriteDBProvider;
 import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 
@@ -14,7 +15,6 @@ import java.time.LocalDateTime;
 
 public class TaskCreation extends EventForm{
     private Task task;
-    private static int TASK_COUNTER = 0;
 
     public TaskCreation() {
         super();
@@ -34,13 +34,12 @@ public class TaskCreation extends EventForm{
                     " dodgerblue",
                     task.getDescription());
             AddedCalendar.addEntry(newEntry);
-            TASK_COUNTER++;
         });
     }
 
     public void taskCreating() {
         TextField taskName = new TextField();
-        Text taskId = new Text(SprintCreation.getSprintCounter() + TaskCreation.getTaskCounter());
+        Text taskId = new Text(NitriteDBProvider.getInstance().idFor(task.getClass()).toString());
         TextArea description = new TextArea();
         description.setPlaceholder("Please provide task description here");
         Select<String> assignPeople = new Select<>("Bob", "John", "Rick", "Mahaa", "Tylo");
@@ -49,10 +48,13 @@ public class TaskCreation extends EventForm{
         assignSprint.setPlaceholder("Assigning to sprint..");
         getSave().setText("Create");
         getSave().addClickListener(event -> {
-            task.setId(Integer.parseInt(SprintCreation.getSprintCounter() + TaskCreation.getTaskCounter()));
+            task.setId(Integer.parseInt(taskId.getText()));
             task.setName(taskName.getValue());
             task.setDescription(description.getValue());
-            Notification sprintNotification = new Notification("Task " + task.getName() + " is now added",
+            Notification sprintNotification = new Notification(
+                    "Task #" + task.getId() +
+                            " " + task.getName() +
+                            " is now added",
                     1100,
                     Notification.Position.BOTTOM_CENTER);
             sprintNotification.open();
@@ -76,9 +78,5 @@ public class TaskCreation extends EventForm{
 
     public void setNewTask(Task newTask) {
         this.task = newTask;
-    }
-
-    public static String getTaskCounter(){
-        return Integer.toString(TASK_COUNTER);
     }
 }
