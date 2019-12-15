@@ -7,6 +7,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -66,6 +67,7 @@ public class TrackallView extends View {
         inner.add(scroller, detailed_pane);
         inner.getStyle().set("width", "100%");
         inner.setHeightFull();
+        outer.add(new Button("New issue", e -> Notification.show("unimplemented")));
         outer.add(inner);
         outer.setHeightFull();
         add(outer);
