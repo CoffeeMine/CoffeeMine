@@ -11,7 +11,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.Route;
 
-import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.components.eventform.SprintCreation;
 import org.coffeemine.app.spring.components.eventform.TaskCreation;
 import org.coffeemine.app.spring.components.eventform.TaskModification;
@@ -24,7 +23,6 @@ import org.vaadin.stefan.fullcalendar.CalendarViewImpl;
 import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 
-import java.lang.reflect.Array;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 
