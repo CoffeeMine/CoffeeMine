@@ -1,8 +1,9 @@
 package org.coffeemine.app.spring.data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class TrackItem {
+public class TrackItem implements Serializable {
     public enum Type {
         BUG,
         FEATURE_REQUEST,
