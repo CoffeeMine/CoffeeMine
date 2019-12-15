@@ -51,6 +51,7 @@ public class TaskCreation extends EventForm{
             task.setId(Integer.parseInt(taskId.getText()));
             task.setName(taskName.getValue());
             task.setDescription(description.getValue());
+            NitriteDBProvider.getInstance().addTask(task);
             Notification sprintNotification = new Notification(
                     "Task #" + task.getId() +
                             " " + task.getName() +

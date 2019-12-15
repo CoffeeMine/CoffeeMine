@@ -11,14 +11,20 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.Route;
 
+import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.components.eventform.SprintCreation;
 import org.coffeemine.app.spring.components.eventform.TaskCreation;
 import org.coffeemine.app.spring.components.eventform.TaskModification;
+import org.coffeemine.app.spring.data.Sprint;
+import org.coffeemine.app.spring.data.Task;
+import org.coffeemine.app.spring.db.NitriteDBProvider;
 import org.coffeemine.app.spring.view.View;
 import org.coffeemine.app.spring.annonations.NavbarRoutable;
 import org.vaadin.stefan.fullcalendar.CalendarViewImpl;
+import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 
+import java.lang.reflect.Array;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 
@@ -74,6 +80,35 @@ class Calendar extends View {
         systemCalendar.setFirstDay(DayOfWeek.MONDAY);
         systemCalendar.setBusinessHours();
         systemCalendar.addEntryClickedListener(event -> this.editTask());
+        Object[] sprints = NitriteDBProvider.getInstance().getSprints().toArray();
+        Object[] tasks = NitriteDBProvider.getInstance().getTasks().toArray();
+        for (Object sprint : sprints) {
+            Sprint castToSprint = (Sprint)sprint;
+            Entry newEntry = new Entry(
+                    Integer.toString(castToSprint.getId()),
+                    Integer.toString(castToSprint.getId()),
+                    castToSprint.getStart().atStartOfDay(),
+                    castToSprint.getEnd().plusDays(1).atStartOfDay(),
+                    true,
+                    true,
+                    "red",
+                    "");
+            newEntry.setRenderingMode(Entry.RenderingMode.BACKGROUND);
+            systemCalendar.addEntry(newEntry);
+        }
+        for (Object task : tasks) {
+            Task castToTask = (Task) task;
+            Entry newEntry = new Entry(
+                    Integer.toString(castToTask.getId()),
+                    castToTask.getName(),
+                    LocalDateTime.now(),
+                    LocalDateTime.of(2019, 11, 28, 12, 00),
+                    true,
+                    true,
+                    " dodgerblue",
+                    castToTask.getDescription());
+            systemCalendar.addEntry(newEntry);
+        }
 
         calendar.add(calendarController);
         calendar.add(date);

@@ -47,6 +47,7 @@ public class SprintCreation extends EventForm{
             sprint.setId(NitriteDBProvider.getInstance().idFor(sprint.getClass()));
             sprint.setStart(startTime.getValue());
             sprint.setEnd((endTime.getValue()));
+            NitriteDBProvider.getInstance().addSprint(sprint);
             Notification sprintNotification = new Notification(
                     "Sprint " + sprint.getId() + " is now added",
                     1100,
