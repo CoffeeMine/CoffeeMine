@@ -19,7 +19,9 @@ public interface DBProvider {
     int addUser(User user);
     ISprint getSprint(int id);
     int addSprint(ISprint sprint);
+    void removeSprint(int id);
     ITask getTask(int id);
     int addTask(ITask task);
+    void removeTask(int id);
     Integer account_id(String name, String hashpass);
 }

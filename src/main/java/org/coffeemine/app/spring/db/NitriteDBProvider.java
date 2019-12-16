@@ -156,6 +156,11 @@ public class NitriteDBProvider implements DBProvider {
     }
 
     @Override
+    public void removeSprint(int id) {
+
+    }
+
+    @Override
     public ITask getTask(int id) {
         return new Task().fromNO2Doc(db.getCollection("tasks").find(eq("id", id)).firstOrDefault());
     }
@@ -168,6 +173,11 @@ public class NitriteDBProvider implements DBProvider {
         db.getCollection("tasks").insert(doc);
         db.commit();
         return id;
+    }
+
+    @Override
+    public void removeTask(int id) {
+
     }
 
     @Override

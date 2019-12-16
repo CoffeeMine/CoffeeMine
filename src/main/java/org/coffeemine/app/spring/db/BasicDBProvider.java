@@ -112,6 +112,11 @@ public class BasicDBProvider implements DBProvider {
     }
 
     @Override
+    public void removeSprint(int id) {
+
+    }
+
+    @Override
     public ITask getTask(int id) {
         return tasks.stream().filter(u -> u.getId() == id).findFirst().orElse(null);
     }
@@ -120,6 +125,11 @@ public class BasicDBProvider implements DBProvider {
     public int addTask(ITask task) {
         tasks.add(task);
         return task.getId();
+    }
+
+    @Override
+    public void removeTask(int id) {
+
     }
 
     @Override
