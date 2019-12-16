@@ -11,9 +11,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.Route;
 import org.coffeemine.app.spring.annonations.NavbarRoutable;
-import org.coffeemine.app.spring.components.eventform.SprintCreation;
-import org.coffeemine.app.spring.components.eventform.TaskCreation;
-import org.coffeemine.app.spring.components.eventform.TaskModification;
+import org.coffeemine.app.spring.components.EventsDialog.SprintCreation;
+import org.coffeemine.app.spring.components.EventsDialog.TaskCreation;
+import org.coffeemine.app.spring.components.EventsDialog.TaskDetail;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 import org.coffeemine.app.spring.view.View;
 import org.vaadin.stefan.fullcalendar.CalendarViewImpl;
@@ -49,7 +49,7 @@ class Calendar extends View {
         final var new_task = new Button("New task", e -> createTask());
 
         final var event_creation = new Div(new_sprint, new_task);
-        event_creation.getStyle().set("margin-left","auto");
+        event_creation.getStyle().set("margin-left", "auto");
 
         final var controls = new HorizontalLayout();
         controls.setWidthFull();
@@ -59,7 +59,16 @@ class Calendar extends View {
         final var date = new Text(LocalDateTime.now().format(DateTimeFormatter.ofPattern("d MMM yyyy")));
         calendar.setFirstDay(DayOfWeek.MONDAY);
         calendar.setBusinessHours();
-        calendar.addEntryClickedListener(event -> editTask(event.getEntry()));
+        calendar.addEntryClickedListener(event -> openTask(event.getEntry()));
+
+        updateEvents();
+
+        final var container = new VerticalLayout(controls, date, calendar);
+        add(container);
+    }
+
+    void updateEvents() {
+        calendar.removeAllEntries();
         NitriteDBProvider.getInstance().getSprints().forEach(sprint -> {
             final var entry = new Entry(
                     Integer.toString(sprint.getId()),
@@ -85,9 +94,6 @@ class Calendar extends View {
                     task.getDescription());
             calendar.addEntry(entry);
         });
-
-        final var container = new VerticalLayout(controls, date, calendar);
-        add(container);
     }
 
     void changeCalendarView(String view_name){
@@ -135,8 +141,7 @@ class Calendar extends View {
         });
     }
 
-    private void editTask(Entry currentEntry){
-        TaskModification taskEdit = new TaskModification(currentEntry);
-        taskEdit.taskEditing(calendar);
+    private void openTask(Entry currentEntry) {
+        new TaskDetail(Integer.parseInt(currentEntry.getId()), t -> updateEvents());
     }
 }

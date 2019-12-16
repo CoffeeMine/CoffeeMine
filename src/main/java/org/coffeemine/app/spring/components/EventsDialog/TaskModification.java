@@ -1,6 +1,8 @@
-package org.coffeemine.app.spring.components.eventform;
+package org.coffeemine.app.spring.components.EventsDialog;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.NumberField;
@@ -8,22 +10,13 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import org.coffeemine.app.spring.data.ITask;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
-import org.vaadin.stefan.fullcalendar.Entry;
-import org.vaadin.stefan.fullcalendar.FullCalendar;
 
-public class TaskModification extends EventForm{
-    private ITask currentTask;
-    private Entry currentEntry;
-    private Button delete;
+import java.util.function.Consumer;
 
-    public TaskModification(Entry currentEntry){
-        super();
-        delete = new Button("Delete");
-        currentTask = NitriteDBProvider.getInstance().getTask(Integer.parseInt(currentEntry.getId()));
-        this.currentEntry = currentEntry;
-    }
 
-    public TaskModification(ITask currentTask){
+public class TaskModification extends Dialog {
+
+    public TaskModification(int task_id, Consumer<ITask> callback) {
         super();
         delete = new Button("Delete");
         this.currentTask = currentTask;
@@ -68,17 +61,14 @@ public class TaskModification extends EventForm{
         });
         Button reset = new Button("Reset");
 
-        //Adding the elements for the form
-        getNewForm().removeAll();
-        getNewForm().add("Modifying Task #"+currentTask.getId()+" "+currentTask.getName());
-        getNewForm().addFormItem(taskName, "Task Name");
-        getNewForm().addFormItem(taskId, "Task ID");
-        getNewForm().addFormItem(assignSprint, "Sprint assign");
-        getNewForm().addFormItem(description, "Task Description");
-        getNewForm().add(getSave(), reset, delete);
+        final var form = new FormLayout();
+        form.add("Modifying Task #" + task.getId() + " " + task.getName());
+        form.addFormItem(name, "Task Name");
+        form.addFormItem(sprint_sel, "For");
+        form.addFormItem(desc, "Task Description");
+        form.add(save, reset, delete);
 
-        getDialog().removeAll();
-        getDialog().add(getNewForm());
-        getDialog().open();
+        add(form);
     }
+
 }
