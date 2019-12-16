@@ -2,6 +2,7 @@ package org.coffeemine.app.spring;
 
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 import org.coffeemine.app.spring.data.Project;
@@ -41,10 +42,13 @@ public class TestingData {
         tasks.add(task2.getId());
         tasks.add(task3.getId());
 
-        var testsprint = new Sprint(db.idFor(Sprint.class), LocalDate.now(), LocalDate.now(), -1, tasks);
+        var now = LocalDate.now();
+        var start = now.minus(1, ChronoUnit.WEEKS);
+        var end = now.plus(1, ChronoUnit.WEEKS);
+
+        var testsprint = new Sprint(db.idFor(Sprint.class), start, end, -1, tasks);
             db.addSprint(testsprint);
 
         defaultProject.addSprint(testsprint.getId());
-
     }
 }

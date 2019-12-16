@@ -5,6 +5,7 @@ import elemental.json.impl.JreJsonFactory;
 import org.coffeemine.app.spring.data.*;
 import org.dizitart.no2.Nitrite;
 
+import java.time.LocalDate;
 import java.util.Random;
 import java.util.stream.Stream;
 
@@ -122,6 +123,19 @@ public class NitriteDBProvider implements DBProvider {
         return db.getCollection("fragments")
                 .find(elemMatch("users", eq("$", user.getId())))
                 .toList().stream().map(d -> new Fragment().fromNO2Doc(d));
+    }
+
+    @Override
+    public Project getCurrentProject(User user) {
+        return this.getProject(user.getCurrentProject());
+    }
+
+    @Override
+    public ISprint getCurrentSprint(Project project) {
+        var now = LocalDate.now();
+        return this.getSprints4Project(project)
+                .dropWhile(sprint -> !(sprint.getStart().isBefore(LocalDate.now()) && sprint.getEnd().isAfter(LocalDate.now()))).findFirst()
+                .orElse(null);
     }
 
     @Override

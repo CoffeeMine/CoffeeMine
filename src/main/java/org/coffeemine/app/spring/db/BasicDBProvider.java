@@ -4,6 +4,7 @@ import elemental.json.JsonObject;
 import elemental.json.impl.JreJsonFactory;
 import org.coffeemine.app.spring.data.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -72,6 +73,19 @@ public class BasicDBProvider implements DBProvider {
     @Override
     public Stream<Fragment> getFragments4User(User user) {
         return fragments.stream().filter(fragment -> fragment.getUsers().contains(user.getId()));
+    }
+
+    @Override
+    public Project getCurrentProject(User user) {
+        return this.getProject(user.getCurrentProject());
+    }
+    
+    @Override
+    public ISprint getCurrentSprint(Project project) {
+        var now = LocalDate.now();
+        return this.sprints.stream()
+                .dropWhile(sprint -> !(sprint.getStart().isBefore(now) && sprint.getEnd().isAfter(now))).findFirst()
+                .orElse(null);
     }
 
     @Override
