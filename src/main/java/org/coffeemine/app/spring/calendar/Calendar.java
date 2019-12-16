@@ -135,7 +135,7 @@ class Calendar extends View {
                     LocalDateTime.of(2019, 11, 28, 12, 0),
                     true,
                     true,
-                    " dodgerblue",
+                    "dodgerblue",
                     task.getDescription());
             calendar.addEntry(entry);
         });
