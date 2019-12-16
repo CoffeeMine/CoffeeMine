@@ -5,12 +5,12 @@ import com.vaadin.flow.component.notification.Notification;
 
 import org.coffeemine.app.spring.components.HorizontalScroll;
 import org.coffeemine.app.spring.components.TaskBlock;
-import org.coffeemine.app.spring.data.Sprint;
+import org.coffeemine.app.spring.data.ISprint;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 
 public class TasksView extends HorizontalScroll {
 
-    public TasksView(Sprint sprint) {
+    public TasksView(ISprint sprint) {
         var db = NitriteDBProvider.getInstance();
 
         db.getTasks4Sprint(sprint).forEach(task -> {
