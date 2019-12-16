@@ -1,6 +1,5 @@
 package org.coffeemine.app.spring.calendar;
 
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -24,6 +23,7 @@ import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Route
@@ -31,24 +31,38 @@ import java.time.LocalDateTime;
 @CssImport("./styles/material-full-calendar.css")
 class Calendar extends View {
     private FullCalendar systemCalendar;
-    private Text date;
-    HorizontalLayout calendarController;
-    VerticalLayout calendar;
+    private LocalDate dateLog;
+    private HorizontalLayout calendarController;
+    private VerticalLayout calendar;
 
     Calendar(){
         super();
         this.calendarController = new HorizontalLayout();
         this.calendarController.setWidthFull();
         this.calendar = new VerticalLayout();
-
-        Button today = new Button("Today", event -> systemCalendar.today());
-        Button previous = new Button("<< Previous", event -> systemCalendar.previous());
-        Button next = new Button("next >>",event -> systemCalendar.next());
+        dateLog = LocalDate.now();
 
         DatePicker datePicker = new DatePicker();
         datePicker.setPlaceholder("Date within this month");
         datePicker.setClearButtonVisible(true);
+        datePicker.setValue(dateLog);
         datePicker.addValueChangeListener(event -> systemCalendar.gotoDate(event.getValue()));
+
+        Button today = new Button("Today", event -> {
+            systemCalendar.today();
+            dateLog = LocalDate.now();
+            datePicker.setValue(dateLog);
+        });
+        Button previous = new Button("<< Previous", event -> {
+            systemCalendar.previous();
+            dateLog = dateLog.minusMonths(1);
+            datePicker.setValue(dateLog);
+        });
+        Button next = new Button("next >>",event -> {
+            systemCalendar.next();
+            dateLog = dateLog.plusMonths(1);
+            datePicker.setValue(dateLog);
+        });
 
         Select<String> selectView = new Select<>("Month", "Week", "Day");
         selectView.setPlaceholder("View as..");
@@ -71,16 +85,12 @@ class Calendar extends View {
 
         systemCalendar = new FullCalendar();
         systemCalendar.getStyle().set("z-index", "0");
-        date = new Text(LocalDateTime.now().getYear() + "  "
-                + LocalDateTime.now().getMonth().toString() + "  " +
-                LocalDateTime.now().getDayOfMonth());
         systemCalendar.setFirstDay(DayOfWeek.MONDAY);
         systemCalendar.setBusinessHours();
         systemCalendar.addEntryClickedListener(event -> this.maintainTask(event.getEntry()));
         updateCalendar();
 
         calendar.add(calendarController);
-        calendar.add(date);
         calendar.add(systemCalendar);
 
         add(calendar);
