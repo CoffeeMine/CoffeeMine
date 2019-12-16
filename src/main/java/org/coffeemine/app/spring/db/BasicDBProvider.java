@@ -85,6 +85,31 @@ public class BasicDBProvider implements DBProvider {
     }
 
     @Override
+    public Project getProject(int id) {
+        return projects.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
+    }
+
+    @Override
+    public void addProject(Project project) {
+        projects.add(project);
+    }
+
+    @Override
+    public void addSprint(Sprint sprint) {
+        sprints.add(sprint);
+    }
+
+    @Override
+    public void addTask(Task task) {
+        tasks.add(task);
+    }
+  
+    @Override
+    public void addFragment(Fragment fragment) {
+        fragments.add(fragment);
+    }
+
+    @Override
     public void addUser(User user) {
         users.add(user);
     }
@@ -103,6 +128,9 @@ public class BasicDBProvider implements DBProvider {
 
         if(c.equals(User.class))
             return getUsers().map(User::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
+
+        if(c.equals(Project.class))
+            return getProjects().map(Project::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
 
         if(c.equals(Sprint.class))
             return sprints.stream().map(ISprint::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;

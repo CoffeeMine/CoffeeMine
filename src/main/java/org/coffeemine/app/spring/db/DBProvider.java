@@ -14,7 +14,12 @@ public interface DBProvider {
     Stream<Fragment> getFragments4User(User task);
     Stream<User> getUsers();
     User getUser(int id);
+    Project getProject(int id);
     void addUser(User user);
+    void addProject(Project project);
+    void addSprint(Sprint sprint);
+    void addTask(Task task);
+    void addFragment(Fragment fragment);
     Integer account_id(String name, String hashpass);
 
     Integer idFor(Class<?> c);

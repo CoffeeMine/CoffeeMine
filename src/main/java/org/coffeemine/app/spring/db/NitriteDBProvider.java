@@ -135,6 +135,35 @@ public class NitriteDBProvider implements DBProvider {
     }
 
     @Override
+    public Project getProject(int id) {
+        return new Project().fromNO2Doc(db.getCollection("projects").find(eq("id", id)).firstOrDefault());
+    }
+
+    @Override
+    public void addProject(Project project) {
+        db.getCollection("projects").insert(project.asNO2Doc());
+        db.commit();
+    }
+
+    @Override
+    public void addSprint(Sprint sprint) {
+        db.getCollection("sprints").insert(sprint.asNO2Doc());
+        db.commit();
+    }
+
+    @Override
+    public void addTask(Task task) {
+        db.getCollection("tasks").insert(task.asNO2Doc());
+        db.commit();
+    }
+
+    @Override
+    public void addFragment(Fragment fragment) {
+        db.getCollection("fragments").insert(fragment.asNO2Doc());
+        db.commit();
+    }
+
+    @Override
     public void addUser(User user) {
         db.getCollection("users").insert(user.asNO2Doc());
         db.commit();
@@ -159,6 +188,8 @@ public class NitriteDBProvider implements DBProvider {
         if(c.equals(User.class))
             return getUsers().map(User::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
 
+        if(c.equals(Project.class))
+            return getProjects().map(Project::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
 
         if(c.equals(Sprint.class))
             return getSprints().map(ISprint::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
