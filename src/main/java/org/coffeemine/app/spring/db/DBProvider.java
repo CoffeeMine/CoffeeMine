@@ -17,10 +17,13 @@ public interface DBProvider {
     Stream<User> getUsers();
     User getUser(int id);
     void addUser(User user);
+    void removeUser(int id);
     Sprint getSprint(int id);
     void addSprint(Sprint sprint);
+    void removeSprint(int id);
     Task getTask(int id);
     void addTask(Task task);
+    void removeTask(int id);
     Integer account_id(String name, String hashpass);
 
     Integer idFor(Class<?> c);
