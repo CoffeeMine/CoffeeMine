@@ -5,7 +5,6 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import org.coffeemine.app.spring.data.ITask;
@@ -18,48 +17,41 @@ public class TaskModification extends Dialog {
 
     public TaskModification(int task_id, Consumer<ITask> callback) {
         super();
-        delete = new Button("Delete");
-        this.currentTask = currentTask;
-    }
+        final var task = NitriteDBProvider.getInstance().getTask(task_id);
 
-    public void taskEditing(FullCalendar AddedCalendar){
-        taskEditing();
-        delete.addClickListener(event -> {
-            AddedCalendar.removeEntry(currentEntry);
-            NitriteDBProvider.getInstance().removeTask(currentTask.getId());
-            Notification notification = new Notification(
-                    "Task " + currentTask.getName() + " is now deleted",
+        final var name = new TextField();
+        name.setValue(task.getName());
+        final var desc = new TextArea();
+        desc.setPlaceholder("Please provide a task description here");
+        desc.setValue(task.getDescription());
+        final var sprint_sel = new Select<>("Sprint 1", "Sprint 2", "Sprint 3");
+        sprint_sel.setPlaceholder("Assigning to sprint..");
+        sprint_sel.setValue("   ");
+
+        final var save = new Button("Save", e -> {
+            task.setName(name.getValue());
+            task.setDescription(desc.getValue());
+            //TODO update DB fields
+            callback.accept(task);
+            Notification.show(
+                    "Saved task " + task.getName(),
                     1100,
                     Notification.Position.BOTTOM_CENTER);
-            notification.open();
-            getDialog().close();
+            close();
         });
-    }
 
-    public void taskEditing(){
-        //Elements for the form
-        TextField taskName = new TextField();
-        taskName.setValue(currentTask.getName());
-        NumberField taskId = new NumberField();
-        taskId.setValue((double) currentTask.getId());
-        TextArea description = new TextArea();
-        description.setPlaceholder("Please provide task description here");
-        description.setValue(currentTask.getDescription());
-        Select<String> assignSprint = new Select<>("Sprint 1", "Sprint 2", "Sprint 3");
-        assignSprint.setPlaceholder("Assigning to sprint..");
-        assignSprint.setValue("   ");
-        getSave().setText("Save");
-        getSave().addClickListener(event -> {
-            currentTask.setName(taskName.getValue());
-            currentTask.setDescription(description.getValue());
-            Notification notification = new Notification(
-                    "Task " + currentTask.getName() + " is now saved",
+        final var reset = new Button("Reset");
+
+        final var delete = new Button("Delete", e -> {
+            NitriteDBProvider.getInstance().removeTask(task.getId());
+            callback.accept(null);
+            Notification.show(
+                    "Deleted task " + task.getName(),
                     1100,
                     Notification.Position.BOTTOM_CENTER);
-            notification.open();
-            getDialog().close();
+            close();
         });
-        Button reset = new Button("Reset");
+
 
         final var form = new FormLayout();
         form.add("Modifying Task #" + task.getId() + " " + task.getName());
