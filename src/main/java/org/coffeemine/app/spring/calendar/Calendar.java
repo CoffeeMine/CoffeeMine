@@ -21,6 +21,7 @@ import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -30,16 +31,26 @@ import java.time.format.DateTimeFormatter;
 class Calendar extends View {
     private FullCalendar calendar = new FullCalendar();
 
-    public Calendar(){
+    public Calendar() {
         super();
-        final var today = new Button("Today", event -> calendar.today());
-        final var previous = new Button("<< Previous", event -> calendar.previous());
-        final var next = new Button("Next >>",event -> calendar.next());
 
-        final var date_picker = new DatePicker();
+        final var date_picker = new DatePicker(LocalDate.now());
         date_picker.setPlaceholder("Date within this month");
         date_picker.setClearButtonVisible(true);
         date_picker.addValueChangeListener(event -> calendar.gotoDate(event.getValue()));
+
+        final var today = new Button("Today", event -> {
+            calendar.today();
+            date_picker.setValue(LocalDate.now());
+        });
+        final var previous = new Button("<< Previous", event -> {
+            calendar.previous();
+            date_picker.setValue(date_picker.getValue().minusDays(1));
+        });
+        final var next = new Button("Next >>", event -> {
+            calendar.next();
+            date_picker.setValue(date_picker.getValue().plusDays(1));
+        });
 
         final var select_view = new Select<>("Month", "Week", "Day");
         select_view.setPlaceholder("View as..");
@@ -56,7 +67,7 @@ class Calendar extends View {
         controls.add(previous, today, next, date_picker, select_view, event_creation);
 
         calendar.getStyle().set("z-index", "0");
-        final var date = new Text(LocalDateTime.now().format(DateTimeFormatter.ofPattern("d MMM yyyy")));
+        final var date = new Text(date_picker.getValue().format(DateTimeFormatter.ofPattern("d MMM yyyy")));
         calendar.setFirstDay(DayOfWeek.MONDAY);
         calendar.setBusinessHours();
         calendar.addEntryClickedListener(event -> openTask(event.getEntry()));
