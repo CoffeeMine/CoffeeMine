@@ -134,7 +134,7 @@ public class NitriteDBProvider implements DBProvider {
     public ISprint getCurrentSprint(Project project) {
         var now = LocalDate.now();
         return this.getSprints4Project(project)
-                .dropWhile(sprint -> !(sprint.getStart().isBefore(LocalDate.now()) && sprint.getEnd().isAfter(LocalDate.now()))).findFirst()
+                .dropWhile(sprint -> !(sprint.getStart().isBefore(now) && sprint.getEnd().isAfter(now))).findFirst()
                 .orElse(null);
     }
 
