@@ -17,6 +17,8 @@ public interface DBProvider {
     Stream<User> getUsers();
     User getUser(int id);
     Project getProject(int id);
+    Sprint getSprint(int id);
+    Task getTask(int id);
     void addUser(User user);
     void addProject(Project project);
     void addSprint(Sprint sprint);

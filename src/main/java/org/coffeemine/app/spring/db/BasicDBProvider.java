@@ -104,6 +104,16 @@ public class BasicDBProvider implements DBProvider {
     }
 
     @Override
+    public Sprint getSprint(int id) {
+        return sprints.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
+    }
+
+    @Override
+    public Task getTask(int id) {
+        return tasks.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
+    }
+
+    @Override
     public void addProject(Project project) {
         projects.add(project);
     }

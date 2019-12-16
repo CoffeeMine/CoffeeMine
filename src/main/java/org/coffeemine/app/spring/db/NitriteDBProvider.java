@@ -154,6 +154,16 @@ public class NitriteDBProvider implements DBProvider {
     }
 
     @Override
+    public Sprint getSprint(int id) {
+        return new Sprint().fromNO2Doc(db.getCollection("sprints").find(eq("id", id)).firstOrDefault());
+    }
+
+    @Override
+    public Task getTask(int id) {
+        return new Task().fromNO2Doc(db.getCollection("tasks").find(eq("id", id)).firstOrDefault());
+    }
+
+    @Override
     public void addProject(Project project) {
         db.getCollection("projects").insert(project.asNO2Doc());
         db.commit();
