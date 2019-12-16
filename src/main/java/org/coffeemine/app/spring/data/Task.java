@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 
 public class Task implements ITask {
-    private int id;
+    private int id = -1;
     @NotNull
     private String name = "";
     @NotNull
@@ -33,10 +33,6 @@ public class Task implements ITask {
     @Override
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     @Override

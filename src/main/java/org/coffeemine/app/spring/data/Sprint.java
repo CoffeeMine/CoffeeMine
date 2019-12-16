@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Sprint implements ISprint {
-    private int id;
+    private int id = -1;
     @NotNull
     private LocalDate start = LocalDate.EPOCH;
     @NotNull
@@ -32,10 +32,6 @@ public class Sprint implements ISprint {
     @Override
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     @Override
