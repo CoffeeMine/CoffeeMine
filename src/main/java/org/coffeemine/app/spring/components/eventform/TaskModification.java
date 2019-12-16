@@ -23,10 +23,17 @@ public class TaskModification extends EventForm{
         this.currentEntry = currentEntry;
     }
 
+    public TaskModification(Task currentTask){
+        super();
+        delete = new Button("Delete");
+        this.currentTask = currentTask;
+    }
+
     public void taskEditing(FullCalendar AddedCalendar){
         taskEditing();
         delete.addClickListener(event -> {
             AddedCalendar.removeEntry(currentEntry);
+            NitriteDBProvider.getInstance().removeTask(currentTask.getId());
             Notification notification = new Notification(
                     "Task " + currentTask.getName() + " is now deleted",
                     1100,
@@ -62,6 +69,7 @@ public class TaskModification extends EventForm{
         Button reset = new Button("Reset");
 
         //Adding the elements for the form
+        getNewForm().removeAll();
         getNewForm().add("Modifying Task #"+currentTask.getId()+" "+currentTask.getName());
         getNewForm().addFormItem(taskName, "Task Name");
         getNewForm().addFormItem(taskId, "Task ID");
@@ -69,6 +77,7 @@ public class TaskModification extends EventForm{
         getNewForm().addFormItem(description, "Task Description");
         getNewForm().add(getSave(), reset, delete);
 
+        getDialog().removeAll();
         getDialog().add(getNewForm());
         getDialog().open();
     }

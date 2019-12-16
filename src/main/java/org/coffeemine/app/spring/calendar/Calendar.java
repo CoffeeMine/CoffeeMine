@@ -13,7 +13,7 @@ import com.vaadin.flow.router.Route;
 
 import org.coffeemine.app.spring.components.eventform.SprintCreation;
 import org.coffeemine.app.spring.components.eventform.TaskCreation;
-import org.coffeemine.app.spring.components.eventform.TaskModification;
+import org.coffeemine.app.spring.components.eventform.TaskDetail;
 import org.coffeemine.app.spring.data.Sprint;
 import org.coffeemine.app.spring.data.Task;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
@@ -55,7 +55,6 @@ class Calendar extends View {
         selectView.addValueChangeListener(event -> this.changeCalendarView(event.getValue()));
 
         Button newSprint = new Button("New sprint", event -> this.createNewSprint());
-
         Button newTask = new Button("New task", event -> this.createNewTask());
 
         Div newEventCreation = new Div();
@@ -77,7 +76,49 @@ class Calendar extends View {
                 LocalDateTime.now().getDayOfMonth());
         systemCalendar.setFirstDay(DayOfWeek.MONDAY);
         systemCalendar.setBusinessHours();
-        systemCalendar.addEntryClickedListener(event -> this.editTask(event.getEntry()));
+        systemCalendar.addEntryClickedListener(event -> this.maintainTask(event.getEntry()));
+        updateCalendar();
+
+        calendar.add(calendarController);
+        calendar.add(date);
+        calendar.add(systemCalendar);
+
+        add(calendar);
+    }
+
+    void changeCalendarView(String viewName){
+        switch(viewName) {
+            case "Day":
+                systemCalendar.changeView(CalendarViewImpl.DAY_GRID_DAY);
+                Notification.show(viewName + " view now");
+                break;
+            case "Week":
+                systemCalendar.changeView(CalendarViewImpl.DAY_GRID_WEEK);
+                Notification.show(viewName + " view now");
+                break;
+            default:
+                systemCalendar.changeView(CalendarViewImpl.DAY_GRID_MONTH);
+                Notification.show(viewName + " view now");
+                break;
+        }
+    }
+
+    void createNewSprint(){
+        SprintCreation newSprint = new SprintCreation();
+        newSprint.sprintCreating(systemCalendar);
+    }
+
+    void createNewTask(){
+        TaskCreation newTask = new TaskCreation();
+        newTask.taskCreating(systemCalendar);
+    }
+
+    void maintainTask(Entry currentEntry){
+        TaskDetail taskDetail = new TaskDetail(Integer.parseInt(currentEntry.getId()));
+        taskDetail.taskDetail();
+    }
+
+    void updateCalendar(){
         Object[] sprints = NitriteDBProvider.getInstance().getSprints().toArray();
         Object[] tasks = NitriteDBProvider.getInstance().getTasks().toArray();
         for (Object sprint : sprints) {
@@ -107,44 +148,5 @@ class Calendar extends View {
                     castToTask.getDescription());
             systemCalendar.addEntry(newEntry);
         }
-
-        calendar.add(calendarController);
-        calendar.add(date);
-        calendar.add(systemCalendar);
-
-        add(calendar);
-    }
-
-    void changeCalendarView(String viewName){
-        switch(viewName) {
-            case "Day":
-                systemCalendar.changeView(CalendarViewImpl.DAY_GRID_DAY);
-                Notification.show(viewName + " view now");
-                break;
-            case "Week":
-                systemCalendar.changeView(CalendarViewImpl.DAY_GRID_WEEK);
-                Notification.show(viewName + " view now");
-                break;
-            default:
-                systemCalendar.changeView(CalendarViewImpl.DAY_GRID_MONTH);
-                Notification.show(viewName + " view now");
-                break;
-        }
-    }
-
-    void createNewSprint(){
-        SprintCreation newSprint = new SprintCreation();
-        newSprint.sprintCreating(systemCalendar);
-
-    }
-
-    void createNewTask(){
-        TaskCreation newTask = new TaskCreation();
-        newTask.taskCreating(systemCalendar);
-    }
-
-    void editTask(Entry currentEntry){
-        TaskModification taskEdit = new TaskModification(currentEntry);
-        taskEdit.taskEditing(systemCalendar);
     }
 }
