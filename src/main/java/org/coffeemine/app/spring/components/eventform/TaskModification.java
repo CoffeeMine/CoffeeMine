@@ -6,15 +6,15 @@ import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
-import org.coffeemine.app.spring.data.Task;
+import org.coffeemine.app.spring.data.ITask;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 
 public class TaskModification extends EventForm{
-    private Task currentTask;
+    private ITask currentTask;
     private Entry currentEntry;
-    Button delete;
+    private Button delete;
 
     public TaskModification(Entry currentEntry){
         super();

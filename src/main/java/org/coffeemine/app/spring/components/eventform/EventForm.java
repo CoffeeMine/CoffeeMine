@@ -5,25 +5,21 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 
 public abstract class EventForm {
-    private Dialog dialog;
-    private FormLayout newForm;
-    private Button save;
+    private Dialog dialog = new Dialog();
+    private FormLayout newForm = new FormLayout();
+    private Button save = new Button();
 
-    public EventForm(){
-        dialog = new Dialog();
-        newForm = new FormLayout();
-        save = new Button();
-    }
+    public EventForm(){ }
 
-    public Dialog getDialog() {
+    protected Dialog getDialog() {
         return dialog;
     }
 
-    public FormLayout getNewForm() {
+    protected FormLayout getNewForm() {
         return newForm;
     }
 
-    public Button getSave() {
+    protected Button getSave() {
         return save;
     }
 }

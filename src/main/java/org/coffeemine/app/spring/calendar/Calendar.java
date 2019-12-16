@@ -10,141 +10,133 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.Route;
-
+import org.coffeemine.app.spring.annonations.NavbarRoutable;
 import org.coffeemine.app.spring.components.eventform.SprintCreation;
 import org.coffeemine.app.spring.components.eventform.TaskCreation;
 import org.coffeemine.app.spring.components.eventform.TaskModification;
-import org.coffeemine.app.spring.data.Sprint;
-import org.coffeemine.app.spring.data.Task;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 import org.coffeemine.app.spring.view.View;
-import org.coffeemine.app.spring.annonations.NavbarRoutable;
 import org.vaadin.stefan.fullcalendar.CalendarViewImpl;
 import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Route
 @NavbarRoutable
 @CssImport("./styles/material-full-calendar.css")
 class Calendar extends View {
-    private FullCalendar systemCalendar;
-    private Text date;
-    HorizontalLayout calendarController;
-    VerticalLayout calendar;
+    private FullCalendar calendar = new FullCalendar();
 
-    Calendar(){
+    public Calendar(){
         super();
-        this.calendarController = new HorizontalLayout();
-        this.calendarController.setWidthFull();
-        this.calendar = new VerticalLayout();
+        final var today = new Button("Today", event -> calendar.today());
+        final var previous = new Button("<< Previous", event -> calendar.previous());
+        final var next = new Button("Next >>",event -> calendar.next());
 
-        Button today = new Button("Today", event -> systemCalendar.today());
-        Button previous = new Button("<< Previous", event -> systemCalendar.previous());
-        Button next = new Button("next >>",event -> systemCalendar.next());
+        final var date_picker = new DatePicker();
+        date_picker.setPlaceholder("Date within this month");
+        date_picker.setClearButtonVisible(true);
+        date_picker.addValueChangeListener(event -> calendar.gotoDate(event.getValue()));
 
-        DatePicker datePicker = new DatePicker();
-        datePicker.setPlaceholder("Date within this month");
-        datePicker.setClearButtonVisible(true);
-        datePicker.addValueChangeListener(event -> systemCalendar.gotoDate(event.getValue()));
+        final var select_view = new Select<>("Month", "Week", "Day");
+        select_view.setPlaceholder("View as..");
+        select_view.addValueChangeListener(event -> changeCalendarView(event.getValue()));
 
-        Select<String> selectView = new Select<>("Month", "Week", "Day");
-        selectView.setPlaceholder("View as..");
-        selectView.addValueChangeListener(event -> this.changeCalendarView(event.getValue()));
+        final var new_sprint = new Button("New sprint", e -> createSprint());
+        final var new_task = new Button("New task", e -> createTask());
 
-        Button newSprint = new Button("New sprint", event -> this.createNewSprint());
+        final var event_creation = new Div(new_sprint, new_task);
+        event_creation.getStyle().set("margin-left","auto");
 
-        Button newTask = new Button("New task", event -> this.createNewTask());
+        final var controls = new HorizontalLayout();
+        controls.setWidthFull();
+        controls.add(previous, today, next, date_picker, select_view, event_creation);
 
-        Div newEventCreation = new Div();
-        newEventCreation.add(newSprint);
-        newEventCreation.add(newTask);
-        newEventCreation.getStyle().set("margin-left","auto");
-
-        calendarController.add(previous);
-        calendarController.add(today);
-        calendarController.add(next);
-        calendarController.add(datePicker);
-        calendarController.add(selectView);
-        calendarController.add(newEventCreation);
-
-        systemCalendar = new FullCalendar();
-        systemCalendar.getStyle().set("z-index", "0");
-        date = new Text(LocalDateTime.now().getYear() + "  "
-                + LocalDateTime.now().getMonth().toString() + "  " +
-                LocalDateTime.now().getDayOfMonth());
-        systemCalendar.setFirstDay(DayOfWeek.MONDAY);
-        systemCalendar.setBusinessHours();
-        systemCalendar.addEntryClickedListener(event -> this.editTask(event.getEntry()));
-        Object[] sprints = NitriteDBProvider.getInstance().getSprints().toArray();
-        Object[] tasks = NitriteDBProvider.getInstance().getTasks().toArray();
-        for (Object sprint : sprints) {
-            Sprint castToSprint = (Sprint)sprint;
-            Entry newEntry = new Entry(
-                    Integer.toString(castToSprint.getId()),
-                    Integer.toString(castToSprint.getId()),
-                    castToSprint.getStart().atStartOfDay(),
-                    castToSprint.getEnd().plusDays(1).atStartOfDay(),
+        calendar.getStyle().set("z-index", "0");
+        final var date = new Text(LocalDateTime.now().format(DateTimeFormatter.ofPattern("d MMM yyyy")));
+        calendar.setFirstDay(DayOfWeek.MONDAY);
+        calendar.setBusinessHours();
+        calendar.addEntryClickedListener(event -> editTask(event.getEntry()));
+        NitriteDBProvider.getInstance().getSprints().forEach(sprint -> {
+            final var entry = new Entry(
+                    Integer.toString(sprint.getId()),
+                    Integer.toString(sprint.getId()),
+                    sprint.getStart().atStartOfDay(),
+                    sprint.getEnd().plusDays(1).atStartOfDay(),
                     true,
                     true,
                     "red",
                     "");
-            newEntry.setRenderingMode(Entry.RenderingMode.BACKGROUND);
-            systemCalendar.addEntry(newEntry);
-        }
-        for (Object task : tasks) {
-            Task castToTask = (Task) task;
-            Entry newEntry = new Entry(
-                    Integer.toString(castToTask.getId()),
-                    castToTask.getName(),
+            entry.setRenderingMode(Entry.RenderingMode.BACKGROUND);
+            calendar.addEntry(entry);
+        });
+        NitriteDBProvider.getInstance().getTasks().forEach(task -> {
+            final var entry = new Entry(
+                    Integer.toString(task.getId()),
+                    task.getName(),
                     LocalDateTime.now(),
-                    LocalDateTime.of(2019, 11, 28, 12, 00),
+                    LocalDateTime.of(2019, 11, 28, 12, 0),
                     true,
                     true,
                     " dodgerblue",
-                    castToTask.getDescription());
-            systemCalendar.addEntry(newEntry);
-        }
+                    task.getDescription());
+            calendar.addEntry(entry);
+        });
 
-        calendar.add(calendarController);
-        calendar.add(date);
-        calendar.add(systemCalendar);
-
-        add(calendar);
+        final var container = new VerticalLayout(controls, date, calendar);
+        add(container);
     }
 
-    void changeCalendarView(String viewName){
-        switch(viewName) {
+    void changeCalendarView(String view_name){
+        switch(view_name) {
             case "Day":
-                systemCalendar.changeView(CalendarViewImpl.DAY_GRID_DAY);
-                Notification.show(viewName + " view now");
+                calendar.changeView(CalendarViewImpl.DAY_GRID_DAY);
                 break;
             case "Week":
-                systemCalendar.changeView(CalendarViewImpl.DAY_GRID_WEEK);
-                Notification.show(viewName + " view now");
+                calendar.changeView(CalendarViewImpl.DAY_GRID_WEEK);
                 break;
             default:
-                systemCalendar.changeView(CalendarViewImpl.DAY_GRID_MONTH);
-                Notification.show(viewName + " view now");
-                break;
+                calendar.changeView(CalendarViewImpl.DAY_GRID_MONTH);
         }
+        Notification.show(view_name + " view now");
     }
 
-    void createNewSprint(){
-        SprintCreation newSprint = new SprintCreation();
-        newSprint.sprintCreating(systemCalendar);
-
+    private void createSprint(){
+        new SprintCreation(s -> {
+            final var entry = new Entry(
+                    Integer.toString(s.getId()),
+                    Integer.toString(s.getId()),
+                    s.getStart().atStartOfDay(),
+                    s.getEnd().plusDays(1).atStartOfDay(),
+                    true,
+                    true,
+                    "red",
+                    "");
+            entry.setRenderingMode(Entry.RenderingMode.BACKGROUND);
+            calendar.addEntry(entry);
+        });
     }
 
-    void createNewTask(){
-        TaskCreation newTask = new TaskCreation();
-        newTask.taskCreating(systemCalendar);
+    private void createTask(){
+        new TaskCreation(task -> {
+            final var entry = new Entry(
+                    Integer.toString(task.getId()),
+                    task.getName(),
+                    LocalDateTime.now(),
+                    LocalDateTime.of(2019, 11, 28, 12, 0),
+                    true,
+                    true,
+                    " dodgerblue",
+                    task.getDescription());
+            calendar.addEntry(entry);
+        });
     }
 
-    void editTask(Entry currentEntry){
+    private void editTask(Entry currentEntry){
         TaskModification taskEdit = new TaskModification(currentEntry);
-        taskEdit.taskEditing(systemCalendar);
+        taskEdit.taskEditing(calendar);
     }
 }
