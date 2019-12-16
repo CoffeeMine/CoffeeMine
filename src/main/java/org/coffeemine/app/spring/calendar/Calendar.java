@@ -11,9 +11,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.Route;
 
-import org.coffeemine.app.spring.components.eventform.SprintCreation;
-import org.coffeemine.app.spring.components.eventform.TaskCreation;
-import org.coffeemine.app.spring.components.eventform.TaskDetail;
+import org.coffeemine.app.spring.components.EventsDialog.SprintCreation;
+import org.coffeemine.app.spring.components.EventsDialog.TaskCreation;
+import org.coffeemine.app.spring.components.EventsDialog.TaskDetail;
 import org.coffeemine.app.spring.data.Sprint;
 import org.coffeemine.app.spring.data.Task;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
@@ -105,17 +105,26 @@ class Calendar extends View {
 
     void createNewSprint(){
         SprintCreation newSprint = new SprintCreation();
-        newSprint.sprintCreating(systemCalendar);
+        newSprint.open();
+        newSprint.addDetachListener(event -> {
+            updateCalendar();
+        });
     }
 
     void createNewTask(){
         TaskCreation newTask = new TaskCreation();
-        newTask.taskCreating(systemCalendar);
+        newTask.open();
+        newTask.addDetachListener(event -> {
+            updateCalendar();
+        });
     }
 
     void maintainTask(Entry currentEntry){
         TaskDetail taskDetail = new TaskDetail(Integer.parseInt(currentEntry.getId()));
-        taskDetail.taskDetail();
+        taskDetail.open();
+        taskDetail.addDetachListener(event -> {
+            updateCalendar();
+        });
     }
 
     void updateCalendar(){

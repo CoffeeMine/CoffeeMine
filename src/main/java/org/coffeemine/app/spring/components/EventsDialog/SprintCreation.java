@@ -1,49 +1,34 @@
-package org.coffeemine.app.spring.components.eventform;
+package org.coffeemine.app.spring.components.EventsDialog;
 
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import org.coffeemine.app.spring.data.Sprint;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
-import org.vaadin.stefan.fullcalendar.Entry;
-import org.vaadin.stefan.fullcalendar.FullCalendar;
 
 import java.time.LocalDate;
 
-public class SprintCreation extends EventForm{
+public class SprintCreation extends Dialog {
     private Sprint sprint;
 
     public SprintCreation() {
         super();
         sprint = new Sprint();
-    }
+        FormLayout newForm = new FormLayout();
 
-    public void sprintCreating(FullCalendar AddedCalendar) {
-        sprintCreating();
-        getSave().addClickListener(event ->{
-            Entry newEntry = new Entry(
-                    Integer.toString(sprint.getId()),
-                    Integer.toString(sprint.getId()),
-                    sprint.getStart().atStartOfDay(),
-                    sprint.getEnd().plusDays(1).atStartOfDay(),
-                    true,
-                    true,
-                    "red",
-                    "");
-            newEntry.setRenderingMode(Entry.RenderingMode.BACKGROUND);
-            AddedCalendar.addEntry(newEntry);
-        });
-    }
-
-    public void sprintCreating() {
         Text title = new Text("Sprint" + " x");
+
         DatePicker startTime = new DatePicker();
         startTime.setValue(LocalDate.now());
+
         DatePicker endTime = new DatePicker();
         endTime.setValue(LocalDate.now());
-        getSave().setText("Create");
-        getSave().addClickListener(event -> {
+
+        Button create = new Button("Create");
+        create.addClickListener(event -> {
             sprint.setId(NitriteDBProvider.getInstance().idFor(sprint.getClass()));
             sprint.setStart(startTime.getValue());
             sprint.setEnd((endTime.getValue()));
@@ -53,17 +38,16 @@ public class SprintCreation extends EventForm{
                     1100,
                     Notification.Position.BOTTOM_CENTER);
             notification.open();
-            getDialog().close();
+            this.close();
         });
         Button reset = new Button("Reset");
 
-        getNewForm().add(title);
-        getNewForm().addFormItem(startTime, "Start Time");
-        getNewForm().addFormItem(endTime, "End Time");
-        getNewForm().add(getSave(), reset);
+        newForm.add(title);
+        newForm.addFormItem(startTime, "Start Time");
+        newForm.addFormItem(endTime, "End Time");
+        newForm.add(create, reset);
 
-        getDialog().add(getNewForm());
-        getDialog().open();
+        this.add(newForm);
     }
 
     public Sprint getNewSprint() {
