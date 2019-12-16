@@ -31,7 +31,7 @@ public class StatisticsCalculation {
     public int actualValue(ITask task) {
         int actualValue = 0;
         if (task.getCompleted()) {
-            List<Integer> days = dbProvider.getFragments4Task(task).map(Fragment::getDays).collect(Collectors.toList());
+            List<Integer> days = dbProvider.getFragments4Task(task).map(Fragment::getHours).collect(Collectors.toList());
             int sumOfDays = days.stream().mapToInt(Integer::intValue).sum();
 
             actualValue = sumOfDays * getSalary(task) * task.getHours();
