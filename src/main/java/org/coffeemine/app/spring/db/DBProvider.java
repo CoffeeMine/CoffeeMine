@@ -16,12 +16,10 @@ public interface DBProvider {
     Stream<Fragment> getFragments4User(User task);
     Stream<User> getUsers();
     User getUser(int id);
-    void addUser(User user);
-    Sprint getSprint(int id);
-    void addSprint(Sprint sprint);
-    Task getTask(int id);
-    void addTask(Task task);
+    int addUser(User user);
+    ISprint getSprint(int id);
+    int addSprint(ISprint sprint);
+    ITask getTask(int id);
+    int addTask(ITask task);
     Integer account_id(String name, String hashpass);
-
-    Integer idFor(Class<?> c);
 }

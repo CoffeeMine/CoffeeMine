@@ -16,8 +16,8 @@ public class BasicDBProvider implements DBProvider {
     static private BasicDBProvider instance = new BasicDBProvider();
 
     private ArrayList<Project> projects = new ArrayList<>();
-    private ArrayList<Sprint> sprints = new ArrayList<>();
-    private ArrayList<Task> tasks = new ArrayList<>();
+    private ArrayList<ISprint> sprints = new ArrayList<>();
+    private ArrayList<ITask> tasks = new ArrayList<>();
     private ArrayList<Fragment> fragments = new ArrayList<>();
     private ArrayList<User> users = new ArrayList<>();
 
@@ -58,7 +58,7 @@ public class BasicDBProvider implements DBProvider {
 
     @Override
     public Stream<ISprint> getSprints4Project(Project project) {
-        return sprints.stream().filter(sprint -> project.getSprints().contains(sprint.getId())).map(t -> t);
+        return sprints.stream().filter(sprint -> project.getSprints().contains(sprint.getId()));
     }
 
     @Override
@@ -66,12 +66,12 @@ public class BasicDBProvider implements DBProvider {
         final var task_ids = getSprints4Project(project)
                 .flatMap(s -> s.getTasks().stream())
                 .collect(Collectors.toList());
-        return tasks.stream().filter(task -> task_ids.contains(task.getId())).map(t -> t);
+        return tasks.stream().filter(task -> task_ids.contains(task.getId()));
     }
 
     @Override
     public Stream<ITask> getTasks4Sprint(ISprint sprint) {
-        return tasks.stream().filter(task -> sprint.getTasks().contains(task.getId())).map(t -> t);
+        return tasks.stream().filter(task -> sprint.getTasks().contains(task.getId()));
     }
 
     @Override
@@ -95,28 +95,31 @@ public class BasicDBProvider implements DBProvider {
     }
 
     @Override
-    public void addUser(User user) {
+    public int addUser(User user) {
         users.add(user);
+        return user.getId();
     }
 
     @Override
-    public Sprint getSprint(int id) {
+    public ISprint getSprint(int id) {
         return sprints.stream().filter(u -> u.getId() == id).findFirst().orElse(null);
     }
 
     @Override
-    public void addSprint(Sprint sprint) {
+    public int addSprint(ISprint sprint) {
         sprints.add(sprint);
+        return sprint.getId();
     }
 
     @Override
-    public Task getTask(int id) {
+    public ITask getTask(int id) {
         return tasks.stream().filter(u -> u.getId() == id).findFirst().orElse(null);
     }
 
     @Override
-    public void addTask(Task task) {
+    public int addTask(ITask task) {
         tasks.add(task);
+        return task.getId();
     }
 
     @Override
@@ -127,17 +130,16 @@ public class BasicDBProvider implements DBProvider {
         return acc.isPresent() ? acc.get().getId() : null;
     }
 
-    @Override
     public Integer idFor(Class<?> c) {
         final Integer v = new Random().nextInt();
 
         if(c.equals(User.class))
             return getUsers().map(User::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
 
-        if(c.equals(Sprint.class))
+        if(c.equals(ISprint.class))
             return sprints.stream().map(ISprint::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
 
-        if(c.equals(Task.class))
+        if(c.equals(ITask.class))
             return tasks.stream().map(ITask::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
 
         if(c.equals(Fragment.class))

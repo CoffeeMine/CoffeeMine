@@ -134,31 +134,40 @@ public class NitriteDBProvider implements DBProvider {
     }
 
     @Override
-    public void addUser(User user) {
+    public int addUser(User user) {
         db.getCollection("users").insert(user.asNO2Doc());
         db.commit();
+        return user.getId();
     }
 
     @Override
-    public Sprint getSprint(int id) {
+    public ISprint getSprint(int id) {
         return new Sprint().fromNO2Doc(db.getCollection("sprints").find(eq("id", id)).firstOrDefault());
     }
 
     @Override
-    public void addSprint(Sprint sprint) {
-        db.getCollection("sprints").insert(sprint.asNO2Doc());
+    public int addSprint(ISprint sprint) {
+        final var doc = sprint.asNO2Doc();
+        final var id = idFor(ISprint.class);
+        doc.replace("id", id);
+        db.getCollection("sprints").insert(doc);
         db.commit();
+        return id;
     }
 
     @Override
-    public Task getTask(int id) {
+    public ITask getTask(int id) {
         return new Task().fromNO2Doc(db.getCollection("tasks").find(eq("id", id)).firstOrDefault());
     }
 
     @Override
-    public void addTask(Task task) {
-        db.getCollection("tasks").insert(task.asNO2Doc());
+    public int addTask(ITask task) {
+        final var doc = task.asNO2Doc();
+        final var id = idFor(ITask.class);
+        doc.replace("id", id);
+        db.getCollection("tasks").insert(doc);
         db.commit();
+        return id;
     }
 
     @Override
@@ -173,18 +182,16 @@ public class NitriteDBProvider implements DBProvider {
         return null;
     }
 
-    @Override
-    public Integer idFor(Class<?> c) {
-        final Integer v = new Random().nextInt();
+    private int idFor(Class<?> c) {
+        final int v = new Random().nextInt();
 
         if(c.equals(User.class))
             return getUsers().map(User::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
 
-
-        if(c.equals(Sprint.class))
+        if(c.equals(ISprint.class))
             return getSprints().map(ISprint::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
 
-        if(c.equals(Task.class))
+        if(c.equals(ITask.class))
             return getTasks().map(ITask::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
 
         if(c.equals(Fragment.class))
