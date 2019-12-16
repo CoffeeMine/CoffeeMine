@@ -35,6 +35,10 @@ public class Task implements ITask {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public @NotNull String getName() {
         return name;

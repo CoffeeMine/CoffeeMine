@@ -14,7 +14,6 @@ public class NitriteDBProvider implements DBProvider {
     static private NitriteDBProvider instance = null;
     private Nitrite db;
 
-
     public NitriteDBProvider(String filename) {
         db = Nitrite.builder()
                 .compressed()
@@ -72,12 +71,12 @@ public class NitriteDBProvider implements DBProvider {
                 .find().toList().stream().map(d -> new Project().fromNO2Doc(d));
     }
 
-    private Stream<ISprint> getSprints() {
+    public Stream<ISprint> getSprints() {
         return db.getCollection("sprints")
                 .find().toList().stream().map(d -> new Sprint().fromNO2Doc(d));
     }
 
-    private Stream<ITask> getTasks() {
+    public Stream<ITask> getTasks() {
         return db.getCollection("tasks")
                 .find().toList().stream().map(d -> new Task().fromNO2Doc(d));
     }
@@ -137,6 +136,28 @@ public class NitriteDBProvider implements DBProvider {
     @Override
     public void addUser(User user) {
         db.getCollection("users").insert(user.asNO2Doc());
+        db.commit();
+    }
+
+    @Override
+    public Sprint getSprint(int id) {
+        return new Sprint().fromNO2Doc(db.getCollection("sprints").find(eq("id", id)).firstOrDefault());
+    }
+
+    @Override
+    public void addSprint(Sprint sprint) {
+        db.getCollection("sprints").insert(sprint.asNO2Doc());
+        db.commit();
+    }
+
+    @Override
+    public Task getTask(int id) {
+        return new Task().fromNO2Doc(db.getCollection("tasks").find(eq("id", id)).firstOrDefault());
+    }
+
+    @Override
+    public void addTask(Task task) {
+        db.getCollection("tasks").insert(task.asNO2Doc());
         db.commit();
     }
 

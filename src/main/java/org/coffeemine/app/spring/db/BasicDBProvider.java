@@ -47,6 +47,16 @@ public class BasicDBProvider implements DBProvider {
     }
 
     @Override
+    public Stream<ISprint> getSprints() {
+        return null;
+    }
+
+    @Override
+    public Stream<ITask> getTasks() {
+        return null;
+    }
+
+    @Override
     public Stream<ISprint> getSprints4Project(Project project) {
         return sprints.stream().filter(sprint -> project.getSprints().contains(sprint.getId())).map(t -> t);
     }
@@ -87,6 +97,26 @@ public class BasicDBProvider implements DBProvider {
     @Override
     public void addUser(User user) {
         users.add(user);
+    }
+
+    @Override
+    public Sprint getSprint(int id) {
+        return sprints.stream().filter(u -> u.getId() == id).findFirst().orElse(null);
+    }
+
+    @Override
+    public void addSprint(Sprint sprint) {
+        sprints.add(sprint);
+    }
+
+    @Override
+    public Task getTask(int id) {
+        return tasks.stream().filter(u -> u.getId() == id).findFirst().orElse(null);
+    }
+
+    @Override
+    public void addTask(Task task) {
+        tasks.add(task);
     }
 
     @Override
