@@ -5,6 +5,7 @@ import elemental.json.impl.JreJsonFactory;
 import org.coffeemine.app.spring.data.*;
 import org.dizitart.no2.Nitrite;
 
+import java.time.LocalDate;
 import java.util.Random;
 import java.util.stream.Stream;
 
@@ -124,6 +125,19 @@ public class NitriteDBProvider implements DBProvider {
     }
 
     @Override
+    public Project getCurrentProject(User user) {
+        return this.getProject(user.getCurrentProject());
+    }
+
+    @Override
+    public ISprint getCurrentSprint(Project project) {
+        var now = LocalDate.now();
+        return this.getSprints4Project(project)
+                .dropWhile(sprint -> !(sprint.getStart().isBefore(now) && sprint.getEnd().isAfter(now))).findFirst()
+                .orElse(null);
+    }
+
+    @Override
     public Stream<User> getUsers() {
         return db.getCollection("users").find().toList().stream().map(d -> new User().fromNO2Doc(d));
     }
@@ -131,6 +145,27 @@ public class NitriteDBProvider implements DBProvider {
     @Override
     public User getUser(int id) {
         return new User().fromNO2Doc(db.getCollection("users").find(eq("id", id)).firstOrDefault());
+    }
+
+    @Override
+    public Project getProject(int id) {
+        return new Project().fromNO2Doc(db.getCollection("projects").find(eq("id", id)).firstOrDefault());
+    }
+
+    @Override
+    public void addProject(Project project) {
+        db.getCollection("projects").insert(project.asNO2Doc());
+        db.commit();
+    }
+
+    @Override
+    public void addFragment(Fragment fragment) {
+        final var doc = sprint.asNO2Doc();
+        final var id = idFor(Fragment.class);
+        doc.replace("id", id);
+        db.getCollection("fragments").insert(doc);
+        db.commit();
+        return id;
     }
 
     @Override
@@ -197,6 +232,9 @@ public class NitriteDBProvider implements DBProvider {
 
         if(c.equals(User.class))
             return getUsers().map(User::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
+
+        if(c.equals(Project.class))
+            return getProjects().map(Project::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
 
         if(c.equals(ISprint.class))
             return getSprints().map(ISprint::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;

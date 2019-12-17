@@ -85,6 +85,19 @@ public class BasicDBProvider implements DBProvider {
     }
 
     @Override
+    public Project getCurrentProject(User user) {
+        return this.getProject(user.getCurrentProject());
+    }
+
+    @Override
+    public ISprint getCurrentSprint(Project project) {
+        var now = LocalDate.now();
+        return this.sprints.stream()
+                .dropWhile(sprint -> !(sprint.getStart().isBefore(now) && sprint.getEnd().isAfter(now))).findFirst()
+                .orElse(null);
+    }
+
+    @Override
     public Stream<User> getUsers() {
         return users.stream();
     }
@@ -145,6 +158,9 @@ public class BasicDBProvider implements DBProvider {
 
         if(c.equals(User.class))
             return getUsers().map(User::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
+
+        if(c.equals(Project.class))
+            return getProjects().map(Project::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
 
         if(c.equals(ISprint.class))
             return sprints.stream().map(ISprint::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;

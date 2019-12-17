@@ -13,9 +13,14 @@ public interface DBProvider {
     Stream<ITask> getTasks4Project(Project project);
     Stream<ITask> getTasks4Sprint(ISprint sprint);
     Stream<Fragment> getFragments4Task(ITask task);
-    Stream<Fragment> getFragments4User(User task);
+    Stream<Fragment> getFragments4User(User user);
+    Project getCurrentProject(User user);
+    ISprint getCurrentSprint(Project project);
     Stream<User> getUsers();
     User getUser(int id);
+    Project getProject(int id);
+    void addProject(Project project);
+    void addFragment(Fragment fragment);
     int addUser(User user);
     ISprint getSprint(int id);
     int addSprint(ISprint sprint);

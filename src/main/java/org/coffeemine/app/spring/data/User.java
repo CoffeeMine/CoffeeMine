@@ -16,6 +16,7 @@ public class User implements NO2Serializable {
     private String name;
     private float hourly_salary = 0;
     private Status status;
+    private int current_proj = -1;
 
     private String account_name;
     private String account_passhash;
@@ -63,6 +64,14 @@ public class User implements NO2Serializable {
         this.status = status;
     }
 
+    public int getCurrentProject() {
+        return this.current_proj;
+    }
+
+    public void setCurrentProject(int proj) {
+        this.current_proj = proj;
+    }  
+
     public String getAccountName() {
         return account_name;
     }
@@ -85,6 +94,7 @@ public class User implements NO2Serializable {
                 .put("name", name)
                 .put("salary", hourly_salary)
                 .put("status", status)
+                .put("current_proj", current_proj)
                 .put("account_name", account_name)
                 .put("account_passhash", account_passhash);
     }
@@ -98,6 +108,7 @@ public class User implements NO2Serializable {
         name = doc.get("name", String.class);
         hourly_salary = doc.get("salary", Float.class);
         status = doc.get("status", User.Status.class);
+        current_proj = doc.get("current_proj", Integer.class);
         account_name = doc.get("account_name", String.class);
         account_passhash = doc.get("account_passhash", String.class);
         return this;

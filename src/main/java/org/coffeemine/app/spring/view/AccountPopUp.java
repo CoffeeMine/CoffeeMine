@@ -8,7 +8,11 @@ import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+
+import org.coffeemine.app.spring.auth.BasicAccessControl;
+import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.components.LetterIcon;
+import org.coffeemine.app.spring.data.User;
 import org.coffeemine.app.spring.userprofile.UserProfile;
 
 class AccountPopUp extends VerticalLayout {
@@ -20,7 +24,10 @@ class AccountPopUp extends VerticalLayout {
         this.setAlignItems(Alignment.CENTER);
 
         this.setWidth("350px");
-        String userName = "John Bob";
+
+        User user = CurrentUser.get();
+        String userName = (user == null) ? "No User" : user.getName();
+
         H3 accountFullname = new H3(userName);
         LetterIcon letterIcon = new LetterIcon(userName.substring(0, 1));
         Text currentProject = new Text("CoffeeMine");
@@ -45,7 +52,7 @@ class AccountPopUp extends VerticalLayout {
         Button detailsButton = new Button("Details", e -> UI.getCurrent().navigate(UserProfile.class));
         detailsButton.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
 
-        Button logoutButton = new Button("Log out");
+        Button logoutButton = new Button("Log out", e -> BasicAccessControl.getInstance().signOut());
         logoutButton.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
         logoutButton.getStyle().set("margin-left", "auto");
 

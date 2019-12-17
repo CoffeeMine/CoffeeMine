@@ -1,38 +1,21 @@
 package org.coffeemine.app.spring.auth;
 
-import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.WrappedSession;
 
-import java.util.Objects;
+import org.coffeemine.app.spring.data.User;
+import org.coffeemine.app.spring.db.NitriteDBProvider;
 
-/**
- * Class for retrieving and setting the name of the current user of the current
- * session (without using JAAS). All methods of this class require that a
- * {@link VaadinRequest} is bound to the current thread.
- *
- *
- * @see com.vaadin.flow.server.VaadinService#getCurrentRequest()
- */
 public final class CurrentUser {
+    private static User currentUser = null;
 
-    /**
-     * The attribute key used to store the username in the session.
-     */
     public static final String CURRENT_USER_SESSION_ATTRIBUTE_KEY = CurrentUser.class.getCanonicalName();
 
     private CurrentUser() {
     }
 
-    /**
-     * Returns the name of the current user stored in the current session, or an
-     * empty string if no user name is stored.
-     *
-     * @throws IllegalStateException
-     *             if the current session cannot be accessed.
-     */
-    public static String get() {
-        return Objects.requireNonNullElse((String) getCurrentHttpSession().getAttribute(CURRENT_USER_SESSION_ATTRIBUTE_KEY), "");
+    public static User get() {
+        return currentUser;
     }
 
     private static WrappedSession getCurrentHttpSession() {
@@ -43,18 +26,14 @@ public final class CurrentUser {
         return va_session.getSession();
     }
 
-    /**
-     * Sets the name of the current user and stores it in the current session.
-     * Using a {@code null} username will remove the username from the session.
-     *
-     * @throws IllegalStateException
-     *             if the current session cannot be accessed.
-     */
-    public static void set(String currentUser) {
-        if (currentUser == null)
+    public static void set(Integer userId) {
+        if (userId == null) {
             getCurrentHttpSession().removeAttribute(CURRENT_USER_SESSION_ATTRIBUTE_KEY);
-        else
-            getCurrentHttpSession().setAttribute(CURRENT_USER_SESSION_ATTRIBUTE_KEY, currentUser);
+            currentUser = null;
+        } else {
+            getCurrentHttpSession().setAttribute(CURRENT_USER_SESSION_ATTRIBUTE_KEY, userId);
+            currentUser = NitriteDBProvider.getInstance().getUser(userId);
+        }
     }
 
 }

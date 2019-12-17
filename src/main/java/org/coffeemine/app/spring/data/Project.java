@@ -10,13 +10,22 @@ import java.util.ArrayList;
 
 public class Project implements JsonSerializable, NO2Serializable {
     private String name = "Unnamed";
+    private int id;
     private ArrayList<Integer> sprints = new ArrayList<>();
 
     public Project() {}
-    public Project(String name) { this.name = name; }
+    
+    public Project(String name, int id) { 
+        this.name = name;
+        this.id = id;
+    }
 
     public String getName() {
         return name;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public void setName(String name) {
@@ -25,6 +34,10 @@ public class Project implements JsonSerializable, NO2Serializable {
 
     public ArrayList<Integer> getSprints() {
         return sprints;
+    }
+
+    public void addSprint(int sprint) {
+        sprints.add(sprint);
     }
 
     @Override
@@ -55,6 +68,7 @@ public class Project implements JsonSerializable, NO2Serializable {
     @Override
     public Document asNO2Doc() {
         return Document.createDocument("name", name)
+                .put("id", id)
                 .put("sprints", sprints);
     }
 
@@ -64,6 +78,7 @@ public class Project implements JsonSerializable, NO2Serializable {
             return null;
 
         name = doc.get("name", String.class);
+        id = doc.get("id", Integer.class);
         sprints = ((ArrayList<Integer>) doc.get("sprints"));
         return this;
     }

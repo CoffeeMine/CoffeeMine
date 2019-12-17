@@ -4,7 +4,10 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+
+import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.components.LetterIcon;
+import org.coffeemine.app.spring.data.User;
 
 public class TopBar extends HorizontalLayout {
 
@@ -38,7 +41,9 @@ public class TopBar extends HorizontalLayout {
         clickhack.addClassName("clickhack");
         clickhack.setVisible(false);
 
-        String userName = "John Bob";
+        User user = CurrentUser.get();
+        String userName = (user == null) ? "No User" : user.getName();
+
         LetterIcon AccountButton = new LetterIcon(userName.substring(0, 1));
         AccountButton.getStyle().set("font-size", "30px");
 
