@@ -25,7 +25,7 @@ public class Task implements ITask {
 
     public Task() { }
 
-    public Task(int id, @NotNull String name, @NotNull String description, @NotNull int hours, @NotNull boolean completed, @NotNull ArrayList<Integer> assignees, @NotNull ArrayList<Integer> fragments, ArrayList<String> commits) {
+    public Task(int id, @NotNull String name, @NotNull String description, int hours, boolean completed, @NotNull ArrayList<Integer> assignees, @NotNull ArrayList<Integer> fragments, ArrayList<String> commits) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -62,16 +62,24 @@ public class Task implements ITask {
     }
 
     @Override
-    public @NotNull int getHours() { return hours; }
+    public int getHours() {
+        return hours;
+    }
 
     @Override
-    public void setHours (@NotNull int hours) { this.hours = hours; }
+    public void setHours(int hours) {
+        this.hours = hours;
+    }
 
     @Override
-    public @NotNull boolean getCompleted() { return completed; }
+    public boolean isCompleted() {
+        return completed;
+    }
 
     @Override
-    public void setCompleted(@NotNull boolean completed) { this.completed = completed; }
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
 
     @Override
     public @NotNull ArrayList<Integer> getAssignees() {
