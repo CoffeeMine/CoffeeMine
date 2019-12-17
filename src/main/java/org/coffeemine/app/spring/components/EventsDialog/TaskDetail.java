@@ -34,5 +34,6 @@ public class TaskDetail extends Dialog {
         form.add(edit);
 
         add(form);
+        open();
     }
 }

@@ -18,19 +18,15 @@ public class SprintCreation extends Dialog {
 
     public SprintCreation(Consumer<ISprint> callback) {
         super();
-        final var create = new Button("Create");
-        create.addClickListener(e -> callback.accept(sprint));
-        render(create);
-    }
 
-    private void render(Button create) {
         final var title = new Text("Sprint" + " x");
         final var start_time = new DatePicker(LocalDate.now());
         final var end_time = new DatePicker(LocalDate.now());
-        create.addClickListener(event -> {
+        final var create = new Button("Create", event -> {
             sprint.setStart(start_time.getValue());
             sprint.setEnd((end_time.getValue()));
             final var id = NitriteDBProvider.getInstance().addSprint(sprint);
+            callback.accept(sprint);
             Notification.show(
                     "Sprint " + id + " is now added",
                     1100,

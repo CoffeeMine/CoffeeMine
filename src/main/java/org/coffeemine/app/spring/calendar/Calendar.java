@@ -111,37 +111,15 @@ class Calendar extends View {
     }
 
     private void createSprint(){
-        new SprintCreation(s -> {
-            final var entry = new Entry(
-                    Integer.toString(s.getId()),
-                    Integer.toString(s.getId()),
-                    s.getStart().atStartOfDay(),
-                    s.getEnd().plusDays(1).atStartOfDay(),
-                    true,
-                    true,
-                    "red",
-                    "");
-            entry.setRenderingMode(Entry.RenderingMode.BACKGROUND);
-            calendar.addEntry(entry);
-        });
+        new SprintCreation(s -> updateEvents());
     }
 
     private void createTask(){
-        new TaskCreation(task -> {
-            final var entry = new Entry(
-                    Integer.toString(task.getId()),
-                    task.getName(),
-                    LocalDateTime.now(),
-                    LocalDateTime.of(2019, 11, 28, 12, 0),
-                    true,
-                    true,
-                    "dodgerblue",
-                    task.getDescription());
-            calendar.addEntry(entry);
-        });
+        new TaskCreation(t -> updateEvents());
     }
 
     private void openTask(Entry currentEntry) {
+        System.out.println("Calendar.openTask");
         new TaskDetail(Integer.parseInt(currentEntry.getId()), t -> updateEvents());
     }
 }

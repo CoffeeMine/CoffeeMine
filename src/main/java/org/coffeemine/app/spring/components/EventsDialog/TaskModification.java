@@ -61,6 +61,7 @@ public class TaskModification extends Dialog {
         form.add(save, reset, delete);
 
         add(form);
+        open();
     }
 
 }

@@ -18,12 +18,7 @@ public class TaskCreation extends Dialog {
 
     public TaskCreation(Consumer<ITask> callback) {
         super();
-        final var create_btn = new Button("Create");
-        create_btn.addClickListener(e -> callback.accept(task));
-        render(create_btn);
-    }
 
-    private void render(Button create_btn) {
         final var name = new TextField();
         final var desc = new TextArea();
         desc.setPlaceholder("Please provide task description here");
@@ -31,10 +26,11 @@ public class TaskCreation extends Dialog {
         assignees_sel.setPlaceholder("Assigning to..");
         final var sprint_sel = new Select<>("Sprint 1", "Sprint 2", "Sprint 3");
         sprint_sel.setPlaceholder("Assigning to sprint..");
-        create_btn.addClickListener(event -> {
+        final var create_btn = new Button("Create", event -> {
             task.setName(name.getValue());
             task.setDescription(desc.getValue());
             NitriteDBProvider.getInstance().addTask(task);
+            callback.accept(task);
             Notification notification = new Notification(
                     "Added task #" + task.getId() +
                             " " + task.getName(),
