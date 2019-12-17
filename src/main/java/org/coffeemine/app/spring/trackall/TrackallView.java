@@ -108,8 +108,8 @@ public class TrackallView extends View {
 
         final var people_collapse = new Collapsible(false,
                 new VerticalLayout(
-                    new Span("Assignee: " + ti.getAssignee()),
-                    new Span("Reporter: " + ti.getReporter()))
+                        new Span("Assignee: " + (ti.getAssignee() < 0 ? "N/A" : NitriteDBProvider.getInstance().getUser(ti.getAssignee()).getName())),
+                        new Span("Reporter: " + NitriteDBProvider.getInstance().getUser(ti.getReporter()).getName()))
         );
         final var people_toggle = new Button("People", e -> people_collapse.toggle());
         final var dates_collapes = new Collapsible(false,

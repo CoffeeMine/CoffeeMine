@@ -1,12 +1,10 @@
 package org.coffeemine.app.spring;
 
-import org.coffeemine.app.spring.data.Project;
-import org.coffeemine.app.spring.data.Sprint;
-import org.coffeemine.app.spring.data.Task;
-import org.coffeemine.app.spring.data.User;
+import org.coffeemine.app.spring.data.*;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
@@ -18,6 +16,10 @@ public class TestingData {
     static void load() {
         final var db = NitriteDBProvider.getInstance();
         var defaultUser = new User(0, "Admoon", User.Status.ADMIN, -1.0f, "admoon", "Foobar");
+
+        db.addTrackItem(new TrackItem(3, "Bob is broken", "Bob doesn't work since the update", 0, -1, TrackItem.Type.BUG, true, TrackItem.Status.OPEN, TrackItem.Resolution.UNRESOLVED, LocalDateTime.now(), null));
+        db.addTrackItem(new TrackItem(45, "Change color", "Green is better than yellow", 0, 0, TrackItem.Type.FEATURE_REQUEST, true, TrackItem.Status.IN_PROGRESS, TrackItem.Resolution.FIXED, LocalDateTime.now(), LocalDateTime.now()));
+
         final var proj_id = db.addProject(new Project("CoffeeMine", -1));
 
         defaultUser.setCurrentProject(proj_id);
