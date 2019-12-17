@@ -153,14 +153,18 @@ public class NitriteDBProvider implements DBProvider {
     }
 
     @Override
-    public void addProject(Project project) {
-        db.getCollection("projects").insert(project.asNO2Doc());
+    public int addProject(Project project) {
+        final var doc = project.asNO2Doc();
+        final var id = idFor(Project.class);
+        doc.replace("id", id);
+        db.getCollection("projects").insert(doc);
         db.commit();
+        return id;
     }
 
     @Override
-    public void addFragment(Fragment fragment) {
-        final var doc = sprint.asNO2Doc();
+    public int addFragment(Fragment fragment) {
+        final var doc = fragment.asNO2Doc();
         final var id = idFor(Fragment.class);
         doc.replace("id", id);
         db.getCollection("fragments").insert(doc);

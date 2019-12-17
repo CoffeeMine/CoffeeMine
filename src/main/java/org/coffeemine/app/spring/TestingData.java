@@ -1,14 +1,14 @@
 package org.coffeemine.app.spring;
 
-import org.coffeemine.app.spring.db.NitriteDBProvider;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-
 import org.coffeemine.app.spring.data.Project;
 import org.coffeemine.app.spring.data.Sprint;
 import org.coffeemine.app.spring.data.Task;
 import org.coffeemine.app.spring.data.User;
+import org.coffeemine.app.spring.db.NitriteDBProvider;
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 
 public class TestingData {
 
@@ -16,39 +16,29 @@ public class TestingData {
     }
 
     static void load() {
-        var db = NitriteDBProvider.getInstance();
+        final var db = NitriteDBProvider.getInstance();
         var defaultUser = new User(0, "Admoon", User.Status.ADMIN, -1.0f, "admoon", "Foobar");
-        var defaultProject = new Project("CoffeeMine", db.idFor(Project.class));
+        final var proj_id = db.addProject(new Project("CoffeeMine", -1));
 
-        defaultUser.setCurrentProject(defaultProject.getId());
-        
+        defaultUser.setCurrentProject(proj_id);
+
         db.addUser(defaultUser);
-        db.addProject(defaultProject);
 
         var users = new ArrayList<Integer>();
         users.add(0);
-        var task = new Task(db.idFor(Task.class), "Hello", "Task1", users, new ArrayList<Integer>(), new ArrayList<String>());
-        var task1 = new Task(db.idFor(Task.class), "Hello1", "Task2", users, new ArrayList<Integer>(), new ArrayList<String>());
-        var task2 = new Task(db.idFor(Task.class), "Hello2", "Task3", users, new ArrayList<Integer>(), new ArrayList<String>());
-        var task3 = new Task(db.idFor(Task.class), "Hello3", "Task4", users, new ArrayList<Integer>(), new ArrayList<String>());
-        db.addTask(task);
-        db.addTask(task1);
-        db.addTask(task2);
-        db.addTask(task3);
 
         var tasks = new ArrayList<Integer>();
-        tasks.add(task.getId());
-        tasks.add(task1.getId());
-        tasks.add(task2.getId());
-        tasks.add(task3.getId());
+        tasks.add(db.addTask(new Task(-1, "Hello0", "Task1", users, new ArrayList<>(), new ArrayList<>())));
+        tasks.add(db.addTask(new Task(-1, "Hello1", "Task2", users, new ArrayList<>(), new ArrayList<>())));
+        tasks.add(db.addTask(new Task(-1, "Hello2", "Task3", users, new ArrayList<>(), new ArrayList<>())));
+        tasks.add(db.addTask(new Task(-1, "Hello3", "Task4", users, new ArrayList<>(), new ArrayList<>())));
 
-        var now = LocalDate.now();
-        var start = now.minus(1, ChronoUnit.WEEKS);
-        var end = now.plus(1, ChronoUnit.WEEKS);
+        final var now = LocalDate.now();
+        final var start = now.minus(1, ChronoUnit.WEEKS);
+        final var end = now.plus(1, ChronoUnit.WEEKS);
 
-        var testsprint = new Sprint(db.idFor(Sprint.class), start, end, -1, tasks);
-            db.addSprint(testsprint);
+        final var sprint_id = db.addSprint(new Sprint(-1, start, end, -1, tasks));
 
-        defaultProject.addSprint(testsprint.getId());
+        db.getProject(proj_id).addSprint(sprint_id);
     }
 }
