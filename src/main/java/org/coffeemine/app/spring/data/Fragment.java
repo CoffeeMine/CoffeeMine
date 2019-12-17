@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 import static java.time.format.DateTimeFormatter.ofLocalizedDate;
@@ -40,6 +41,8 @@ public class Fragment implements JsonSerializable, NO2Serializable {
     public LocalDate getEnd() {
         return end;
     }
+
+    public int getHours() {return (int) ChronoUnit.HOURS.between(begin, end);}
 
     public void setBegin(LocalDate begin) {
         this.begin = begin;

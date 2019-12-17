@@ -14,6 +14,10 @@ public class Task implements ITask {
     @NotNull
     private String description = "";
     @NotNull
+    private int hours;
+    @NotNull
+    private boolean completed;
+    @NotNull
     private ArrayList<Integer> assignees = new ArrayList<>();
     @NotNull
     private ArrayList<Integer> fragments = new ArrayList<>();
@@ -21,10 +25,12 @@ public class Task implements ITask {
 
     public Task() { }
 
-    public Task(int id, @NotNull String name, @NotNull String description, @NotNull ArrayList<Integer> assignees, @NotNull ArrayList<Integer> fragments, ArrayList<String> commits) {
+    public Task(int id, @NotNull String name, @NotNull String description, @NotNull int hours, @NotNull boolean completed, @NotNull ArrayList<Integer> assignees, @NotNull ArrayList<Integer> fragments, ArrayList<String> commits) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.hours = hours;
+        this.completed = completed;
         this.assignees = assignees;
         this.fragments = fragments;
         this.commits = commits;
@@ -56,6 +62,18 @@ public class Task implements ITask {
     }
 
     @Override
+    public @NotNull int getHours() { return hours; }
+
+    @Override
+    public void setHours (@NotNull int hours) { this.hours = hours; }
+
+    @Override
+    public @NotNull boolean getCompleted() { return completed; }
+
+    @Override
+    public void setCompleted(@NotNull boolean completed) { this.completed = completed; }
+
+    @Override
     public @NotNull ArrayList<Integer> getAssignees() {
         return assignees;
     }
@@ -82,6 +100,8 @@ public class Task implements ITask {
         ret.put("id", id);
         ret.put("name", name);
         ret.put("description", description);
+        ret.put("hours", hours);
+        ret.put("completed", completed);
         final var assignees = factory.createArray();
         for (int i = 0; i < this.assignees.size(); ++i)
             assignees.set(i, this.assignees.get(i));
@@ -104,6 +124,8 @@ public class Task implements ITask {
         id = ((int) value.getNumber("id"));
         name = value.getString("name");
         description = value.getString("description");
+        hours = ((int) value.getNumber("hours"));
+        completed = value.getBoolean("completed");
 
         final var jassign = value.getArray("assignees");
         assignees.ensureCapacity(jassign.length());
@@ -133,6 +155,8 @@ public class Task implements ITask {
         return Document.createDocument("id", id)
                 .put("name", name)
                 .put("description", description)
+                .put("hours", hours)
+                .put("completed", completed)
                 .put("assignees", assignees)
                 .put("fragments", fragments)
                 .put("commits", commits);
@@ -146,6 +170,8 @@ public class Task implements ITask {
         id = doc.get("id", Integer.class);
         name = doc.get("name", String.class);
         description = doc.get("description", String.class);
+        hours = doc.get("hours", Integer.class);
+        completed = doc.get("completed", Boolean.class);
         assignees = ((ArrayList<Integer>) doc.get("assignees"));
         fragments = ((ArrayList<Integer>) doc.get("fragments"));
         commits = ((ArrayList<String>) doc.get("commits"));
