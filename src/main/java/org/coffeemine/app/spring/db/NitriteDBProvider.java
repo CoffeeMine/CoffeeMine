@@ -3,6 +3,7 @@ package org.coffeemine.app.spring.db;
 import elemental.json.JsonObject;
 import elemental.json.impl.JreJsonFactory;
 import org.coffeemine.app.spring.data.*;
+import org.dizitart.no2.Document;
 import org.dizitart.no2.Nitrite;
 
 import java.time.LocalDate;
@@ -29,7 +30,7 @@ public class NitriteDBProvider implements DBProvider {
         instance = new NitriteDBProvider(filename);
     }
 
-    public static DBProvider getInstance() {
+    public static NitriteDBProvider getInstance() {
         return instance;
     }
 
@@ -217,6 +218,14 @@ public class NitriteDBProvider implements DBProvider {
     @Override
     public void removeTask(int id) {
 
+    }
+
+    public Stream<TrackItem> getTrackItems() {
+        return db.getCollection("trackitems").find().toList().stream().map(d -> ((TrackItem) d.get("obj")));
+    }
+
+    public void addTrackItem(TrackItem item) {
+        db.getCollection("trackitems").insert(Document.createDocument("obj", item));
     }
 
     @Override
