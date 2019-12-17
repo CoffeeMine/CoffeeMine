@@ -1,11 +1,17 @@
 package org.coffeemine.app.spring.view;
 
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 import org.coffeemine.app.spring.auth.CurrentUser;
+import com.vaadin.flow.component.textfield.TextField;
+import org.coffeemine.app.spring.components.HoursLogIn;
 import org.coffeemine.app.spring.components.LetterIcon;
 import org.coffeemine.app.spring.data.User;
 
@@ -33,6 +39,10 @@ public class TopBar extends HorizontalLayout {
 
         tabLayout.add(new RoutingTabs());
 
+        final var log_hours = new Button("Hours log in", e -> {
+            HoursLogIn hoursLog = new HoursLogIn();
+            hoursLog.taskCreating();
+        });
         AccountPopUp accountInfo = new AccountPopUp();
 
         // TODO: Currently we're drawing a fullsize Div over the screen to detect clicks
@@ -62,8 +72,8 @@ public class TopBar extends HorizontalLayout {
             }
         });
 
-        miscLayout.add(AccountButton);
+        miscLayout.add(log_hours,AccountButton);
 
-        this.add(brandLayout, tabLayout, miscLayout, clickhack, accountInfo);
+        this.add(brandLayout, tabLayout ,miscLayout ,clickhack, accountInfo);
     }
 }
