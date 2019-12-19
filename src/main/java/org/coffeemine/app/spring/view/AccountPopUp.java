@@ -43,7 +43,7 @@ class AccountPopUp extends VerticalLayout {
         Hr line = new Hr();
         line.setWidth("80%");
 
-        final var projectsList = new ProjectList(3, new Text("projects:"));
+        final var projectsList = new ProjectList(ProjectList.Modes.SMALL, 3, new Text("projects:"));
 
         HorizontalLayout buttons = new HorizontalLayout();
         buttons.setWidthFull();
