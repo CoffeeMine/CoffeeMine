@@ -2,10 +2,12 @@ package org.coffeemine.app.spring.components;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 
 public class ProjectList extends VerticalLayout {
@@ -42,6 +44,15 @@ public class ProjectList extends VerticalLayout {
         projects.forEach(project -> {
             final var projectListItem = new HorizontalLayout();
             projectListItem.addClassName("projectitem");
+
+            projectListItem.addClickListener(e -> {
+                if (CurrentUser.get() != null) {
+                    CurrentUser.get().setCurrentProject(project.getId());
+                    // small trick to also refresh overview
+                    UI.getCurrent().navigate("login");
+                    UI.getCurrent().navigate("");
+                }
+            });
 
             if (mode == Modes.LARGE) {
                 final var letter = new LetterIcon(project.getName().substring(0, 1));
