@@ -12,12 +12,16 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.coffeemine.app.spring.auth.BasicAccessControl;
 import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.components.LetterIcon;
+import org.coffeemine.app.spring.components.ProjectList;
 import org.coffeemine.app.spring.data.User;
+import org.coffeemine.app.spring.db.NitriteDBProvider;
 import org.coffeemine.app.spring.userprofile.UserProfile;
 
 class AccountPopUp extends VerticalLayout {
 
     public AccountPopUp() {
+        final var db = NitriteDBProvider.getInstance();
+
         this.addClassNames("accountinfo", "mono_font");
         this.setVisible(false);
 
@@ -26,25 +30,20 @@ class AccountPopUp extends VerticalLayout {
         this.setWidth("350px");
 
         User user = CurrentUser.get();
-        String userName = (user == null) ? "No User" : user.getName();
-
+        var userName = "No User";
+        var currentProjectName = "No Project";
+        if(user != null) {
+            userName = user.getName();
+            currentProjectName = db.getCurrentProject(user).getName();
+        }
         H3 accountFullname = new H3(userName);
         LetterIcon letterIcon = new LetterIcon(userName.substring(0, 1));
-        Text currentProject = new Text("CoffeeMine");
+        Text currentProject = new Text(currentProjectName);
 
         Hr line = new Hr();
         line.setWidth("80%");
 
-        VerticalLayout projectsList = new VerticalLayout();
-        projectsList.setSizeFull();
-        projectsList.add(new Text("projects:"));
-        for (int i : new int[] { 1, 2, 3 }) {
-            HorizontalLayout test = new HorizontalLayout();
-            test.addClassName("projectitem");
-            test.setAlignItems(Alignment.CENTER);
-            test.add(new Text("XYZ Project " + Integer.toString(i)));
-            projectsList.add(test);
-        }
+        final var projectsList = new ProjectList(3, new Text("projects:"));
 
         HorizontalLayout buttons = new HorizontalLayout();
         buttons.setWidthFull();

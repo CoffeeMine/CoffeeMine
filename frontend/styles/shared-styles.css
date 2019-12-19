@@ -100,6 +100,7 @@ H1, H2, H3, H4 {
 }
 
 .projectitem {
+  align-items: center;
   transition: 0.2s;
   background: #2c2c2c;
   height: 50px;
