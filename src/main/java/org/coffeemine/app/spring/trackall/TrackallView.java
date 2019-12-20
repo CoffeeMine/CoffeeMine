@@ -1,15 +1,16 @@
 package org.coffeemine.app.spring.trackall;
 
-import ch.carnet.kasparscherrer.VerticalScrollLayout;
-import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
@@ -31,46 +32,63 @@ public class TrackallView extends View {
         private TrackItem item;
 
         ListItem(TrackItem item) {
-            super();
-            this.item = item;
-            getStyle().set("border-bottom", "1px solid yellow");
-            final var inner_container = new VerticalLayout(
-                    new Span('#' + Integer.toString(item.getId())),
-                    new Span(item.getName()));
-            final var outer_container = new HorizontalLayout(
-                    new Span(Character.toString(item.getType().name().charAt(0))),
-                    inner_container);
-            inner_container.getChildren().forEach(c -> (((HasStyle) c)).getStyle().set("all", "initial"));
-            super.add(outer_container);
+                super();
+                this.item = item;
+                final var inner_container = new VerticalLayout(new Span('#' + Integer.toString(item.getId())),
+                                new Span(item.getName()));
+                final var outer_container = new HorizontalLayout(
+                                new Span(Character.toString(item.getType().name().charAt(0))), inner_container);
+
+                outer_container.setPadding(false);
+                inner_container.setPadding(false);
+                this.getStyle().set("align-items", "flex-start");
+                super.add(outer_container);
         }
 
     }
 
-    private VerticalLayout outer = new VerticalLayout();
-    private HorizontalLayout inner = new HorizontalLayout();
+    private SplitLayout inner = new SplitLayout();
     private Tabs item_list = new Tabs();
     private ArrayList<ListItem> items = new ArrayList<>();
-    private Div detailed_pane = new Div();
+    private VerticalLayout detailed_pane = new VerticalLayout();
+    private VerticalLayout wrapper = new VerticalLayout();
+    private HorizontalLayout topbar = new HorizontalLayout();
 
     public TrackallView() {
         super();
-        detailed_pane.getStyle().set("border-left", "1px thick solid #ff0000");
-        detailed_pane.getStyle().set("width", "100%");
-        detailed_pane.getStyle().set("background-color", "#000080");
-        detailed_pane.add(new Span("It all works, except not #2351"));
-        item_list.setOrientation(Tabs.Orientation.VERTICAL);
-        item_list.setHeightFull();
-        item_list.getStyle().set("background-color", "green");
+        add(wrapper);
+        wrapper.setSizeFull();
 
-        final var scroller =  new VerticalScrollLayout(item_list);
-        scroller.setWidth("30%");
-        inner.add(scroller, detailed_pane);
-        inner.getStyle().set("width", "100%");
-        inner.setHeightFull();
-        outer.add(new Button("New issue", e -> Notification.show("unimplemented")));
-        outer.add(inner);
-        outer.setHeightFull();
-        add(outer);
+        topbar.addClassName("tracking-topbar");
+        // left alligned
+        final var controls = new Div();
+        final var newIssueButton = new Button("New Issue", e -> Notification.show("unimplemented"));
+        newIssueButton.addThemeVariants(ButtonVariant.MATERIAL_CONTAINED);
+        controls.add(newIssueButton);
+        // centered
+        final var text = new Div(new H3("Tracker"));
+        text.getStyle().set("text-align", "center");
+        // right alligned
+        final var rest = new Div();
+        rest.getStyle().set("text-align", "right");
+
+        topbar.add(controls,text,rest);
+        wrapper.add(topbar);
+
+        inner.setSizeFull();
+        inner.setSplitterPosition(0);
+
+        detailed_pane.addClassName("tracking-detailed-pane");
+
+        item_list.setOrientation(Tabs.Orientation.VERTICAL);
+        item_list.setWidthFull();
+
+        final var scroller = new VerticalLayout(item_list);
+        scroller.addClassName("trackall-scroller");
+        
+        inner.addToPrimary(scroller);
+        inner.addToSecondary(detailed_pane);
+        wrapper.add(inner);
 
         items.addAll(NitriteDBProvider.getInstance().getTrackItems().map(ListItem::new).collect(Collectors.toList()));
 
@@ -104,7 +122,6 @@ public class TrackallView extends View {
                 new Paragraph("Hello darkness my old friend..."));
         final var description_toggle = new Button("Description", e -> description_collapse.toggle());
         final var left_col = new VerticalLayout(details_toggle, details_collapse, description_toggle, description_collapse);
-        left_col.setWidth("150%");
 
         final var people_collapse = new Collapsible(false,
                 new VerticalLayout(
@@ -120,7 +137,11 @@ public class TrackallView extends View {
         final var dates_toggle = new Button("Dates", e -> dates_collapes.toggle());
         final var right_col = new VerticalLayout(people_toggle, people_collapse, dates_toggle, dates_collapes);
         final var columns_holder = new HorizontalLayout(left_col, right_col);
-        columns_holder.setWidth("100%");
-        detailed_pane.add(new VerticalLayout(new H3(ti.getName()), columns_holder));
+
+        columns_holder.setWidthFull();
+        left_col.setWidthFull();
+        right_col.setWidthFull();
+
+        detailed_pane.add(new H2(ti.getName()), columns_holder);
     }
 }
