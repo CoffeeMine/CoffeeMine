@@ -27,5 +27,9 @@ public class HorizontalScroll extends PolymerTemplate<TemplateModel> {
             add(component);
         }
     }
+
+    public void removeAll() {
+        getElement().removeAllChildren();
+    }
 }
 
