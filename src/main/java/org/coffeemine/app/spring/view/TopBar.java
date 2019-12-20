@@ -52,6 +52,8 @@ public class TopBar extends HorizontalLayout {
 
         LetterIcon AccountButton = new LetterIcon(userName.substring(0, 1));
         AccountButton.getStyle().set("font-size", "30px");
+        AccountButton.getStyle().set("margin", "0px");
+
 
         clickhack.addClickListener(e -> {
             clickhack.setVisible(false);
