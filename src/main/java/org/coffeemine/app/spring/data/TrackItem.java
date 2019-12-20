@@ -5,17 +5,39 @@ import java.time.LocalDateTime;
 
 public class TrackItem implements Serializable {
     public enum Type {
-        BUG,
-        FEATURE_REQUEST,
+        BUG("Bug"),
+        FEATURE_REQUEST("Feature Request");
+
+        private String val;
+
+        Type(String val) {
+            this.val = val;
+        }
+
+        public String getVal() {
+            return val;
+        }
     }
+
     public enum Status {
-        OPEN,
-        IN_PROGRESS,
-        RESOLVED,
-        REOPENED,
-        CLOSED,
-        POSTPONED
+        OPEN("Open"),
+        IN_PROGRESS("In Progress"),
+        RESOLVED("Resolved"),
+        REOPENED("Reopened"),
+        CLOSED("Closed"),
+        POSTPONED("Postponed");
+
+        private String val;
+
+        Status(String val) {
+            this.val = val;
+        }
+
+        public String getVal() {
+            return val;
+        }
     }
+
     public enum Resolution {
         UNRESOLVED,
         FIXED,
@@ -55,6 +77,10 @@ public class TrackItem implements Serializable {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

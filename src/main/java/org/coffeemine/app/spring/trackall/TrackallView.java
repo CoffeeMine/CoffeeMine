@@ -7,18 +7,22 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
 import org.coffeemine.app.spring.annonations.NavbarRoutable;
+import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.components.Collapsible;
+import org.coffeemine.app.spring.components.CreateTrackItem;
 import org.coffeemine.app.spring.data.TrackItem;
+import org.coffeemine.app.spring.data.User;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 import org.coffeemine.app.spring.view.View;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -56,7 +60,7 @@ public class TrackallView extends View {
         super();
         detailed_pane.getStyle().set("border-left", "1px thick solid #ff0000");
         detailed_pane.getStyle().set("width", "100%");
-        detailed_pane.getStyle().set("background-color", "#000080");
+        detailed_pane.getStyle().set("background-color", "#070340");
         detailed_pane.add(new Span("It all works, except not #2351"));
         item_list.setOrientation(Tabs.Orientation.VERTICAL);
         item_list.setHeightFull();
@@ -67,7 +71,7 @@ public class TrackallView extends View {
         inner.add(scroller, detailed_pane);
         inner.getStyle().set("width", "100%");
         inner.setHeightFull();
-        outer.add(new Button("New issue", e -> Notification.show("unimplemented")));
+        outer.add(new Button("New issue", e -> new CreateTrackItem(ti -> NitriteDBProvider.getInstance().addTrackItem(ti))));
         outer.add(inner);
         outer.setHeightFull();
         add(outer);
@@ -87,17 +91,79 @@ public class TrackallView extends View {
 
     private void update_details(TrackItem ti) {
         detailed_pane.removeAll();
-        if(ti == null){
+        if (ti == null) {
             // TODO: dflt
 
             return;
         }
+
+        final var confirm_status = new Div();
+        final var status = new Div();
+        final var resolution = new Div();
+        final var assignee = new Div();
+        if (CurrentUser.get() != null && CurrentUser.get().getStatus().equals(User.Status.ADMIN)) {
+            {
+                final var sel = new Select<>("Confirmed", "Unconfirmed");
+                sel.setValue((ti.isConfirmed() ? "Confirmed" : "Unconfirmed"));
+                sel.addValueChangeListener(e -> {
+                    ti.setConfirmed(e.getValue().equals("Confirmed"));
+                    NitriteDBProvider.getInstance().updateTrackItem(ti);
+                    update_details(ti);
+                });
+                sel.setLabel("Confirmation status:");
+                confirm_status.add(sel);
+            }
+            {
+                final var sel = new Select<>(TrackItem.Status.values());
+                sel.setValue(ti.getStatus());
+                sel.addValueChangeListener(e -> {
+                    ti.setStatus(e.getValue());
+                    NitriteDBProvider.getInstance().updateTrackItem(ti);
+                    update_details(ti);
+                });
+                sel.setLabel("Status:");
+                status.add(sel);
+            }
+            {
+                final var sel = new Select<>(TrackItem.Resolution.values());
+                sel.setValue(ti.getResolution());
+                sel.addValueChangeListener(e -> {
+                    ti.setResolution(e.getValue());
+                    if (e.getValue() == TrackItem.Resolution.FIXED || e.getValue() == TrackItem.Resolution.IMPLEMENTED) {
+                        ti.setResolved(LocalDateTime.now());
+                    } else
+                        ti.setResolved(null);
+                    NitriteDBProvider.getInstance().updateTrackItem(ti);
+                    update_details(ti);
+                });
+                sel.setLabel("Status:");
+                resolution.add(sel);
+            }
+            {
+                final var sel = new Select<>(NitriteDBProvider.getInstance().getUsers().collect(Collectors.toList()).toArray(new User[]{}));
+                sel.setItemLabelGenerator(u -> u != null ? u.getName() : "N/A");
+                sel.setValue(NitriteDBProvider.getInstance().getUser(ti.getAssignee()));
+                sel.addValueChangeListener(e -> {
+                    ti.setAssignee(e.getValue().getId());
+                    NitriteDBProvider.getInstance().updateTrackItem(ti);
+                    update_details(ti);
+                });
+                sel.setLabel("Assignee:");
+                assignee.add(sel);
+            }
+        } else {
+            confirm_status.add(new Span("Confirmation status: " + (ti.isConfirmed() ? "Confirmed" : "Unconfirmed")));
+            status.add(new Span("Status: " + ti.getStatus().getVal()));
+            resolution.add(new Span("Resolution: " + ti.getResolution().name()));
+            assignee.add(new Span("Assignee: " + (ti.getAssignee() < 0 ? "N/A" : NitriteDBProvider.getInstance().getUser(ti.getAssignee()).getName())));
+        }
+
         final var details_collapse = new Collapsible(false,
                 new VerticalLayout(
-                        new Span("Type: " + ti.getType().name()),
-                        new Span("Status: " + ti.getStatus().name()),
-                        new Span("Confirmation status: " + (ti.isConfirmed() ? "Confirmed" : "Unconfirmed")),
-                        new Span("Resolution: " + ti.getResolution().name())
+                        new Span("Type: " + ti.getType().getVal()),
+                        status,
+                        confirm_status,
+                        resolution
                 ));
         final var details_toggle = new Button("Details", e -> details_collapse.toggle());
         final var description_collapse = new Collapsible(false,
@@ -108,14 +174,14 @@ public class TrackallView extends View {
 
         final var people_collapse = new Collapsible(false,
                 new VerticalLayout(
-                        new Span("Assignee: " + (ti.getAssignee() < 0 ? "N/A" : NitriteDBProvider.getInstance().getUser(ti.getAssignee()).getName())),
+                        assignee,
                         new Span("Reporter: " + NitriteDBProvider.getInstance().getUser(ti.getReporter()).getName()))
         );
         final var people_toggle = new Button("People", e -> people_collapse.toggle());
         final var dates_collapes = new Collapsible(false,
                 new VerticalLayout(
-                        new Span("Created: " + ti.getOpened().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)), //TODO: custom date formatter YYYY-MM-DD hh:mm
-                        new Span("Resolved: " + (ti.getResolved() != null ? ti.getResolved().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : "N/A"))
+                        new Span("Created: " + ti.getOpened().format(DateTimeFormatter.ofPattern("uuuu MMM dd HH:mm:ss"))),
+                        new Span("Resolved: " + (ti.getResolved() != null ? ti.getResolved().format(DateTimeFormatter.ofPattern("uuuu MMM dd HH:mm:ss")) : "N/A"))
                 ));
         final var dates_toggle = new Button("Dates", e -> dates_collapes.toggle());
         final var right_col = new VerticalLayout(people_toggle, people_collapse, dates_toggle, dates_collapes);
