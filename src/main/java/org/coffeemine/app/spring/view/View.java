@@ -11,6 +11,7 @@ public abstract class View extends AppLayout implements ProtectedView {
     protected View() {
         addToNavbar(new TopBar());
         addToDrawer(new SideBar());
+        content_div.getStyle().set("all", "inherit");
         setContent(content_div);
         setDrawerOpened(false);
     }
