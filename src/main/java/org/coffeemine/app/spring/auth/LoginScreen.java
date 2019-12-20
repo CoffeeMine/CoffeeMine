@@ -1,6 +1,7 @@
 package org.coffeemine.app.spring.auth;
 
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
@@ -13,6 +14,11 @@ public class LoginScreen extends VerticalLayout {
 
     LoginScreen() {
         this.setSizeFull();
+        final var branding = new Image("./icons/icon-mono.png", "");
+        branding.getStyle().set("position", "fixed");
+        branding.getStyle().set("margin-left", "-100px");
+        branding.getStyle().set("left", "50%");
+        branding.getStyle().set("z-index", "-1");
 
         Div layout = new Div();
         layout.getStyle().set("margin", "auto");
@@ -20,7 +26,7 @@ public class LoginScreen extends VerticalLayout {
         LoginForm login = new LoginForm();
 
         layout.add(login);
-        this.add(layout);
+        this.add(branding, layout);
 
         BasicAccessControl loginControl = BasicAccessControl.getInstance();
 
