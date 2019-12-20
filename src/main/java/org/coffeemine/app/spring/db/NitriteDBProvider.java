@@ -197,7 +197,7 @@ public class NitriteDBProvider implements DBProvider {
 
     @Override
     public void removeSprint(int id) {
-
+        db.getCollection("sprints").remove(eq("id", id));
     }
 
     @Override
@@ -217,7 +217,7 @@ public class NitriteDBProvider implements DBProvider {
 
     @Override
     public void removeTask(int id) {
-
+        db.getCollection("tasks").remove(eq("id", id));
     }
 
     public Stream<TrackItem> getTrackItems() {
