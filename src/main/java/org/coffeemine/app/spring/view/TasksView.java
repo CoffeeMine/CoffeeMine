@@ -17,7 +17,7 @@ public class TasksView extends HorizontalScroll {
             var assigneeText = "";
 
             for (var user : task.getAssignees()) {
-                assigneeText += db.getUser(user).getAccountName();
+                assigneeText += db.getUser(user).getName();
             }
 
             add(new TaskBlock(task.getName(), task.getDescription(), assigneeText, new Button("details", e -> {

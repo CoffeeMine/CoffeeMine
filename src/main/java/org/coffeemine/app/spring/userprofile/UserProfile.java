@@ -15,7 +15,7 @@ import com.vaadin.flow.router.Route;
 import org.coffeemine.app.spring.auth.BasicAccessControl;
 import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.auth.ProtectedView;
-import org.coffeemine.app.spring.components.LetterIcon;
+import org.coffeemine.app.spring.components.ProjectList;
 import org.coffeemine.app.spring.data.User;
 import org.coffeemine.app.spring.view.Overview;
 
@@ -74,16 +74,8 @@ public class UserProfile extends VerticalLayout implements ProtectedView {
         Button save = new Button("save");
         save.getStyle().set("margin-left", "auto");
         save.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
-        HorizontalLayout currentProjects = new HorizontalLayout();
-        String projectName = "Lorem Ipsum";
-        H3 lorem = new H3(projectName);
-        lorem.getStyle().set("padding", "0px");
-        lorem.getStyle().set("margin-top", "auto");
-        lorem.getStyle().set("margin-bottom", "auto");
-        // circle capital letter L
-        LetterIcon L = new LetterIcon(projectName.substring(0, 1));
-        L.getStyle().set("font-size", "30px");
-        currentProjects.add(L, lorem);
+        final var currentProjects = new ProjectList(ProjectList.Modes.LARGE);
+        currentProjects.setHeight("100%");
         userprofile.add(save);
         userprofile.add(currentProject);
         userprofile.add(currentProjects);
