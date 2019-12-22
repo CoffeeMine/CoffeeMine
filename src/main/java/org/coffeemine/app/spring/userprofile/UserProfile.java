@@ -10,18 +10,28 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.WildcardParameter;
 
 import org.coffeemine.app.spring.auth.BasicAccessControl;
 import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.auth.ProtectedView;
 import org.coffeemine.app.spring.components.ProjectList;
 import org.coffeemine.app.spring.data.User;
+import org.coffeemine.app.spring.db.NitriteDBProvider;
 import org.coffeemine.app.spring.view.Overview;
 
 @Route(value = "Profile")
-public class UserProfile extends VerticalLayout implements ProtectedView {
+public class UserProfile extends VerticalLayout implements ProtectedView, HasUrlParameter<String> {
+    private User user;
+
     public UserProfile() {
+    }
+
+    public void generate() {
+        removeAll();
         this.setHeightFull();
         this.setPadding(false);
         VerticalLayout userprofile = new VerticalLayout();
@@ -38,7 +48,6 @@ public class UserProfile extends VerticalLayout implements ProtectedView {
         usernameTitle.getStyle().set("margin-left", "auto");
         usernameTitle.getStyle().set("margin-right", "auto");
 
-        User user = CurrentUser.get();
         String userName = (user == null) ? "No User" : user.getName();
 
         H2 title = new H2(userName);
@@ -83,5 +92,20 @@ public class UserProfile extends VerticalLayout implements ProtectedView {
         logOut.getStyle().set("margin-left", "auto");
         logOut.addThemeVariants(ButtonVariant.MATERIAL_CONTAINED);
         userprofile.add(logOut);
+    }
+
+    @Override
+    public void setParameter(BeforeEvent event, @WildcardParameter String parameter) {
+        if (!parameter.isEmpty()) {
+            if (parameter.equals("current")) {
+                user = CurrentUser.get();
+            } else {
+                try {
+                    user = NitriteDBProvider.getInstance().getUser(Integer.parseInt(parameter));
+                } catch (Exception e) {
+                }
+            }
+        }
+        generate();
     }
 }
