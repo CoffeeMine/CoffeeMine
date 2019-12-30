@@ -51,13 +51,11 @@ vaadin-form-item span {
   width: 100%;
   max-width: 150px;
   padding: 10px 30px 10px 30px;
-  border-radius: 8px 8px 0px 0px;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-  border-bottom-color: var(--material-primary-color);
+  border-radius: 8px;
   position: relative;
   top: 5px;
-  background: var(--material-tertiary-background-color);
+  background: var(--material-secondary-background-color);
+  box-shadow: inset 0px 0px 20px 0px rgba(0,0,0,0.50);
 }
 
 vaadin-login-form-wrapper {
