@@ -32,66 +32,69 @@ public class UserProfile extends VerticalLayout implements ProtectedView, HasUrl
 
     public void generate() {
         removeAll();
-        this.setHeightFull();
-        this.setPadding(false);
+        setHeightFull();
+        setPadding(false);
+        setAlignItems(Alignment.CENTER);
+
         VerticalLayout userprofile = new VerticalLayout();
-        userprofile.setHeightFull();
         userprofile.addClassName("userprofile");
-        userprofile.setMaxWidth("800px");
-        // copy this to center
-        userprofile.getStyle().set("margin", "auto");
-        this.add(userprofile);
+
         Button back = new Button("back");
         back.addClickListener(e -> UI.getCurrent().navigate(Overview.class));
         back.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
+
         HorizontalLayout usernameTitle = new HorizontalLayout();
-        usernameTitle.getStyle().set("margin-left", "auto");
-        usernameTitle.getStyle().set("margin-right", "auto");
+        usernameTitle.setWidthFull();
+        usernameTitle.setAlignItems(Alignment.CENTER);
 
         String userName = (user == null) ? "No User" : user.getName();
 
         H2 title = new H2(userName);
         title.getStyle().set("padding", "0px");
-        title.getStyle().set("margin-top", "auto");
-        title.getStyle().set("margin-bottom", "auto");
-        // circle capital letter A
+        title.getStyle().set("margin", "auto auto auto 0px");
+
         Span letter = new Span(userName.substring(0, 1));
         letter.addClassName("lettericon");
+        letter.getStyle().set("margin-left", "auto");
+
         usernameTitle.add(letter, title);
-        userprofile.add(back);
-        userprofile.add(usernameTitle);
+
         HorizontalLayout info = new HorizontalLayout();
         info.setWidthFull();
-        userprofile.add(info);
-        // details
+
         VerticalLayout details = new VerticalLayout();
         details.setWidthFull();
-        details.add(new H3("Account details"));
+
         FormLayout accountDetails = new FormLayout();
         accountDetails.addFormItem(new TextField(), "Full name：");
         accountDetails.addFormItem(new TextField(), "Email:");
-        details.add(accountDetails);
+
+        details.add(new H3("Account details"), accountDetails);
+
         VerticalLayout states = new VerticalLayout();
         states.setWidthFull();
-        states.add(new H3("Account states "));
+
         FormLayout accountStates = new FormLayout();
         accountStates.addFormItem(new Span("0.0"), "Hourly salary");
         accountStates.addFormItem(new Span("0.0"), "Total hours worked: ");
-        states.add(accountStates);
+
+        states.add(new H3("Account states "), accountStates);
         info.add(details, states);
+
         H3 currentProject = new H3("Current projects");
         Button save = new Button("save");
         save.getStyle().set("margin-left", "auto");
         save.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
-        final var currentProjects = new ProjectList(ProjectList.Modes.LARGE);
+
+        ProjectList currentProjects = new ProjectList(ProjectList.Modes.LARGE);
         currentProjects.setHeight("100%");
-        userprofile.add(save);
-        userprofile.add(currentProject);
-        userprofile.add(currentProjects);
+
         Button logOut = new Button("Log out", e -> BasicAccessControl.getInstance().signOut());
         logOut.getStyle().set("margin-left", "auto");
         logOut.addThemeVariants(ButtonVariant.MATERIAL_CONTAINED);
-        userprofile.add(logOut);
+
+        userprofile.add(back, usernameTitle, info, save, currentProject, currentProjects, logOut);
+        add(userprofile);
     }
 
     @Override

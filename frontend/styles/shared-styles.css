@@ -140,6 +140,8 @@ H1, H2, H3, H4 {
 
 .userprofile {
   background-color: var(--material-secondary-background-color);
+  max-width: 800px;
+  height: 100%;
 }
 
 .taskBlock {
