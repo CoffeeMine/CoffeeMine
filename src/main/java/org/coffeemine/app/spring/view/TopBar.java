@@ -61,17 +61,18 @@ public class TopBar extends HorizontalLayout {
         clickhack.addClickListener(e -> {
             clickhack.setVisible(false);
             accountInfo.setVisible(false);
-            search.toggle();
+            search.setVisible(false);
         });
 
         final var searchButton = new Button(new Icon(VaadinIcon.SEARCH), e -> {
             if (!clickhack.isVisible()) {
                 clickhack.setVisible(true);
+                search.setVisible(true);
+                search.focus();
             } else {
                 clickhack.setVisible(false);
+                search.setVisible(false);
             }
-            search.toggle();
-
         });
 
         AccountButton.addClickListener(e -> {

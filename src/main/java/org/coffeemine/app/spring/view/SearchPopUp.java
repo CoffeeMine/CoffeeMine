@@ -64,12 +64,7 @@ class SearchPopUp extends VerticalLayout {
         add(searchbar, nothing, results);
     }
 
-    public void toggle() {
-        if (!isVisible()) {
-            setVisible(true);
-            searchbar.focus();
-        } else {
-            setVisible(false);
-        }
+    public void focus() {
+        searchbar.focus();
     }
 }
