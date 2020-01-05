@@ -1,12 +1,11 @@
-# Project Base for CoffeeMine
+# CoffeeMine -  Your collaborative project management tool
 
-This contains all the necessary configuration and some placeholder files to get you started.
 
-The best way to create your own project based on this starter is [start.vaadin.com](https://start.vaadin.com/) - you can get only the necessary parts and choose the package naming you want to use.
+## Development
 
 Import the project to the IDE of your choosing as a Maven project.
 
-Run the application using `mvn spring-boot:run` or by running the `Application` class directly from your IDE.
+Run the application using `mvn` or by running the `Application` class directly from your IDE.
 
 Open http://localhost:9090/ in a browser.
 
