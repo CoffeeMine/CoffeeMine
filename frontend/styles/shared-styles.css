@@ -221,3 +221,19 @@ vaadin-tab[orientation = vertical] {
   border-bottom-width: 1px;
 }
 
+.recent-changes {
+  width: 100%;
+  max-width: 800px;
+  height: fit-content;
+  min-height: 400px;
+  margin: 1em auto;
+  border-radius: 5px;
+  box-shadow: var(--material-shadow-elevation-4dp);
+  background-color: var(--material-tertiary-background-color);
+}
+
+.link:hover {
+  cursor: pointer;
+  color: var(--material-primary-color);
+  text-decoration: underline;
+}
