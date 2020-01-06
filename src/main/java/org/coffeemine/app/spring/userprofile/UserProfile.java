@@ -20,6 +20,7 @@ import org.coffeemine.app.spring.auth.BasicAccessControl;
 import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.auth.ProtectedView;
 import org.coffeemine.app.spring.components.ProjectList;
+import org.coffeemine.app.spring.data.ChangeTracker;
 import org.coffeemine.app.spring.data.User;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 import org.coffeemine.app.spring.view.Overview;
@@ -101,7 +102,8 @@ public class UserProfile extends VerticalLayout implements ProtectedView, HasUrl
         final var allTasks = new VerticalLayout();
         allTasks.addClassName("projectlist");
         final var db = NitriteDBProvider.getInstance();
-        db.getTasks().forEach(task -> {
+        db.getTasks().sorted((a, b) -> -Long.compare(((ChangeTracker) a).getLastModifiedTime(), ((ChangeTracker) b).getLastModifiedTime()))
+        .forEach(task -> {
             if (task.getAssignees().contains(user.getId())) {
                 final var taskItem = new Div(new Span(task.getName()));
                 taskItem.addClassNames("projectitem", "projectitem-small");
