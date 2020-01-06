@@ -18,8 +18,10 @@ import com.vaadin.flow.router.WildcardParameter;
 
 import org.coffeemine.app.spring.auth.BasicAccessControl;
 import org.coffeemine.app.spring.auth.CurrentUser;
+import org.coffeemine.app.spring.auth.LoginScreen;
 import org.coffeemine.app.spring.auth.ProtectedView;
 import org.coffeemine.app.spring.components.ProjectList;
+import org.coffeemine.app.spring.components.EventsDialog.TaskDetail;
 import org.coffeemine.app.spring.data.ChangeTracker;
 import org.coffeemine.app.spring.data.User;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
@@ -107,6 +109,13 @@ public class UserProfile extends VerticalLayout implements ProtectedView, HasUrl
             if (task.getAssignees().contains(user.getId())) {
                 final var taskItem = new Div(new Span(task.getName()));
                 taskItem.addClassNames("projectitem", "projectitem-small");
+                taskItem.addClickListener(e -> {
+                    final var detailDialog = new TaskDetail(task.getId(), t -> {
+                        UI.getCurrent().navigate(LoginScreen.class);
+                        UI.getCurrent().navigate(UserProfile.class, Integer.toString(user.getId()));
+                    });
+                    detailDialog.open();
+                });
                 allTasks.add(taskItem);
             }
         });
