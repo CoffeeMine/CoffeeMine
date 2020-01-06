@@ -136,7 +136,7 @@ H1, H2, H3, H4 {
 }
 
 .projectitem-small {
-  padding: 13px 35px;
+  padding: 13px 0px 13px 10px;
 }
 
 .userprofile {

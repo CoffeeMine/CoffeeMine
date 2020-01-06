@@ -8,6 +8,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
@@ -80,7 +81,7 @@ public class ProjectList extends VerticalLayout {
                 projectListItem.add(new H4(project.getName()));
             } else if (mode == Modes.SMALL) {
                 projectListItem.addClassName("projectitem-small");
-                projectListItem.add(new Text(project.getName()));
+                projectListItem.add(new Span(project.getName()));
             }
             this.add(projectListItem);
         });

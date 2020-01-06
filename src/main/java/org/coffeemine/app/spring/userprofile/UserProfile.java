@@ -4,6 +4,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
@@ -81,18 +82,41 @@ public class UserProfile extends VerticalLayout implements ProtectedView, HasUrl
         states.add(new H3("Account states "), accountStates);
         info.add(details, states);
 
-        H3 currentProject = new H3("Current projects");
         Button save = new Button("save");
         save.getStyle().set("margin-left", "auto");
         save.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
 
+        final var particpation = new HorizontalLayout();
+        particpation.setWidthFull();
+        
+        final var projects = new VerticalLayout(new H3("Current projects"));
+        projects.setWidth("50%");
+
         ProjectList currentProjects = new ProjectList(ProjectList.Modes.LARGE);
+        projects.add(currentProjects);
+
+        final var tasks = new VerticalLayout(new H3("Assigned tasks"));
+        tasks.setWidth("50%");
+
+        final var allTasks = new VerticalLayout();
+        allTasks.addClassName("projectlist");
+        final var db = NitriteDBProvider.getInstance();
+        db.getTasks().forEach(task -> {
+            if (task.getAssignees().contains(user.getId())) {
+                final var taskItem = new Div(new Span(task.getName()));
+                taskItem.addClassNames("projectitem", "projectitem-small");
+                allTasks.add(taskItem);
+            }
+        });
+
+        tasks.add(allTasks);
+        particpation.add(projects, tasks);
 
         Button logOut = new Button("Log out", e -> BasicAccessControl.getInstance().signOut());
         logOut.getStyle().set("margin", "auto 0px 0px auto");
         logOut.addThemeVariants(ButtonVariant.MATERIAL_CONTAINED);
 
-        userprofile.add(back, usernameTitle, info, save, currentProject, currentProjects, logOut);
+        userprofile.add(back, usernameTitle, info, save, particpation, logOut);
         add(userprofile);
     }
 
@@ -108,6 +132,8 @@ public class UserProfile extends VerticalLayout implements ProtectedView, HasUrl
                 }
             }
         }
-        generate();
+        if (user != null) {
+            generate();
+        }
     }
 }
