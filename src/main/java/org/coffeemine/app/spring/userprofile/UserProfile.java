@@ -87,10 +87,9 @@ public class UserProfile extends VerticalLayout implements ProtectedView, HasUrl
         save.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
 
         ProjectList currentProjects = new ProjectList(ProjectList.Modes.LARGE);
-        currentProjects.setHeight("100%");
 
         Button logOut = new Button("Log out", e -> BasicAccessControl.getInstance().signOut());
-        logOut.getStyle().set("margin-left", "auto");
+        logOut.getStyle().set("margin", "auto 0px 0px auto");
         logOut.addThemeVariants(ButtonVariant.MATERIAL_CONTAINED);
 
         userprofile.add(back, usernameTitle, info, save, currentProject, currentProjects, logOut);
