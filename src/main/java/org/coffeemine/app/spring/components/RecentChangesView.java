@@ -4,19 +4,19 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Stream;
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-import org.coffeemine.app.spring.auth.LoginScreen;
-import org.coffeemine.app.spring.components.EventsDialog.TaskDetail;
+import org.coffeemine.app.spring.data.ChangeTracker;
 import org.coffeemine.app.spring.data.Project;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
-import org.coffeemine.app.spring.view.Overview;
 
 public class RecentChangesView extends VerticalLayout {
+
+    Stream<ChangeTracker> total = Stream.empty();
 
     public RecentChangesView(Project project) {
         addClassName("recent-changes");
@@ -24,31 +24,20 @@ public class RecentChangesView extends VerticalLayout {
 
         final var db = NitriteDBProvider.getInstance();
 
-        db.getSprints4Project(project)
-                .forEach(sprint -> db.getTasks4Sprint(sprint).sorted(
-                        (a, b) -> -Long.compare(db.getTaskModifiedTime(a.getId()), (db.getTaskModifiedTime(b.getId()))))
-                        .forEach(task -> {
-                            final var date = LocalDateTime
-                                    .ofInstant(Instant.ofEpochMilli(db.getTaskModifiedTime(task.getId())),
-                                            ZoneId.systemDefault())
-                                    .format(DateTimeFormatter.ofPattern("dd MMM. yyyy hh:mm:ss"));
-                            final var revision = db.getTaskRevision(task.getId());
+        total = Stream.concat(total, db.getSprints4Project(project).map(sprint -> (ChangeTracker) sprint));
 
-                            final var changeText = new Span();
-                            changeText.addClassName("link");
-                            changeText.getElement().setProperty("innerHTML", "Task \"" + task.getName() + "\":<br/>"
-                                    + ((revision == 1) ? "Added" : "Modified") + " at: " + date);
+        db.getSprints4Project(project).forEach(sprint -> {
+            total = Stream.concat(total, db.getTasks4Sprint(sprint).map(task -> (ChangeTracker) task));
+        });
 
-                            changeText.addClickListener(e -> {
-                                final var details = new TaskDetail(task.getId(), t -> {
-                                    UI.getCurrent().navigate(LoginScreen.class);
-                                    UI.getCurrent().navigate(Overview.class);
-                                });
-                                details.open();
-                            });
+        total.sorted((a, b) -> -Long.compare(a.getLastModifiedTime(), b.getLastModifiedTime()))
+        .forEach(change -> {
+            final var date = LocalDateTime.ofInstant(Instant.ofEpochMilli(change.getLastModifiedTime()), ZoneId.systemDefault());
 
-                            add(changeText);
-                        }));
-
+            final var changeText = new Span();
+            changeText.getElement().setProperty("innerHTML", change.getType() + " \"" + change.getMessage() + "\":<br/>"
+                    + ((change.getRevision() == 1) ? "Added" : "Modified") + " at: " + date.format(DateTimeFormatter.ofPattern("dd MMM. yyyy hh:mm:ss")));
+            add(changeText);
+        });
     }
 }

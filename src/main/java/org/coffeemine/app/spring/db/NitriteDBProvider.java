@@ -215,14 +215,6 @@ public class NitriteDBProvider implements DBProvider {
         return new Task().fromNO2Doc(db.getCollection("tasks").find(eq("id", id)).firstOrDefault());
     }
 
-    public Long getTaskModifiedTime(int id) {
-        return db.getCollection("tasks").find(eq("id", id)).firstOrDefault().getLastModifiedTime();
-    }
-
-    public int getTaskRevision(int id) {
-        return db.getCollection("tasks").find(eq("id", id)).firstOrDefault().getRevision();
-    }
-
     @Override
     public int addTask(ITask task) {
         final var doc = task.asNO2Doc();
