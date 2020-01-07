@@ -32,4 +32,5 @@ public interface ITask extends JsonSerializable, NO2Serializable {
     ArrayList<String> getCommits();
 
     void setCommits(ArrayList<String> commits);
+    void addFragment(int id);
 }
