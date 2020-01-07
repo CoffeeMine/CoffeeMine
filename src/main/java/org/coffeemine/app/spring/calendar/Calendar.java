@@ -67,14 +67,13 @@ class Calendar extends View {
         controls.add(previous, today, next, date_picker, select_view, event_creation);
 
         calendar.getStyle().set("z-index", "0");
-        final var date = new Text(date_picker.getValue().format(DateTimeFormatter.ofPattern("d MMM yyyy")));
         calendar.setFirstDay(DayOfWeek.MONDAY);
         calendar.setBusinessHours();
         calendar.addEntryClickedListener(event -> openTask(event.getEntry()));
 
         updateEvents();
 
-        final var container = new VerticalLayout(controls, date, calendar);
+        final var container = new VerticalLayout(controls, calendar);
         add(container);
     }
 
