@@ -18,7 +18,7 @@ public class TaskDetail extends Dialog {
         final var name = new Text(task.getName());
         final var id_txt = new Text(Integer.toString(task.getId()));
         final var description = new Text(task.getDescription());
-        final var bound_sprint = new Text("Sprint X");
+        final var bound_sprint = new Text(task.getAssignSprint());
 
         final var edit = new Button("Edit", e -> {
             new TaskModification(task.getId(), on_edit);

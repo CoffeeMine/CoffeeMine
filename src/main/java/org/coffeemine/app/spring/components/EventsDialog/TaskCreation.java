@@ -7,14 +7,16 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.data.ITask;
 import org.coffeemine.app.spring.data.Task;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class TaskCreation extends Dialog {
-    private ITask task = new Task();
+    private ITask task;
 
     public TaskCreation(Consumer<ITask> callback) {
         super();
@@ -24,12 +26,17 @@ public class TaskCreation extends Dialog {
         desc.setPlaceholder("Please provide task description here");
         final var assignees_sel = new Select<>("Bob", "John", "Rick", "Mahaa", "Tylo");
         assignees_sel.setPlaceholder("Assigning to..");
-        final var sprint_sel = new Select<>("Sprint 1", "Sprint 2", "Sprint 3");
+
+        String[] sprints = new String[(int) NitriteDBProvider.getInstance().getSprints4Project(NitriteDBProvider.getInstance().getCurrentProject(CurrentUser.get())).count()];
+        for(int i=1; i<= sprints.length; i++){
+            sprints[i-1]= "Sprint " + i;
+        }
+        final var sprint_sel = new Select<>(sprints);
         sprint_sel.setPlaceholder("Assigning to sprint..");
         final var create_btn = new Button("Create", event -> {
-            task.setName(name.getValue());
-            task.setDescription(desc.getValue());
-            NitriteDBProvider.getInstance().addTask(task);
+            task = NitriteDBProvider.getInstance().getTask(
+                    NitriteDBProvider.getInstance().addTask(
+                            new Task(-1, name.getValue(), sprint_sel.getValue(), desc.getValue(),5, true, new ArrayList<Integer>(), new ArrayList<>(),new ArrayList<>())));
             callback.accept(task);
             Notification notification = new Notification(
                     "Added task #" + task.getId() +
