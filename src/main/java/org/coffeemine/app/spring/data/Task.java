@@ -98,6 +98,11 @@ public class Task implements ITask, ChangeTracker {
     }
 
     @Override
+    public void addFragment(int id) {
+        fragments.add(id);
+    }
+
+    @Override
     public ArrayList<String> getCommits() {
         return commits;
     }

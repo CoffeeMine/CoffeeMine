@@ -54,7 +54,7 @@ public class HoursLogging extends Dialog {
             selectSprint.setItems(db.getSprints4Project(currentProject).collect(Collectors.toList()));
             selectSprint.addValueChangeListener(event -> {
                 selectTask.removeAll();
-                selectTask.setItemLabelGenerator(e -> ITask.getName());
+                selectTask.setItemLabelGenerator(e -> ((ITask) e).getName());
                 selectTask.setItems(db.getTasks4Sprint(((ISprint) event.getValue())).collect(Collectors.toList()));
             });
             selectTask.addValueChangeListener(event -> {
