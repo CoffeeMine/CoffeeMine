@@ -20,6 +20,7 @@ import org.coffeemine.app.spring.auth.BasicAccessControl;
 import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.auth.LoginScreen;
 import org.coffeemine.app.spring.auth.ProtectedView;
+import org.coffeemine.app.spring.components.AddProjectDialog;
 import org.coffeemine.app.spring.components.ProjectList;
 import org.coffeemine.app.spring.components.EventsDialog.TaskDetail;
 import org.coffeemine.app.spring.components.EventsDialog.UserCreation;
@@ -108,11 +109,30 @@ public class UserProfile extends VerticalLayout implements ProtectedView, HasUrl
         final var particpation = new HorizontalLayout();
         particpation.setWidthFull();
         
-        final var projects = new VerticalLayout(new H3("Current projects"));
+        final var projects = new VerticalLayout();
         projects.setWidth("50%");
 
         ProjectList currentProjects = new ProjectList(ProjectList.Modes.LARGE);
-        projects.add(currentProjects);
+
+        // TODO: somehow align all this properly.
+        final var projectsHeader = new Div();
+        projectsHeader.getStyle().set("margin", "calc(0.4 * var(--material-h5-font-size)) 0px");
+        projectsHeader.getStyle().set("max-height", "var(--material-h5-font-size)");
+        projectsHeader.setWidthFull();
+
+        final var projectsText = new Span("Current Projects");
+        projectsText.getStyle().set("font-size", "var(--material-h5-font-size)");
+        projectsHeader.add(projectsText);
+
+        if (CurrentUser.get().getStatus().equals(User.Status.ADMIN)) {
+            final var newProjectButton = new Button("New Project", e -> {
+                final var createProjectDialog = new AddProjectDialog();
+                createProjectDialog.open();
+            });
+            newProjectButton.getStyle().set("float", "right");
+            projectsHeader.add(newProjectButton);
+        }
+        projects.add(projectsHeader, currentProjects);
 
         final var tasks = new VerticalLayout(new H3("Assigned tasks"));
         tasks.setWidth("50%");
