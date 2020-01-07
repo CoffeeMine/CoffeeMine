@@ -22,6 +22,7 @@ import org.coffeemine.app.spring.auth.LoginScreen;
 import org.coffeemine.app.spring.auth.ProtectedView;
 import org.coffeemine.app.spring.components.ProjectList;
 import org.coffeemine.app.spring.components.EventsDialog.TaskDetail;
+import org.coffeemine.app.spring.components.EventsDialog.UserCreation;
 import org.coffeemine.app.spring.data.ChangeTracker;
 import org.coffeemine.app.spring.data.User;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
@@ -43,9 +44,24 @@ public class UserProfile extends VerticalLayout implements ProtectedView, HasUrl
         VerticalLayout userprofile = new VerticalLayout();
         userprofile.addClassName("userprofile");
 
+        final var topControl = new HorizontalLayout();
+        topControl.setPadding(false);
+        topControl.setWidthFull();
+
         Button back = new Button("back");
         back.addClickListener(e -> UI.getCurrent().navigate(Overview.class));
         back.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
+        topControl.add(back);
+
+        if (user.getStatus().equals(User.Status.ADMIN)) {
+            final var addUserButton = new Button("Add User", e -> {
+                final var userCreator = new UserCreation();
+                userCreator.open();
+            });
+            addUserButton.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
+            addUserButton.getStyle().set("margin-left", "auto");
+            topControl.add(addUserButton);
+        }
 
         HorizontalLayout usernameTitle = new HorizontalLayout();
         usernameTitle.setWidthFull();
@@ -127,7 +143,7 @@ public class UserProfile extends VerticalLayout implements ProtectedView, HasUrl
         logOut.getStyle().set("margin", "auto 0px 0px auto");
         logOut.addThemeVariants(ButtonVariant.MATERIAL_CONTAINED);
 
-        userprofile.add(back, usernameTitle, info, save, particpation, logOut);
+        userprofile.add(topControl, usernameTitle, info, save, particpation, logOut);
         add(userprofile);
     }
 
