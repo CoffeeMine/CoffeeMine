@@ -180,9 +180,12 @@ public class NitriteDBProvider implements DBProvider {
 
     @Override
     public int addUser(User user) {
-        db.getCollection("users").insert(user.asNO2Doc());
+        final var doc = user.asNO2Doc();
+        final var id = idFor(User.class);
+        doc.replace("id", id);
+        db.getCollection("users").insert(doc);
         db.commit();
-        return user.getId();
+        return id;
     }
 
     @Override
