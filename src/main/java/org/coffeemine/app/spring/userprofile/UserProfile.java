@@ -53,7 +53,7 @@ public class UserProfile extends VerticalLayout implements ProtectedView, HasUrl
         back.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
         topControl.add(back);
 
-        if (user.getStatus().equals(User.Status.ADMIN)) {
+        if (CurrentUser.get().getStatus().equals(User.Status.ADMIN)) {
             final var addUserButton = new Button("Add User", e -> {
                 final var userCreator = new UserCreation();
                 userCreator.open();
