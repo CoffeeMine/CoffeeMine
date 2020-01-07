@@ -13,6 +13,10 @@ public interface ITask extends JsonSerializable, NO2Serializable {
 
     void setName(@NotNull String name);
 
+    @NotNull String getAssignSprint();
+
+    void setAssignSprint (@NotNull String assignSprint);
+
     @NotNull String getDescription();
 
     void setDescription(@NotNull String description);

@@ -12,6 +12,8 @@ public class Task implements ITask {
     @NotNull
     private String name = "";
     @NotNull
+    private String assignSprint = "";
+    @NotNull
     private String description = "";
     @NotNull
     private int hours;
@@ -25,9 +27,10 @@ public class Task implements ITask {
 
     public Task() { }
 
-    public Task(int id, @NotNull String name, @NotNull String description, int hours, boolean completed, @NotNull ArrayList<Integer> assignees, @NotNull ArrayList<Integer> fragments, ArrayList<String> commits) {
+    public Task(int id, @NotNull String name, @NotNull String assignSprint, @NotNull String description, int hours, boolean completed, @NotNull ArrayList<Integer> assignees, @NotNull ArrayList<Integer> fragments, ArrayList<String> commits) {
         this.id = id;
         this.name = name;
+        this.assignSprint = assignSprint;
         this.description = description;
         this.hours = hours;
         this.completed = completed;
@@ -50,6 +53,12 @@ public class Task implements ITask {
     public void setName(@NotNull String name) {
         this.name = name;
     }
+
+    @Override
+    public String getAssignSprint() { return assignSprint; };
+
+    @Override
+    public void setAssignSprint(@NotNull String assignSprint){ this.assignSprint = assignSprint;}
 
     @Override
     public @NotNull String getDescription() {
@@ -106,6 +115,7 @@ public class Task implements ITask {
         final var factory = new JreJsonFactory();
         final var ret = factory.createObject();
         ret.put("id", id);
+        ret.put("assignSprint", assignSprint);
         ret.put("name", name);
         ret.put("description", description);
         ret.put("hours", hours);
@@ -131,6 +141,7 @@ public class Task implements ITask {
     public Task readJson(JsonObject value) {
         id = ((int) value.getNumber("id"));
         name = value.getString("name");
+        assignSprint =  value.getString("assignSprint");
         description = value.getString("description");
         hours = ((int) value.getNumber("hours"));
         completed = value.getBoolean("completed");
@@ -162,6 +173,7 @@ public class Task implements ITask {
     public Document asNO2Doc() {
         return Document.createDocument("id", id)
                 .put("name", name)
+                .put("assignSprint", assignSprint)
                 .put("description", description)
                 .put("hours", hours)
                 .put("completed", completed)
@@ -177,6 +189,7 @@ public class Task implements ITask {
 
         id = doc.get("id", Integer.class);
         name = doc.get("name", String.class);
+        assignSprint =  doc.get("assignSprint", String.class);
         description = doc.get("description", String.class);
         hours = doc.get("hours", Integer.class);
         completed = doc.get("completed", Boolean.class);
