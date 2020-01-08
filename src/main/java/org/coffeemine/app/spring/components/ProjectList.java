@@ -50,7 +50,7 @@ public class ProjectList extends VerticalLayout {
             projectListItem.addClassName("projectitem");
 
             projectListItem.addClickListener(e -> {
-                if (CurrentUser.get() != null) {
+                if (CurrentUser.get() != null && CurrentUser.get().getCurrentProject() != project.getId()) {
                     final var redirectDialog = new Dialog();
                     final var buttons = new HorizontalLayout();
                     buttons.getStyle().set("padding-top", "1em");

@@ -16,14 +16,10 @@ public class TasksView extends HorizontalScroll {
 
     public TasksView(ISprint sprint) {
         if (sprint != null) {
-            var db = NitriteDBProvider.getInstance();
+            final var db = NitriteDBProvider.getInstance();
 
             db.getTasks4Sprint(db.getSprint(sprint.getId())).forEach(task -> {
-                var assigneeText = "";
-    
-                for (var user : task.getAssignees()) {
-                    assigneeText += db.getUser(user).getName();
-                }
+                final var assigneeText = String.join(", ", task.getAssignees().stream().map(t -> db.getUser(t).getName()).toArray(size -> new String[size]));
     
                 add(new TaskBlock(task.getName(), task.getDescription(), assigneeText, new Button("details", e -> {
                     final var details = new TaskDetail(task.getId(), t -> {

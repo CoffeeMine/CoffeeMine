@@ -24,11 +24,8 @@ public class RecentChangesView extends VerticalLayout {
 
         final var db = NitriteDBProvider.getInstance();
 
-        total = Stream.concat(total, db.getSprints4Project(project).map(sprint -> (ChangeTracker) sprint));
-
-        db.getSprints4Project(project).forEach(sprint -> {
-            total = Stream.concat(total, db.getTasks4Sprint(sprint).map(task -> (ChangeTracker) task));
-        });
+        total = Stream.concat(total, db.getSprints4Project(project));
+        total = Stream.concat(total, db.getSprints4Project(project).flatMap(s -> db.getTasks4Sprint(s)));
 
         total.sorted((a, b) -> -Long.compare(a.getLastModifiedTime(), b.getLastModifiedTime()))
         .forEach(change -> {

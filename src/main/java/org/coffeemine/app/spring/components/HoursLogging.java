@@ -19,8 +19,6 @@ public class HoursLogging extends Dialog {
     private ITask task = null;
     public HoursLogging() {
 
-        // TODO: show Sprint selector
-        // TODO: show Task selector (only show tasks for selected sprint)
         final var db = NitriteDBProvider.getInstance();
         final var start_time = new DatePicker(LocalDate.now());
         final var end_time = new DatePicker(LocalDate.now());
@@ -33,13 +31,12 @@ public class HoursLogging extends Dialog {
             final var fragment = new Fragment();
             fragment.setBegin(start_time.getValue());
             fragment.setEnd(end_time.getValue());
-            // TODO: save selected task
             final var id = db.addFragment(fragment);
             task.addFragment(id);
             Notification.show(
-                    "Task is now added!",
+                    "Successfully logged",
                     1100,
-                    Notification.Position.BOTTOM_CENTER);
+                    Notification.Position.BOTTOM_END);
             close();
         });
 

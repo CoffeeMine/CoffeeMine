@@ -6,7 +6,7 @@ import org.coffeemine.app.spring.db.NO2Serializable;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 
-public interface ITask extends JsonSerializable, NO2Serializable {
+public interface ITask extends JsonSerializable, NO2Serializable, ChangeTracker {
     int getId();
 
     @NotNull String getName();

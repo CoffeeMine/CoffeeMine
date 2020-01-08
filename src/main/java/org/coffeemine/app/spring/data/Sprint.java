@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class Sprint implements ISprint, ChangeTracker {
+public class Sprint implements ISprint {
     private int id = -1;
     @NotNull
     private LocalDate start = LocalDate.EPOCH;

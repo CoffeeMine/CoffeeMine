@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.ArrayList;
 
-public class Task implements ITask, ChangeTracker {
+public class Task implements ITask {
     private int id = -1;
     @NotNull
     private String name = "";
