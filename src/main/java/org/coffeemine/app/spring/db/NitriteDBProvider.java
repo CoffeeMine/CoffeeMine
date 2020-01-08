@@ -154,6 +154,11 @@ public class NitriteDBProvider implements DBProvider {
     }
 
     @Override
+    public void updateProject(Project project) {
+        db.getCollection("projects").update(eq("id", project.getId()), project.asNO2Doc());
+    }
+
+    @Override
     public int addProject(Project project) {
         final var doc = project.asNO2Doc();
         final var id = idFor(Project.class);
@@ -197,7 +202,12 @@ public class NitriteDBProvider implements DBProvider {
 
     @Override
     public void removeSprint(int id) {
+        db.getCollection("sprints").remove(eq("id", id));
+    }
 
+    @Override
+    public void updateSprint(ISprint sprint) {
+        db.getCollection("sprints").update(eq("id", sprint.getId()), sprint.asNO2Doc());
     }
 
     @Override
@@ -217,7 +227,12 @@ public class NitriteDBProvider implements DBProvider {
 
     @Override
     public void removeTask(int id) {
+        db.getCollection("tasks").remove(eq("id", id));
+    }
 
+    @Override
+    public void updateTask(ITask task) {
+        db.getCollection("tasks").update(eq("id", task.getId()), task.asNO2Doc());
     }
 
     public Stream<TrackItem> getTrackItems() {

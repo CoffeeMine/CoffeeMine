@@ -31,7 +31,7 @@ public class TaskModification extends Dialog {
         final var save = new Button("Save", e -> {
             task.setName(name.getValue());
             task.setDescription(desc.getValue());
-            //TODO update DB fields
+            NitriteDBProvider.getInstance().updateTask(task);
             callback.accept(task);
             Notification.show(
                     "Saved task " + task.getName(),

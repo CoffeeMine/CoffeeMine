@@ -30,6 +30,8 @@ public interface DBProvider {
 
     Project getProject(int id);
 
+    void updateProject(Project project);
+
     int addProject(Project project);
 
     int addFragment(Fragment fragment);
@@ -42,11 +44,15 @@ public interface DBProvider {
 
     void removeSprint(int id);
 
+    void updateSprint(ISprint sprint);
+
     ITask getTask(int id);
 
     int addTask(ITask task);
 
     void removeTask(int id);
+
+    void updateTask(ITask task);
 
     Integer account_id(String name, String hashpass);
 }

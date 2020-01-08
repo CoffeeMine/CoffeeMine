@@ -3,6 +3,7 @@ package org.coffeemine.app.spring.view;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import org.coffeemine.app.spring.auth.CurrentUser;
@@ -26,11 +27,14 @@ public class TopBar extends HorizontalLayout {
         HorizontalLayout miscLayout = new HorizontalLayout();
         miscLayout.getStyle().set("margin-left", "auto");
 
+        final var branding = new Image("./icons/icon-mono.png", "");
+        branding.setHeight("100%");
+
         H3 brandName = new H3("CoffeeMine");
         brandName.getStyle().set("margin", "auto");
         brandName.getStyle().set("padding-left", "10px");
 
-        brandLayout.add(brandName);
+        brandLayout.add(branding, brandName);
 
         tabLayout.add(new RoutingTabs());
 
