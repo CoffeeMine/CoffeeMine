@@ -7,13 +7,18 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.InternalServerError;
 import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.data.ITask;
 import org.coffeemine.app.spring.data.Task;
+import org.coffeemine.app.spring.data.User;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
+import org.vaadin.gatanaso.MultiselectComboBox;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class TaskCreation extends Dialog {
     private ITask task;
@@ -24,19 +29,24 @@ public class TaskCreation extends Dialog {
         final var name = new TextField();
         final var desc = new TextArea();
         desc.setPlaceholder("Please provide task description here");
-        final var assignees_sel = new Select<>("Bob", "John", "Rick", "Mahaa", "Tylo");
+
+        final var assignees_sel = new MultiselectComboBox<User>();
+        assignees_sel.setItems(NitriteDBProvider.getInstance().getUsers().collect(Collectors.toList()));
         assignees_sel.setPlaceholder("Assigning to..");
 
-        String[] sprints = new String[(int) NitriteDBProvider.getInstance().getSprints4Project(NitriteDBProvider.getInstance().getCurrentProject(CurrentUser.get())).count()];
+        final var sprints = new String[(int) NitriteDBProvider.getInstance().getSprints4Project(NitriteDBProvider.getInstance().getCurrentProject(CurrentUser.get())).count()];
         for(int i=1; i<= sprints.length; i++){
             sprints[i-1]= "Sprint " + i;
         }
         final var sprint_sel = new Select<>(sprints);
         sprint_sel.setPlaceholder("Assigning to sprint..");
+
         final var create_btn = new Button("Create", event -> {
+            ArrayList<Integer> usersId = new ArrayList<>();
+            assignees_sel.getSelectedItems().forEach(user -> usersId.add(user.getId()));
             task = NitriteDBProvider.getInstance().getTask(
                     NitriteDBProvider.getInstance().addTask(
-                            new Task(-1, name.getValue(), sprint_sel.getValue(), desc.getValue(),5, true, new ArrayList<Integer>(), new ArrayList<>(),new ArrayList<>())));
+                            new Task(-1, name.getValue(), sprint_sel.getValue(), desc.getValue(),5, true, usersId, new ArrayList<>(),new ArrayList<>())));
             callback.accept(task);
             Notification notification = new Notification(
                     "Added task #" + task.getId() +

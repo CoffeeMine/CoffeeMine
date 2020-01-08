@@ -18,6 +18,9 @@ public class TaskDetail extends Dialog {
         final var name = new Text(task.getName());
         final var id_txt = new Text(Integer.toString(task.getId()));
         final var description = new Text(task.getDescription());
+        final var currentAssignees = new StringBuffer();
+        task.getAssignees().forEach(assigneesId -> currentAssignees.append(NitriteDBProvider.getInstance().getUser(assigneesId).toString()));
+        final var bound_assignees =  new Text(currentAssignees.toString());
         final var bound_sprint = new Text(task.getAssignSprint());
 
         final var edit = new Button("Edit", e -> {
@@ -29,6 +32,7 @@ public class TaskDetail extends Dialog {
         form.add("Task #" + task.getId() + " " + task.getName());
         form.addFormItem(name, "Task Name");
         form.addFormItem(id_txt, "Task ID");
+        form.addFormItem(bound_assignees, "Assigning to");
         form.addFormItem(bound_sprint, "Sprint assign");
         form.addFormItem(description, "Task Description");
         form.add(edit);

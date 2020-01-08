@@ -9,10 +9,14 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.data.ITask;
+import org.coffeemine.app.spring.data.User;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
+import org.vaadin.gatanaso.MultiselectComboBox;
 
-import java.util.ArrayList;
+import java.lang.reflect.Array;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 
 public class TaskModification extends Dialog {
@@ -27,7 +31,14 @@ public class TaskModification extends Dialog {
         desc.setPlaceholder("Please provide a task description here");
         desc.setValue(task.getDescription());
 
-        String[] sprints = new String[(int) NitriteDBProvider.getInstance().getSprints4Project(NitriteDBProvider.getInstance().getCurrentProject(CurrentUser.get())).count()];
+        final var assignees_sel = new MultiselectComboBox<User>();
+        assignees_sel.setItems(NitriteDBProvider.getInstance().getUsers().collect(Collectors.toList()));
+        assignees_sel.setPlaceholder("Assigning to..");
+        Set<User> currentAssignees = new HashSet<>();
+        task.getAssignees().forEach(assigneesId -> currentAssignees.add(NitriteDBProvider.getInstance().getUser(assigneesId)));
+        assignees_sel.setValue(currentAssignees);
+
+        final var sprints = new String[(int) NitriteDBProvider.getInstance().getSprints4Project(NitriteDBProvider.getInstance().getCurrentProject(CurrentUser.get())).count()];
         for(int i=1; i<= sprints.length; i++){
             sprints[i-1]= "Sprint " + i;
         }
@@ -64,6 +75,7 @@ public class TaskModification extends Dialog {
         final var form = new FormLayout();
         form.add("Modifying Task #" + task.getId() + " " + task.getName());
         form.addFormItem(name, "Task Name");
+        form.addFormItem(assignees_sel,"Assigning to");
         form.addFormItem(sprint_sel, "For");
         form.addFormItem(desc, "Task Description");
         form.add(save, reset, delete);
