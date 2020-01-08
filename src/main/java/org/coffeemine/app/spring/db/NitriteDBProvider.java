@@ -90,9 +90,12 @@ public class NitriteDBProvider implements DBProvider {
 
     @Override
     public Stream<ISprint> getSprints4Project(Project project) {
-        return db.getCollection("sprints")
-                .find(in("id", project.getSprints().toArray()))
-                .toList().stream().map(d -> new Sprint().fromNO2Doc(d));
+        if (project.getSprints().size() > 0) {
+            return db.getCollection("sprints")
+            .find(in("id", project.getSprints().toArray()))
+            .toList().stream().map(d -> new Sprint().fromNO2Doc(d));
+        }
+        return Stream.empty();
     }
 
     @Override
@@ -106,16 +109,22 @@ public class NitriteDBProvider implements DBProvider {
 
     @Override
     public Stream<ITask> getTasks4Sprint(ISprint sprint) {
-        return db.getCollection("tasks")
-                .find(in("id", sprint.getTasks().toArray()))
-                .toList().stream().map(d -> new Task().fromNO2Doc(d));
+        if (sprint.getTasks().size() > 0) {
+            return db.getCollection("tasks")
+            .find(in("id", sprint.getTasks().toArray()))
+            .toList().stream().map(d -> new Task().fromNO2Doc(d));
+        }
+        return Stream.empty();
     }
 
     @Override
     public Stream<Fragment> getFragments4Task(ITask task) {
-        return db.getCollection("fragments")
-                .find(in("id", task.getFragments().toArray()))
-                .toList().stream().map(d -> new Fragment().fromNO2Doc(d));
+        if (task.getFragments().size() > 0) {
+            return db.getCollection("fragments")
+                    .find(in("id", task.getFragments().toArray()))
+                    .toList().stream().map(d -> new Fragment().fromNO2Doc(d));
+        }
+        return Stream.empty();
     }
 
     @Override
@@ -127,7 +136,8 @@ public class NitriteDBProvider implements DBProvider {
 
     @Override
     public Project getCurrentProject(User user) {
-        return this.getProject(user.getCurrentProject());
+        final var currentProject = getProject(user.getCurrentProject());
+        return (currentProject != null) ? currentProject : getProjects().findAny().get();
     }
 
     @Override
