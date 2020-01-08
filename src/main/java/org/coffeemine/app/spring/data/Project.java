@@ -45,10 +45,13 @@ public class Project implements JsonSerializable, NO2Serializable {
         final var factory = new JreJsonFactory();
         final var ret = factory.createObject();
         ret.put("name", name);
+        ret.put("id", id);
 
         final var sprints = factory.createArray();
         for (int i = 0; i < this.sprints.size(); ++i)
             sprints.set(i, this.sprints.get(i));
+
+        ret.put("sprints", sprints);
 
         return ret;
     }
@@ -56,6 +59,7 @@ public class Project implements JsonSerializable, NO2Serializable {
     @Override
     public Project readJson(JsonObject value) {
         name = value.getString("name");
+        id = (int) value.getNumber("id");
 
         final var jsprints = value.getArray("fragments");
         sprints.ensureCapacity(jsprints.length());
