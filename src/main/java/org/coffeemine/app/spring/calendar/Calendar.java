@@ -54,6 +54,7 @@ class Calendar extends View {
 
         final var select_view = new Select<>("Month", "Week", "Day");
         select_view.setPlaceholder("View as..");
+        select_view.setValue("Month");
         select_view.addValueChangeListener(event -> changeCalendarView(event.getValue()));
 
         final var new_sprint = new Button("New sprint", e -> createSprint());
@@ -87,7 +88,7 @@ class Calendar extends View {
                     sprint.getEnd().plusDays(1).atStartOfDay(),
                     true,
                     true,
-                    "red",
+                    "Green",
                     "");
             entry.setRenderingMode(Entry.RenderingMode.BACKGROUND);
             calendar.addEntry(entry);
@@ -100,7 +101,7 @@ class Calendar extends View {
                     LocalDateTime.of(2019, 11, 28, 12, 0),
                     true,
                     true,
-                    " dodgerblue",
+                    "dodgerblue",
                     task.getDescription());
             calendar.addEntry(entry);
         });
