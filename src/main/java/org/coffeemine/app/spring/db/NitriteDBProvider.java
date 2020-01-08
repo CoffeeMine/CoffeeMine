@@ -16,6 +16,7 @@ import static org.dizitart.no2.filters.Filters.*;
 public class NitriteDBProvider implements DBProvider {
     static private NitriteDBProvider instance = null;
     private Nitrite db;
+    private boolean first_run = false;
 
     public NitriteDBProvider(String filename) {
         db = Nitrite.builder()
@@ -23,12 +24,15 @@ public class NitriteDBProvider implements DBProvider {
                 .filePath(filename)
                 .openOrCreate();
 
-        if(!db.hasCollection("CoffeeMine"))
+        if (!db.hasCollection("CoffeeMine")) {
             setupCollection();
+            first_run = true;
+        }
     }
 
-    public static void init(String filename){
-        instance = new NitriteDBProvider(filename);
+    public static void init(String filename) {
+        if (instance == null)
+            instance = new NitriteDBProvider(filename);
     }
 
     public static NitriteDBProvider getInstance() {
@@ -42,6 +46,10 @@ public class NitriteDBProvider implements DBProvider {
         db.getCollection("sprints");
         db.getCollection("tasks");
         db.getCollection("fragments");
+    }
+
+    public boolean is_first_run() {
+        return first_run;
     }
 
     @Override
@@ -77,7 +85,7 @@ public class NitriteDBProvider implements DBProvider {
             final var sprints = getSprints4Project(project).collect(Collectors.toList());
             int i = 0;
             while (i < sprints.size())
-                jsprints.set(i++, sprints.get(i).toJson());
+                jsprints.set(i, sprints.get(i++).toJson());
 
             obj.put("sprints", jsprints);
         }
@@ -87,7 +95,7 @@ public class NitriteDBProvider implements DBProvider {
             final var tasks = getTasks4Project(project).collect(Collectors.toList());
             int i = 0;
             while (i < tasks.size())
-                jtasks.set(i++, tasks.get(i).toJson());
+                jtasks.set(i, tasks.get(i++).toJson());
 
             obj.put("tasks", jtasks);
         }
@@ -97,7 +105,7 @@ public class NitriteDBProvider implements DBProvider {
             final var frags = getTasks4Project(project).flatMap(this::getFragments4Task).collect(Collectors.toList());
             int i = 0;
             while (i < frags.size())
-                jfrags.set(i++, frags.get(i).toJson());
+                jfrags.set(i, frags.get(i++).toJson());
 
             obj.put("fragments", jfrags);
         }
@@ -165,6 +173,8 @@ public class NitriteDBProvider implements DBProvider {
 
     @Override
     public Project getCurrentProject(User user) {
+        if (user == null)
+            return null;
         return this.getProject(user.getCurrentProject());
     }
 
