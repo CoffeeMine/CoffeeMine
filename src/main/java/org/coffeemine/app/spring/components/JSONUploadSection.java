@@ -9,8 +9,6 @@ import com.vaadin.flow.component.polymertemplate.Id;
 import com.vaadin.flow.component.polymertemplate.PolymerTemplate;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
-import com.vaadin.flow.dom.DomEventListener;
-import com.vaadin.flow.dom.DomEvent;
 import com.vaadin.flow.templatemodel.TemplateModel;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 
@@ -55,11 +53,8 @@ public class JSONUploadSection extends PolymerTemplate<TemplateModel> {
             error.setVisible(false);
             button.setEnabled(true);
         });
-        upload.getElement().addEventListener("file-remove", new DomEventListener() {
-            @Override
-            public void handleEvent(DomEvent event) {
-                button.setEnabled(false);
-            }
+        upload.getElement().addEventListener("file-remove", e -> {
+            button.setEnabled(false);
         });
     }
 
