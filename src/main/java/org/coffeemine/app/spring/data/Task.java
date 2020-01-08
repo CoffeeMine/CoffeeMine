@@ -113,15 +113,18 @@ public class Task implements ITask {
         final var assignees = factory.createArray();
         for (int i = 0; i < this.assignees.size(); ++i)
             assignees.set(i, this.assignees.get(i));
+        ret.put("assignees", assignees);
 
         final var fragments = factory.createArray();
         for (int i = 0; i < this.fragments.size(); ++i)
             fragments.set(i, this.fragments.get(i));
+        ret.put("fragments", fragments);
 
         if(commits != null){
             final var commits = factory.createArray();
             for (int i = 0; i < this.commits.size(); ++i)
                 commits.set(i, this.commits.get(i));
+            ret.put("commits", commits);
         }
 
         return ret;
@@ -182,7 +185,7 @@ public class Task implements ITask {
         completed = doc.get("completed", Boolean.class);
         assignees = ((ArrayList<Integer>) doc.get("assignees"));
         fragments = ((ArrayList<Integer>) doc.get("fragments"));
-        commits = ((ArrayList<String>) doc.get("commits"));
+        commits = doc.get("commits") != null ? ((ArrayList<String>) doc.get("commits")) : null;
         return this;
     }
 }
