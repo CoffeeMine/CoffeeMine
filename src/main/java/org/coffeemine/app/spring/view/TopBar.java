@@ -28,7 +28,7 @@ public class TopBar extends HorizontalLayout {
 
         HorizontalLayout miscLayout = new HorizontalLayout();
         miscLayout.getStyle().set("margin-left", "auto");
-        
+
         final var branding = new Image("./icons/icon-mono.png", "");
         branding.setHeight("100%");
 

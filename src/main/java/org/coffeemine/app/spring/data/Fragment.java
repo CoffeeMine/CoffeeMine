@@ -67,6 +67,7 @@ public class Fragment implements JsonSerializable, NO2Serializable {
         final var users = factory.createArray();
         for (int i = 0; i < this.users.size(); ++i)
             users.set(i, this.users.get(i));
+        ret.put("users", users);
 
         return ret;
     }

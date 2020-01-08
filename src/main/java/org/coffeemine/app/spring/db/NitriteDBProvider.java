@@ -218,7 +218,7 @@ public class NitriteDBProvider implements DBProvider {
         db.getCollection("sprints").remove(eq("id", id));
     }
 
-    @Override 
+    @Override
     public void updateSprint(ISprint sprint) {
         db.getCollection("sprints").update(eq("id", sprint.getId()), sprint.asNO2Doc());
     }
@@ -253,23 +253,33 @@ public class NitriteDBProvider implements DBProvider {
     }
 
     public void addTrackItem(TrackItem item) {
-        db.getCollection("trackitems").insert(Document.createDocument("obj", item));
+        item.setId(idFor(TrackItem.class));
+        final var doc = Document.createDocument("obj", item);
+        doc.put("id", item.getId());
+        db.getCollection("trackitems").insert(doc);
+    }
+
+    public void updateTrackItem(TrackItem item) {
+        final var doc = Document.createDocument("obj", item);
+        doc.put("id", item.getId());
+        db.getCollection("trackitems").update(eq("id", item.getId()), doc);
+        db.commit();
     }
 
     @Override
     public Integer account_id(String name, String hashpass) {
         final var res = db.getCollection("users")
                 .find(and(eq("account_name", name), eq("account_passhash", hashpass)));
-        if(res.totalCount() == 1)
+        if (res.totalCount() == 1)
             return res.firstOrDefault().get("id", Integer.class);
 
-        if(res.totalCount() > 1)
+        if (res.totalCount() > 1)
             throw new RuntimeException("DB has multiple users with the same names and passwords");
         return null;
     }
 
     private int idFor(Class<?> c) {
-        final int v = new Random().nextInt();
+        final int v = Math.abs(new Random().nextInt());
 
         if(c.equals(User.class))
             return getUsers().map(User::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
@@ -277,14 +287,17 @@ public class NitriteDBProvider implements DBProvider {
         if(c.equals(Project.class))
             return getProjects().map(Project::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
 
-        if(c.equals(ISprint.class))
+        if (c.equals(ISprint.class))
             return getSprints().map(ISprint::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
 
-        if(c.equals(ITask.class))
+        if (c.equals(ITask.class))
             return getTasks().map(ITask::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
 
-        if(c.equals(Fragment.class))
+        if (c.equals(Fragment.class))
             return getFragments().map(Fragment::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
+
+        if (c.equals(TrackItem.class))
+            return getTrackItems().map(TrackItem::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
 
         throw new UnsupportedOperationException();
     }

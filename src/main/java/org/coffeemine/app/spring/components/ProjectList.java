@@ -11,7 +11,6 @@ import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-
 import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 
@@ -35,7 +34,7 @@ public class ProjectList extends VerticalLayout {
         generate(mode, limit);
     }
 
-    public ProjectList(Modes mode, int limit, Component...components) {
+    public ProjectList(Modes mode, int limit, Component... components) {
         this.add(components);
         generate(mode, limit);
     }

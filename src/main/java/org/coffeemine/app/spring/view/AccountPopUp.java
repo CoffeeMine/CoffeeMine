@@ -8,7 +8,6 @@ import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-
 import org.coffeemine.app.spring.auth.BasicAccessControl;
 import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.components.LetterIcon;
@@ -32,7 +31,7 @@ class AccountPopUp extends VerticalLayout {
         User user = CurrentUser.get();
         var userName = "No User";
         var currentProjectName = "No Project";
-        if(user != null) {
+        if (user != null) {
             userName = user.getName();
             currentProjectName = db.getCurrentProject(user).getName();
         }

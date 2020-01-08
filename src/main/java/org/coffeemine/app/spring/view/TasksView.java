@@ -4,11 +4,11 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 
 import org.coffeemine.app.spring.auth.LoginScreen;
-import org.coffeemine.app.spring.components.HorizontalScroll;
-import org.coffeemine.app.spring.components.TaskBlock;
 import org.coffeemine.app.spring.components.EventsDialog.SprintCreation;
 import org.coffeemine.app.spring.components.EventsDialog.TaskCreation;
 import org.coffeemine.app.spring.components.EventsDialog.TaskDetail;
+import org.coffeemine.app.spring.components.HorizontalScroll;
+import org.coffeemine.app.spring.components.TaskBlock;
 import org.coffeemine.app.spring.data.ISprint;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 
