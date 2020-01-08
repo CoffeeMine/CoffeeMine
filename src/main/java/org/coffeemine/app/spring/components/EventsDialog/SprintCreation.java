@@ -29,6 +29,7 @@ public class SprintCreation extends Dialog {
             sprint.setStart(start_time.getValue());
             sprint.setEnd((end_time.getValue()));
             final var id = NitriteDBProvider.getInstance().addSprint(sprint);
+            NitriteDBProvider.getInstance().getCurrentProject(CurrentUser.get()).addSprint(id);
             callback.accept(sprint);
             Notification.show(
                     "Sprint " + id + " is now added",
