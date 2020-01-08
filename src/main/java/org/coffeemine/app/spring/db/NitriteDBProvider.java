@@ -8,6 +8,7 @@ import org.dizitart.no2.Nitrite;
 
 import java.time.LocalDate;
 import java.util.Random;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.dizitart.no2.filters.Filters.*;
@@ -65,6 +66,43 @@ public class NitriteDBProvider implements DBProvider {
         for (int i = 0; i < jfrags.length(); ++i)
             db_fragments.insert(new Fragment().readJson(jfrags.getObject(i)).asNO2Doc());
 
+    }
+
+    public String exportJSONProject(Project project) {
+        final var factory = new JreJsonFactory();
+        final var obj = project.toJson();
+
+        {
+            final var jsprints = factory.createArray();
+            final var sprints = getSprints4Project(project).collect(Collectors.toList());
+            int i = 0;
+            while (i < sprints.size())
+                jsprints.set(i++, sprints.get(i).toJson());
+
+            obj.put("sprints", jsprints);
+        }
+
+        {
+            final var jtasks = factory.createArray();
+            final var tasks = getTasks4Project(project).collect(Collectors.toList());
+            int i = 0;
+            while (i < tasks.size())
+                jtasks.set(i++, tasks.get(i).toJson());
+
+            obj.put("tasks", jtasks);
+        }
+
+        {
+            final var jfrags = factory.createArray();
+            final var frags = getTasks4Project(project).flatMap(this::getFragments4Task).collect(Collectors.toList());
+            int i = 0;
+            while (i < frags.size())
+                jfrags.set(i++, frags.get(i).toJson());
+
+            obj.put("fragments", jfrags);
+        }
+
+        return obj.toJson();
     }
 
     @Override
