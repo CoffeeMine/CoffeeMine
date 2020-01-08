@@ -77,12 +77,14 @@ public class Sprint implements ISprint {
         ret.put("start", start.format(DateTimeFormatter.BASIC_ISO_DATE));
         ret.put("end", end.format(DateTimeFormatter.BASIC_ISO_DATE));
 
-        if(meeting_id != -1)
+        if (meeting_id != -1)
             ret.put("meeting_id", meeting_id);
 
         final var tasks = factory.createArray();
         for (int i = 0; i < this.tasks.size(); ++i)
             tasks.set(i, this.tasks.get(i));
+
+        ret.put("tasks", tasks);
 
         return ret;
     }
