@@ -228,8 +228,8 @@ vaadin-tab[orientation = vertical] {
 .recent-changes {
   width: 100%;
   max-width: 800px;
-  height: fit-content;
-  min-height: 400px;
+  height: 50vh;
+  overflow: auto;
   margin: 1em auto;
   border-radius: 5px;
   box-shadow: var(--material-shadow-elevation-4dp);

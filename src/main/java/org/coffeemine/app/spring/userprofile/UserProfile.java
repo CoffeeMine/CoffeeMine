@@ -108,6 +108,7 @@ public class UserProfile extends VerticalLayout implements ProtectedView, HasUrl
 
         final var particpation = new HorizontalLayout();
         particpation.setWidthFull();
+        particpation.setHeight("26rem");
         
         final var projects = new VerticalLayout();
         projects.setWidth("50%");
