@@ -125,4 +125,8 @@ public class User implements NO2Serializable {
         account_passhash = doc.get("account_passhash", String.class);
         return this;
     }
+
+    public String toString(){
+        return name;
+    }
 }

@@ -1,6 +1,5 @@
 package org.coffeemine.app.spring.calendar;
 
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -23,7 +22,8 @@ import org.vaadin.stefan.fullcalendar.FullCalendar;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Random;
 
 @Route
 @NavbarRoutable
@@ -54,6 +54,7 @@ class Calendar extends View {
 
         final var select_view = new Select<>("Month", "Week", "Day");
         select_view.setPlaceholder("View as..");
+        select_view.setValue("Month");
         select_view.addValueChangeListener(event -> changeCalendarView(event.getValue()));
 
         final var new_sprint = new Button("New sprint", e -> createSprint());
@@ -67,19 +68,27 @@ class Calendar extends View {
         controls.add(previous, today, next, date_picker, select_view, event_creation);
 
         calendar.getStyle().set("z-index", "0");
-        final var date = new Text(date_picker.getValue().format(DateTimeFormatter.ofPattern("d MMM yyyy")));
         calendar.setFirstDay(DayOfWeek.MONDAY);
         calendar.setBusinessHours();
         calendar.addEntryClickedListener(event -> openTask(event.getEntry()));
+        calendar.setHeight(1000);
 
         updateEvents();
 
-        final var container = new VerticalLayout(controls, date, calendar);
+        final var container = new VerticalLayout(controls, calendar);
         add(container);
     }
 
     void updateEvents() {
         calendar.removeAllEntries();
+        final var colorsSet = new ArrayList<String>();
+        colorsSet.add("mediumseagreen");
+        colorsSet.add("tomato");
+        colorsSet.add("orange");
+        colorsSet.add("dodgerblue");
+        colorsSet.add("gray");
+        colorsSet.add("slateblue");
+        colorsSet.add("violet");
         NitriteDBProvider.getInstance().getSprints().forEach(sprint -> {
             final var entry = new Entry(
                     Integer.toString(sprint.getId()),
@@ -88,7 +97,7 @@ class Calendar extends View {
                     sprint.getEnd().plusDays(1).atStartOfDay(),
                     true,
                     true,
-                    "red",
+                    "dodgerblue",
                     "");
             entry.setRenderingMode(Entry.RenderingMode.BACKGROUND);
             calendar.addEntry(entry);
@@ -101,7 +110,7 @@ class Calendar extends View {
                     LocalDateTime.of(2019, 11, 28, 12, 0),
                     true,
                     true,
-                    " dodgerblue",
+                    colorsSet.get(new Random().nextInt(colorsSet.size()-1)),
                     task.getDescription());
             calendar.addEntry(entry);
         });

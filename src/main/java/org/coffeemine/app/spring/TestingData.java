@@ -49,10 +49,10 @@ public class TestingData {
         db.addRisk(new Risk (39,"No choice of supplier", "Subcontract", "Select", "Select"));
 
         var tasks = new ArrayList<Integer>();
-        tasks.add(db.addTask(new Task(-1, "Hello0", "Task1", 10, true, users, new ArrayList<>(), new ArrayList<>())));
-        tasks.add(db.addTask(new Task(-1, "Hello1", "Task2", 16, true, users, new ArrayList<>(), new ArrayList<>())));
-        tasks.add(db.addTask(new Task(-1, "Hello2", "Task3", 1, true, users, new ArrayList<>(), new ArrayList<>())));
-        tasks.add(db.addTask(new Task(-1, "Hello3", "Task4", 3, false, users, new ArrayList<>(), new ArrayList<>())));
+        tasks.add(db.addTask(new Task(-1, "Hello0", "Sprint 1", "Task1", 10, true, users, new ArrayList<>(), new ArrayList<>())));
+        tasks.add(db.addTask(new Task(-1, "Hello1", "Sprint 1", "Task2", 16, true, users, new ArrayList<>(), new ArrayList<>())));
+        tasks.add(db.addTask(new Task(-1, "Hello2", "Sprint 1", "Task3", 1, true, users, new ArrayList<>(), new ArrayList<>())));
+        tasks.add(db.addTask(new Task(-1, "Hello3", "Sprint 1", "Task4", 3, false, users, new ArrayList<>(), new ArrayList<>())));
 
         final var now = LocalDate.now();
         final var start = now.minus(1, ChronoUnit.WEEKS);
