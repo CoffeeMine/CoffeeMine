@@ -8,6 +8,7 @@ import org.dizitart.no2.Nitrite;
 
 import java.time.LocalDate;
 import java.util.Random;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.dizitart.no2.filters.Filters.*;
@@ -15,6 +16,7 @@ import static org.dizitart.no2.filters.Filters.*;
 public class NitriteDBProvider implements DBProvider {
     static private NitriteDBProvider instance = null;
     private Nitrite db;
+    private boolean first_run = false;
 
     public NitriteDBProvider(String filename) {
         db = Nitrite.builder()
@@ -22,12 +24,15 @@ public class NitriteDBProvider implements DBProvider {
                 .filePath(filename)
                 .openOrCreate();
 
-        if(!db.hasCollection("CoffeeMine"))
+        if (!db.hasCollection("CoffeeMine")) {
             setupCollection();
+            first_run = true;
+        }
     }
 
-    public static void init(String filename){
-        instance = new NitriteDBProvider(filename);
+    public static void init(String filename) {
+        if (instance == null)
+            instance = new NitriteDBProvider(filename);
     }
 
     public static NitriteDBProvider getInstance() {
@@ -41,6 +46,10 @@ public class NitriteDBProvider implements DBProvider {
         db.getCollection("sprints");
         db.getCollection("tasks");
         db.getCollection("fragments");
+    }
+
+    public boolean is_first_run() {
+        return first_run;
     }
 
     @Override
@@ -65,6 +74,44 @@ public class NitriteDBProvider implements DBProvider {
         for (int i = 0; i < jfrags.length(); ++i)
             db_fragments.insert(new Fragment().readJson(jfrags.getObject(i)).asNO2Doc());
 
+        db.commit();
+    }
+
+    public String exportJSONProject(Project project) {
+        final var factory = new JreJsonFactory();
+        final var obj = project.toJson();
+
+        {
+            final var jsprints = factory.createArray();
+            final var sprints = getSprints4Project(project).collect(Collectors.toList());
+            int i = 0;
+            while (i < sprints.size())
+                jsprints.set(i, sprints.get(i++).toJson());
+
+            obj.put("sprints", jsprints);
+        }
+
+        {
+            final var jtasks = factory.createArray();
+            final var tasks = getTasks4Project(project).collect(Collectors.toList());
+            int i = 0;
+            while (i < tasks.size())
+                jtasks.set(i, tasks.get(i++).toJson());
+
+            obj.put("tasks", jtasks);
+        }
+
+        {
+            final var jfrags = factory.createArray();
+            final var frags = getTasks4Project(project).flatMap(this::getFragments4Task).collect(Collectors.toList());
+            int i = 0;
+            while (i < frags.size())
+                jfrags.set(i, frags.get(i++).toJson());
+
+            obj.put("fragments", jfrags);
+        }
+
+        return obj.toJson();
     }
 
     @Override
@@ -90,6 +137,8 @@ public class NitriteDBProvider implements DBProvider {
 
     @Override
     public Stream<ISprint> getSprints4Project(Project project) {
+        if (project.getSprints().isEmpty())
+            return Stream.empty();
         return db.getCollection("sprints")
                 .find(in("id", project.getSprints().toArray()))
                 .toList().stream().map(d -> new Sprint().fromNO2Doc(d));
@@ -99,6 +148,8 @@ public class NitriteDBProvider implements DBProvider {
     public Stream<ITask> getTasks4Project(Project project) {
         final var task_ids = getSprints4Project(project)
                 .flatMap(s -> s.getTasks().stream()).toArray();
+        if (task_ids.length == 0)
+            return Stream.empty();
         return db.getCollection("tasks")
                 .find(in("id", task_ids))
                 .toList().stream().map(d -> new Task().fromNO2Doc(d));
@@ -106,6 +157,8 @@ public class NitriteDBProvider implements DBProvider {
 
     @Override
     public Stream<ITask> getTasks4Sprint(ISprint sprint) {
+        if (sprint.getTasks().isEmpty())
+            return Stream.empty();
         return db.getCollection("tasks")
                 .find(in("id", sprint.getTasks().toArray()))
                 .toList().stream().map(d -> new Task().fromNO2Doc(d));
@@ -113,6 +166,8 @@ public class NitriteDBProvider implements DBProvider {
 
     @Override
     public Stream<Fragment> getFragments4Task(ITask task) {
+        if (task.getFragments().isEmpty())
+            return Stream.empty();
         return db.getCollection("fragments")
                 .find(in("id", task.getFragments().toArray()))
                 .toList().stream().map(d -> new Fragment().fromNO2Doc(d));
@@ -127,7 +182,10 @@ public class NitriteDBProvider implements DBProvider {
 
     @Override
     public Project getCurrentProject(User user) {
-        return this.getProject(user.getCurrentProject());
+        if (user == null)
+            return null;
+        final var currentProject = getProject(user.getCurrentProject());
+        return (currentProject != null) ? currentProject : getProjects().findAny().get();
     }
 
     @Override
@@ -180,9 +238,12 @@ public class NitriteDBProvider implements DBProvider {
 
     @Override
     public int addUser(User user) {
-        db.getCollection("users").insert(user.asNO2Doc());
+        final var doc = user.asNO2Doc();
+        final var id = user.getId() == -1 ? idFor(User.class) : user.getId();
+        doc.replace("id", id);
+        db.getCollection("users").insert(doc);
         db.commit();
-        return user.getId();
+        return id;
     }
 
     @Override

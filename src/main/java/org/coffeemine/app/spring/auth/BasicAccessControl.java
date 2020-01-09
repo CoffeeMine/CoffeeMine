@@ -48,7 +48,7 @@ public class BasicAccessControl implements AccessControl {
     public void signOut() {
         userId = null;
         CurrentUser.set(null);
-        UI.getCurrent().getPage().reload();
+        UI.getCurrent().navigate(LoginScreen.class);
     }
 
 }
