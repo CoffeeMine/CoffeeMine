@@ -6,6 +6,10 @@ set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/CMake/Modules")
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../resources/META-INF/resources)
 
+if (NOT EXISTS ${PROJECT_SOURCE_DIR}/thirdparty/rapidjson OR NOT EXISTS ${PROJECT_SOURCE_DIR}/thirdparty/rapidjson/include)
+    message (FATAL_ERROR "Missing depencency; if you have cloned this from a git repository, please run `git submodule update --init --recursive --remote`\n otherwise put the contents of the rapidjson C++ library into 'JSONValidator/thirdparty/rapidjson'")
+endif ()
+
 include_directories (${PROJECT_SOURCE_DIR}/thirdparty/rapidjson/include)
 
 add_compile_options (-o JSONValidator.js)
