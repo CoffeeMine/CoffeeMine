@@ -4,6 +4,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import org.coffeemine.app.spring.auth.CurrentUser;
@@ -41,6 +43,8 @@ public class TopBar extends HorizontalLayout {
         final var log_hours = new Button("Log hours", e -> new HoursLogging());
         AccountPopUp accountInfo = new AccountPopUp();
 
+        SearchPopUp search = new SearchPopUp();
+
         // TODO: Currently we're drawing a fullsize Div over the screen to detect clicks
         // anywhere, but this is not pretty, fix this natively in the future.
         Div clickhack = new Div();
@@ -52,14 +56,27 @@ public class TopBar extends HorizontalLayout {
 
         LetterIcon AccountButton = new LetterIcon(userName.substring(0, 1));
         AccountButton.getStyle().set("font-size", "30px");
+        AccountButton.getStyle().set("margin", "0px");
 
         clickhack.addClickListener(e -> {
             clickhack.setVisible(false);
             accountInfo.setVisible(false);
+            search.setVisible(false);
+        });
+
+        final var searchButton = new Button(new Icon(VaadinIcon.SEARCH), e -> {
+            if (!clickhack.isVisible()) {
+                clickhack.setVisible(true);
+                search.setVisible(true);
+                search.focus();
+            } else {
+                clickhack.setVisible(false);
+                search.setVisible(false);
+            }
         });
 
         AccountButton.addClickListener(e -> {
-            if (!accountInfo.isVisible()) {
+            if (!clickhack.isVisible()) {
                 clickhack.setVisible(true);
                 accountInfo.setVisible(true);
             } else {
@@ -68,8 +85,8 @@ public class TopBar extends HorizontalLayout {
             }
         });
 
-        miscLayout.add(log_hours,AccountButton);
+        miscLayout.add(log_hours, searchButton, AccountButton);
 
-        this.add(brandLayout, tabLayout ,miscLayout ,clickhack, accountInfo);
+        this.add(brandLayout, tabLayout ,miscLayout ,clickhack, accountInfo, search);
     }
 }

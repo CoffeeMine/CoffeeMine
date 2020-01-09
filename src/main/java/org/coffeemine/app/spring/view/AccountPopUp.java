@@ -47,7 +47,7 @@ class AccountPopUp extends VerticalLayout {
         HorizontalLayout buttons = new HorizontalLayout();
         buttons.setWidthFull();
 
-        Button detailsButton = new Button("Details", e -> UI.getCurrent().navigate(UserProfile.class));
+        Button detailsButton = new Button("Profile", e -> UI.getCurrent().navigate(UserProfile.class, "current"));
         detailsButton.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
 
         Button logoutButton = new Button("Log out", e -> BasicAccessControl.getInstance().signOut());
