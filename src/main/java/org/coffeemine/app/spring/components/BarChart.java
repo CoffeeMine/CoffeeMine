@@ -8,11 +8,22 @@ import com.github.appreciated.apexcharts.config.plotoptions.builder.BarBuilder;
 import com.github.appreciated.apexcharts.config.tooltip.builder.YBuilder;
 import com.github.appreciated.apexcharts.config.yaxis.builder.TitleBuilder;
 import com.github.appreciated.apexcharts.helper.Series;
+import org.coffeemine.app.spring.auth.CurrentUser;
+import org.coffeemine.app.spring.db.NitriteDBProvider;
+import org.coffeemine.app.spring.statistics.StatisticsCalculation;
 import org.coffeemine.app.spring.view.View;
 
 public class BarChart extends View {
 
+    private StatisticsCalculation statisticsCalculation;
+
     public BarChart() {
+
+        statisticsCalculation = new StatisticsCalculation();
+
+        final var currentProject = NitriteDBProvider.getInstance().getCurrentProject(CurrentUser.get());
+        final var currentSprint = NitriteDBProvider.getInstance().getCurrentSprint(currentProject);
+
         ApexCharts barChart = ApexChartsBuilder.get()
                 .withChart(ChartBuilder.get()
                         .withType(Type.bar)
@@ -30,12 +41,12 @@ public class BarChart extends View {
                         .withWidth(2.0)
                         .withColors("transparent")
                         .build())
-                .withSeries(new Series<>("Planned Value", 44.0),
-                        new Series<>("Actual Value", 76.0),
-                        new Series<>("Earned Value", 35.0))
+                .withSeries(new Series<>("Planned Value", statisticsCalculation.plannedValueSprint(currentSprint)),
+                        new Series<>("Actual Value", statisticsCalculation.actualValueSprint(currentSprint)),
+                        new Series<>("Earned Value", statisticsCalculation.earnedValue(currentSprint)))
                 .withYaxis(YAxisBuilder.get()
                         .withTitle(TitleBuilder.get()
-                                .withText("SEK (thousands)")
+                                .withText("SEK")
                                 .build())
                         .build())
                 .withXaxis(XAxisBuilder.get().withCategories("Current Sprint").build())
