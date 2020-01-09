@@ -18,9 +18,7 @@ public class TaskDetail extends Dialog {
         final var name = new Text(task.getName());
         final var id_txt = new Text(Integer.toString(task.getId()));
         final var description = new Text(task.getDescription());
-        final var currentAssignees = new StringBuffer();
-        task.getAssignees().forEach(assigneesId -> currentAssignees.append(NitriteDBProvider.getInstance().getUser(assigneesId).toString()));
-        final var bound_assignees =  new Text(currentAssignees.toString());
+        final var bound_assignees =  new Text(String.join(", ", task.getAssignees().stream().map(t -> NitriteDBProvider.getInstance().getUser(t).getName()).toArray(String[]::new)));
         final var bound_sprint = new Text(task.getAssignSprint());
 
         final var edit = new Button("Edit", e -> {
