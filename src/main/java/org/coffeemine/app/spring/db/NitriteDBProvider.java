@@ -136,6 +136,8 @@ public class NitriteDBProvider implements DBProvider {
 
     @Override
     public Stream<ISprint> getSprints4Project(Project project) {
+        if (project.getSprints().isEmpty())
+            return Stream.empty();
         return db.getCollection("sprints")
                 .find(in("id", project.getSprints().toArray()))
                 .toList().stream().map(d -> new Sprint().fromNO2Doc(d));
@@ -152,6 +154,8 @@ public class NitriteDBProvider implements DBProvider {
 
     @Override
     public Stream<ITask> getTasks4Sprint(ISprint sprint) {
+        if (sprint.getTasks().isEmpty())
+            return Stream.empty();
         return db.getCollection("tasks")
                 .find(in("id", sprint.getTasks().toArray()))
                 .toList().stream().map(d -> new Task().fromNO2Doc(d));
@@ -159,6 +163,8 @@ public class NitriteDBProvider implements DBProvider {
 
     @Override
     public Stream<Fragment> getFragments4Task(ITask task) {
+        if (task.getFragments().isEmpty())
+            return Stream.empty();
         return db.getCollection("fragments")
                 .find(in("id", task.getFragments().toArray()))
                 .toList().stream().map(d -> new Fragment().fromNO2Doc(d));
