@@ -74,6 +74,7 @@ public class NitriteDBProvider implements DBProvider {
         for (int i = 0; i < jfrags.length(); ++i)
             db_fragments.insert(new Fragment().readJson(jfrags.getObject(i)).asNO2Doc());
 
+        db.commit();
     }
 
     public String exportJSONProject(Project project) {
@@ -147,6 +148,8 @@ public class NitriteDBProvider implements DBProvider {
     public Stream<ITask> getTasks4Project(Project project) {
         final var task_ids = getSprints4Project(project)
                 .flatMap(s -> s.getTasks().stream()).toArray();
+        if (task_ids.length == 0)
+            return Stream.empty();
         return db.getCollection("tasks")
                 .find(in("id", task_ids))
                 .toList().stream().map(d -> new Task().fromNO2Doc(d));
