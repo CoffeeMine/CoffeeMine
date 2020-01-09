@@ -81,7 +81,7 @@ public class Sprint implements ISprint {
 
     @Override
     public String getMessage() {
-        return "#" + Integer.toString(id);
+        return start.format(DateTimeFormatter.ofPattern("uuuu MMM dd"));
     }
 
     @Override
