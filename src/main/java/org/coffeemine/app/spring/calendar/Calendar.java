@@ -71,6 +71,7 @@ class Calendar extends View {
         calendar.setFirstDay(DayOfWeek.MONDAY);
         calendar.setBusinessHours();
         calendar.addEntryClickedListener(event -> openTask(event.getEntry()));
+        calendar.setHeight(1000);
 
         updateEvents();
 
