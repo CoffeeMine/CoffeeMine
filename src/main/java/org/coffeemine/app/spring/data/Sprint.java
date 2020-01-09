@@ -5,7 +5,6 @@ import elemental.json.impl.JreJsonFactory;
 import org.dizitart.no2.Document;
 
 import javax.validation.constraints.NotNull;
-
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -118,8 +117,8 @@ public class Sprint implements ISprint {
     @Override
     public Sprint readJson(JsonObject value) {
         id = ((int) value.getNumber("id"));
-        start = LocalDate.parse(value.getString("start"));
-        end = LocalDate.parse(value.getString("end"));
+        start = LocalDate.parse(value.getString("start"), DateTimeFormatter.BASIC_ISO_DATE);
+        end = LocalDate.parse(value.getString("end"), DateTimeFormatter.BASIC_ISO_DATE);
 
 
         final var jtask = value.getArray("tasks");
@@ -127,8 +126,8 @@ public class Sprint implements ISprint {
         for (int i = 0; i < jtask.length(); ++i)
             tasks.add(((int) jtask.getNumber(i)));
 
-        if (value.hasKey("meeting_id")){
-            meeting_id = (int)value.getNumber("meeting_id");
+        if (value.hasKey("meeting_id")) {
+            meeting_id = (int) value.getNumber("meeting_id");
         } else
             meeting_id = -1;
 
