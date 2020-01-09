@@ -13,11 +13,10 @@ import org.coffeemine.app.spring.data.User;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 import org.vaadin.gatanaso.MultiselectComboBox;
 
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
 
 public class TaskModification extends Dialog {
 

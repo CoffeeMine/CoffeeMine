@@ -7,7 +7,6 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.InternalServerError;
 import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.data.ITask;
 import org.coffeemine.app.spring.data.Task;
@@ -16,7 +15,6 @@ import org.coffeemine.app.spring.db.NitriteDBProvider;
 import org.vaadin.gatanaso.MultiselectComboBox;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
