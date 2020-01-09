@@ -9,6 +9,7 @@ import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.coffeemine.app.spring.annonations.NavbarRoutable;
 import org.coffeemine.app.spring.auth.CurrentUser;
@@ -25,8 +26,9 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Route(value = "Tracker")
+@PageTitle("CoffeeMine - Tracker")
 @NavbarRoutable
-public class TrackallView extends View {
+public class Tracker extends View {
     private static class ListItem extends Tab {
 
         private TrackItem item;
@@ -54,7 +56,7 @@ public class TrackallView extends View {
     private VerticalLayout wrapper = new VerticalLayout();
     private HorizontalLayout topbar = new HorizontalLayout();
 
-    public TrackallView() {
+    public Tracker() {
         super();
         add(wrapper);
         wrapper.setSizeFull();
