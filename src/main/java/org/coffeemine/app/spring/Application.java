@@ -14,8 +14,14 @@ import org.springframework.context.annotation.ComponentScan;
 public class Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
+        // When developing the application, please use an in-memory document store (uncomment the following line)
         NitriteDBProvider.init(null);
-        TestingData.load();
+        // For production mode however, uncomment the two lines below
+        //System.setProperty("spring.devtools.restart.enabled", "false");
+        //NitriteDBProvider.init("CoffeeMine.no2");
+
+        if (NitriteDBProvider.getInstance().is_first_run())
+            TestingData.load();
 
         SpringApplication.run(Application.class, args);
     }

@@ -5,6 +5,7 @@ import elemental.json.impl.JreJsonFactory;
 import org.dizitart.no2.Document;
 
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ public class Sprint implements ISprint {
     private int meeting_id = -1;
     @NotNull
     private ArrayList<Integer> tasks = new ArrayList<>();
+    private Long lastModifiedTime;
+    private int revision;
 
     public Sprint() { }
 
@@ -27,6 +30,8 @@ public class Sprint implements ISprint {
         this.end = end;
         this.meeting_id = meeting_id;
         this.tasks = tasks;
+        this.lastModifiedTime = Instant.now().toEpochMilli();
+        this.revision = 1;
     }
 
     @Override
@@ -70,6 +75,26 @@ public class Sprint implements ISprint {
     }
 
     @Override
+    public String getType() {
+        return "Sprint";
+    }
+
+    @Override
+    public String getMessage() {
+        return "#" + Integer.toString(id);
+    }
+
+    @Override
+    public Long getLastModifiedTime() {
+        return lastModifiedTime;
+    }
+
+    @Override
+    public int getRevision() {
+        return revision;
+    }
+
+    @Override
     public JsonObject toJson() {
         final var factory = new JreJsonFactory();
         final var ret = factory.createObject();
@@ -92,8 +117,8 @@ public class Sprint implements ISprint {
     @Override
     public Sprint readJson(JsonObject value) {
         id = ((int) value.getNumber("id"));
-        start = LocalDate.parse(value.getString("start"));
-        end = LocalDate.parse(value.getString("end"));
+        start = LocalDate.parse(value.getString("start"), DateTimeFormatter.BASIC_ISO_DATE);
+        end = LocalDate.parse(value.getString("end"), DateTimeFormatter.BASIC_ISO_DATE);
 
 
         final var jtask = value.getArray("tasks");
@@ -101,8 +126,8 @@ public class Sprint implements ISprint {
         for (int i = 0; i < jtask.length(); ++i)
             tasks.add(((int) jtask.getNumber(i)));
 
-        if (value.hasKey("meeting_id")){
-            meeting_id = (int)value.getNumber("meeting_id");
+        if (value.hasKey("meeting_id")) {
+            meeting_id = (int) value.getNumber("meeting_id");
         } else
             meeting_id = -1;
 
@@ -128,6 +153,8 @@ public class Sprint implements ISprint {
         end = doc.get("end", LocalDate.class);
         meeting_id = doc.get("meeting_id", Integer.class);
         tasks = ((ArrayList<Integer>) doc.get("tasks"));
+        lastModifiedTime = doc.getLastModifiedTime();
+        revision = doc.getRevision();
         return this;
     }
 }

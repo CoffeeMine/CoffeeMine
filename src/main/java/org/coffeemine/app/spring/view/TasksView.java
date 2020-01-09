@@ -1,6 +1,10 @@
 package org.coffeemine.app.spring.view;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+
+import org.coffeemine.app.spring.auth.LoginScreen;
+import org.coffeemine.app.spring.components.EventsDialog.SprintCreation;
 import org.coffeemine.app.spring.components.EventsDialog.TaskCreation;
 import org.coffeemine.app.spring.components.EventsDialog.TaskDetail;
 import org.coffeemine.app.spring.components.HorizontalScroll;
@@ -10,32 +14,36 @@ import org.coffeemine.app.spring.db.NitriteDBProvider;
 
 public class TasksView extends HorizontalScroll {
 
-    private int localSprint;
-
     public TasksView(ISprint sprint) {
-        localSprint = sprint.getId();
-        generate();
-    }
+        if (sprint != null) {
+            final var db = NitriteDBProvider.getInstance();
 
-    public void generate() {
-        removeAll();
-        var db = NitriteDBProvider.getInstance();
-
-        db.getTasks4Sprint(db.getSprint(localSprint)).forEach(task -> {
-            var assigneeText = "";
-
-            for (var user : task.getAssignees()) {
-                assigneeText += db.getUser(user).getName();
+            db.getTasks4Sprint(db.getSprint(sprint.getId())).forEach(task -> {
+                final var assigneeText = String.join(", ", task.getAssignees().stream().map(t -> db.getUser(t).getName()).toArray(size -> new String[size]));
+    
+                add(new TaskBlock(task.getName(), task.getDescription(), assigneeText, new Button("details", e -> {
+                    final var details = new TaskDetail(task.getId(), t -> {
+                        UI.getCurrent().navigate(LoginScreen.class);
+                        UI.getCurrent().navigate(Overview.class);
+                    });
+                    details.open();
+                })));
+            });
+            if (db.getTasks4Sprint(db.getSprint(sprint.getId())).count() == 0) {
+                add(new TaskBlock("Create a new task.", "Try adding a new task!", "you", new Button("Create", e -> {
+                    final var create = new TaskCreation(t -> {
+                        UI.getCurrent().navigate(LoginScreen.class);
+                        UI.getCurrent().navigate(Overview.class);
+                    });
+                    create.open();
+                })));
             }
-
-            add(new TaskBlock(task.getName(), task.getDescription(), assigneeText, new Button("details", e -> {
-                final var details = new TaskDetail(task.getId(), t -> generate());
-                details.open();
-            })));
-        });
-        if (db.getTasks4Sprint(db.getSprint(localSprint)).count() == 0) {
-            add(new TaskBlock("Create a new task.", "Try adding a new task!", "you", new Button("Create", e -> {
-                final var create = new TaskCreation(t -> generate());
+        } else {
+            add(new TaskBlock("Create a new sprint.", "Try adding a new sprint!", "you", new Button("Create", e -> {
+                final var create = new SprintCreation(t -> {
+                    UI.getCurrent().navigate(LoginScreen.class);
+                    UI.getCurrent().navigate(Overview.class);
+                });
                 create.open();
             })));
         }

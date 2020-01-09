@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public interface ISprint extends JsonSerializable, NO2Serializable {
+public interface ISprint extends JsonSerializable, NO2Serializable, ChangeTracker {
     int getId();
     @NotNull LocalDate getStart();
     void setStart(@NotNull LocalDate start);

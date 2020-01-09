@@ -9,12 +9,8 @@ import com.vaadin.flow.component.polymertemplate.Id;
 import com.vaadin.flow.component.polymertemplate.PolymerTemplate;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
-import com.vaadin.flow.dom.DomEventListener;
-import com.vaadin.flow.dom.DomEvent;
 import com.vaadin.flow.templatemodel.TemplateModel;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
-
-import java.io.IOException;
 
 @Tag("json-upload-section")
 @JsModule("./src/JSONUploadSection.js")
@@ -27,7 +23,7 @@ public class JSONUploadSection extends PolymerTemplate<TemplateModel> {
     @Id("error")
     private Span error;
 
-    public JSONUploadSection(Button button) {
+    public JSONUploadSection(Button button, Runnable callback) {
         super();
         upload.setReceiver(memory_buffer);
         upload.setMaxFiles(1);
@@ -42,7 +38,8 @@ public class JSONUploadSection extends PolymerTemplate<TemplateModel> {
             try {
                 NitriteDBProvider.getInstance()
                         .importJSONProject(new String(memory_buffer.getInputStream().readAllBytes()));
-            } catch (IOException ex) {
+                callback.run();
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
@@ -55,11 +52,8 @@ public class JSONUploadSection extends PolymerTemplate<TemplateModel> {
             error.setVisible(false);
             button.setEnabled(true);
         });
-        upload.getElement().addEventListener("file-remove", new DomEventListener() {
-            @Override
-            public void handleEvent(DomEvent event) {
-                button.setEnabled(false);
-            }
+        upload.getElement().addEventListener("file-remove", e -> {
+            button.setEnabled(false);
         });
     }
 
