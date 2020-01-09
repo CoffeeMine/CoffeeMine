@@ -1,18 +1,18 @@
 package org.coffeemine.app.spring.components.EventsDialog;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextArea;
 import org.coffeemine.app.spring.auth.CurrentUser;
+import org.coffeemine.app.spring.components.SpaceableTextField;
 import org.coffeemine.app.spring.data.ITask;
 import org.coffeemine.app.spring.data.Task;
 import org.coffeemine.app.spring.data.User;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
-import org.coffeemine.app.spring.components.SpaceableTextField;
-import org.vaadin.gatanaso.MultiselectComboBox;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -28,7 +28,7 @@ public class TaskCreation extends Dialog {
         final var desc = new TextArea();
         desc.setPlaceholder("Please provide task description here");
 
-        final var assignees_sel = new MultiselectComboBox<User>();
+        final var assignees_sel = new /*Multiselect*/ComboBox<User>();
         assignees_sel.setItems(NitriteDBProvider.getInstance().getUsers().collect(Collectors.toList()));
         assignees_sel.setPlaceholder("Assigning to..");
 
@@ -41,10 +41,11 @@ public class TaskCreation extends Dialog {
 
         final var create_btn = new Button("Create", event -> {
             ArrayList<Integer> usersId = new ArrayList<>();
-            assignees_sel.getSelectedItems().forEach(user -> usersId.add(user.getId()));
+            //assignees_sel.getSelectedItem().forEach(user -> usersId.add(user.getId()));
+            usersId.add(assignees_sel.getValue().getId());
             task = NitriteDBProvider.getInstance().getTask(
                     NitriteDBProvider.getInstance().addTask(
-                            new Task(-1, name.getValue(), sprint_sel.getValue(), desc.getValue(),5, true, usersId, new ArrayList<>(),new ArrayList<>())));
+                            new Task(-1, name.getValue(), sprint_sel.getValue(), desc.getValue(), 5, true, usersId, new ArrayList<>(), new ArrayList<>())));
             callback.accept(task);
             Notification notification = new Notification(
                     "Added task #" + task.getId() +

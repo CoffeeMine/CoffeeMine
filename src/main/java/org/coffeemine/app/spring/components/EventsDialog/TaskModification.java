@@ -1,17 +1,17 @@
 package org.coffeemine.app.spring.components.EventsDialog;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.select.Select;
 import org.coffeemine.app.spring.auth.CurrentUser;
+import org.coffeemine.app.spring.components.SpaceableTextArea;
+import org.coffeemine.app.spring.components.SpaceableTextField;
 import org.coffeemine.app.spring.data.ITask;
 import org.coffeemine.app.spring.data.User;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
-import org.coffeemine.app.spring.components.SpaceableTextField;
-import org.coffeemine.app.spring.components.SpaceableTextArea;
-import org.vaadin.gatanaso.MultiselectComboBox;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,16 +30,17 @@ public class TaskModification extends Dialog {
         desc.setPlaceholder("Please provide a task description here");
         desc.setValue(task.getDescription());
 
-        final var assignees_sel = new MultiselectComboBox<User>();
+        final var assignees_sel = new /*Multiselect*/ComboBox<User>();
         assignees_sel.setItems(NitriteDBProvider.getInstance().getUsers().collect(Collectors.toList()));
         assignees_sel.setPlaceholder("Assigning to..");
         Set<User> currentAssignees = new HashSet<>();
         task.getAssignees().forEach(assigneesId -> currentAssignees.add(NitriteDBProvider.getInstance().getUser(assigneesId)));
-        assignees_sel.setValue(currentAssignees);
+        if (!currentAssignees.isEmpty())
+            assignees_sel.setValue(currentAssignees.stream().findFirst().get());
 
         final var sprints = new String[(int) NitriteDBProvider.getInstance().getSprints4Project(NitriteDBProvider.getInstance().getCurrentProject(CurrentUser.get())).count()];
-        for(int i=1; i<= sprints.length; i++){
-            sprints[i-1]= "Sprint " + i;
+        for (int i = 1; i <= sprints.length; i++) {
+            sprints[i - 1] = "Sprint " + i;
         }
         final var sprint_sel = new Select<>(sprints);
         sprint_sel.setPlaceholder("Assigning to sprint..");
