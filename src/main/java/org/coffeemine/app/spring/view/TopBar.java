@@ -4,12 +4,14 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.components.HoursLogging;
 import org.coffeemine.app.spring.components.LetterIcon;
 import org.coffeemine.app.spring.data.User;
+import org.coffeemine.app.spring.db.NitriteDBProvider;
 
 public class TopBar extends HorizontalLayout {
 
@@ -35,6 +37,8 @@ public class TopBar extends HorizontalLayout {
         brandName.getStyle().set("padding-left", "10px");
 
         brandLayout.add(branding, brandName);
+
+        tabLayout.add(new Button("Export", e -> Notification.show(NitriteDBProvider.getInstance().exportJSONProject(NitriteDBProvider.getInstance().getProject(CurrentUser.get().getCurrentProject())))));
 
         tabLayout.add(new RoutingTabs());
 
