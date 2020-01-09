@@ -15,7 +15,7 @@ public class TestingData {
 
     static void load() {
         final var db = NitriteDBProvider.getInstance();
-        var defaultUser = new User(0, "Admoon", User.Status.ADMIN, -1.0f, "admoon", "Foobar");
+        var defaultUser = new User(0, "Admoon", "admoon@foobar.xyz", User.Status.ADMIN, 420f, "admoon", "Foobar");
 
         final var proj_id = db.addProject(new Project("CoffeeMine", -1));
 

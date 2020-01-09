@@ -28,6 +28,8 @@ public interface DBProvider {
 
     User getUser(int id);
 
+    void updateUser(User use);
+
     Project getProject(int id);
 
     void updateProject(Project project);

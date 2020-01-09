@@ -207,6 +207,11 @@ public class NitriteDBProvider implements DBProvider {
     }
 
     @Override
+    public void updateUser(User user) {
+        db.getCollection("users").update(eq("id", user.getId()), user.asNO2Doc());
+    }
+
+    @Override
     public Project getProject(int id) {
         return new Project().fromNO2Doc(db.getCollection("projects").find(eq("id", id)).firstOrDefault());
     }
