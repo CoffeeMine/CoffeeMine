@@ -9,11 +9,11 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.PasswordField;
-import com.vaadin.flow.component.textfield.TextField;
 
 import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.data.User;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
+import org.coffeemine.app.spring.components.SpaceableTextField;
 
 public class UserCreation extends Dialog {
 
@@ -22,12 +22,12 @@ public class UserCreation extends Dialog {
         container.setPadding(false);
         container.setWidthFull();
 
-        final var fullNameField = new TextField("Full name");
+        final var fullNameField = new SpaceableTextField("Full name");
         fullNameField.setRequired(true);
         fullNameField.setWidthFull();
         fullNameField.getStyle().set("margin", "0px");
 
-        final var userNameField = new TextField("Username");
+        final var userNameField = new SpaceableTextField("Username");
         userNameField.setRequired(true);
         userNameField.setWidthFull();
         userNameField.getStyle().set("margin", "0px");

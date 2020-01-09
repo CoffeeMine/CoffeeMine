@@ -10,7 +10,6 @@ import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
@@ -24,6 +23,7 @@ import org.coffeemine.app.spring.components.AddProjectDialog;
 import org.coffeemine.app.spring.components.ProjectList;
 import org.coffeemine.app.spring.components.EventsDialog.TaskDetail;
 import org.coffeemine.app.spring.components.EventsDialog.UserCreation;
+import org.coffeemine.app.spring.components.SpaceableTextField;
 import org.coffeemine.app.spring.data.ChangeTracker;
 import org.coffeemine.app.spring.data.User;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
@@ -87,8 +87,8 @@ public class UserProfile extends VerticalLayout implements ProtectedView, HasUrl
         details.setWidthFull();
 
         FormLayout accountDetails = new FormLayout();
-        accountDetails.addFormItem(new TextField(), "Full name：");
-        accountDetails.addFormItem(new TextField(), "Email:");
+        accountDetails.addFormItem(new SpaceableTextField(), "Full name：");
+        accountDetails.addFormItem(new SpaceableTextField(), "Email:");
 
         details.add(new H3("Account details"), accountDetails);
 

@@ -6,10 +6,10 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
 import org.coffeemine.app.spring.data.ITask;
 import org.coffeemine.app.spring.data.Task;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
+import org.coffeemine.app.spring.components.SpaceableTextField;
 
 import java.util.function.Consumer;
 
@@ -19,7 +19,7 @@ public class TaskCreation extends Dialog {
     public TaskCreation(Consumer<ITask> callback) {
         super();
 
-        final var name = new TextField();
+        final var name = new SpaceableTextField();
         final var desc = new TextArea();
         desc.setPlaceholder("Please provide task description here");
         final var assignees_sel = new Select<>("Bob", "John", "Rick", "Mahaa", "Tylo");

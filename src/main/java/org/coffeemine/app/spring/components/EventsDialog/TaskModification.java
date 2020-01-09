@@ -5,10 +5,10 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
 import org.coffeemine.app.spring.data.ITask;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
+import org.coffeemine.app.spring.components.SpaceableTextField;
+import org.coffeemine.app.spring.components.SpaceableTextArea;
 
 import java.util.function.Consumer;
 
@@ -19,9 +19,9 @@ public class TaskModification extends Dialog {
         super();
         final var task = NitriteDBProvider.getInstance().getTask(task_id);
 
-        final var name = new TextField();
+        final var name = new SpaceableTextField();
         name.setValue(task.getName());
-        final var desc = new TextArea();
+        final var desc = new SpaceableTextArea();
         desc.setPlaceholder("Please provide a task description here");
         desc.setValue(task.getDescription());
         final var sprint_sel = new Select<>("Sprint 1", "Sprint 2", "Sprint 3");

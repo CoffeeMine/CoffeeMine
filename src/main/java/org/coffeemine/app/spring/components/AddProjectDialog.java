@@ -9,10 +9,10 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import org.coffeemine.app.spring.data.Project;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
+import org.coffeemine.app.spring.components.SpaceableTextField;
 
 public class AddProjectDialog extends Dialog {
 
@@ -28,7 +28,7 @@ public class AddProjectDialog extends Dialog {
         addCleanButton.addThemeVariants(ButtonVariant.MATERIAL_CONTAINED);
         addCleanButton.setEnabled(false);
 
-        final var projectName = new TextField("Project name");
+        final var projectName = new SpaceableTextField("Project name");
         projectName.setWidthFull();
         projectName.getStyle().set("margin", "0px");
         projectName.setRequired(true);
@@ -42,7 +42,7 @@ public class AddProjectDialog extends Dialog {
             }
         });
 
-        final var projectDescription = new TextField("Description");
+        final var projectDescription = new SpaceableTextField("Description");
         projectDescription.setWidthFull();
         projectDescription.getStyle().set("margin", "0px");
 
