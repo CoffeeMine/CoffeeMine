@@ -61,7 +61,7 @@ public class Project implements JsonSerializable, NO2Serializable {
         name = value.getString("name");
         id = (int) value.getNumber("id");
 
-        final var jsprints = value.getArray("fragments");
+        final var jsprints = value.getArray("sprints");
         sprints.ensureCapacity(jsprints.length());
         for (int i = 0; i < jsprints.length(); ++i)
             sprints.add(((int) jsprints.getNumber(i)));
