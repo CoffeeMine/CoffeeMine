@@ -57,7 +57,7 @@ public class UserCreation extends Dialog {
                 final var password = passwordField.getOptionalValue().orElseThrow();
             
                 if (db.getUsers().filter(user -> user.getAccountName().equals(name)).count() == 0) {
-                    final var newUser = new User(0, name, email, User.Status.ENABLED, salary, account_name, password);
+                    final var newUser = new User(-1, name, email, User.Status.ENABLED, salary, account_name, password);
                     newUser.setCurrentProject(CurrentUser.get().getCurrentProject());
                     db.addUser(newUser);
                     Notification.show("User \"" + account_name + "\" created", 2000, Notification.Position.BOTTOM_END);
