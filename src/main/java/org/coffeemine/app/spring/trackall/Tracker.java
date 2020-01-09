@@ -3,6 +3,7 @@ package org.coffeemine.app.spring.trackall;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
@@ -159,11 +160,15 @@ public class Tracker extends View {
                 final var sel = new Select<>(NitriteDBProvider.getInstance().getUsers().collect(Collectors.toList()).toArray(new User[]{}));
                 sel.setItemLabelGenerator(u -> u != null ? u.getName() : "N/A");
                 sel.setValue(NitriteDBProvider.getInstance().getUser(ti.getAssignee()));
+                if (NitriteDBProvider.getInstance().getUser(ti.getAssignee()) != null)
+                    Notification.show("Assigned to" + NitriteDBProvider.getInstance().getUser(ti.getAssignee()).getName());
+
                 sel.addValueChangeListener(e -> {
                     ti.setAssignee(e.getValue().getId());
                     NitriteDBProvider.getInstance().updateTrackItem(ti);
                     update_details(ti);
                 });
+
                 sel.setLabel("Assignee:");
                 assignee.add(sel);
             }
