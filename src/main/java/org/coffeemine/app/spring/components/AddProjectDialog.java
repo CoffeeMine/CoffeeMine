@@ -10,7 +10,6 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
-
 import org.coffeemine.app.spring.data.Project;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 
@@ -61,7 +60,7 @@ public class AddProjectDialog extends Dialog {
         addButton.addThemeVariants(ButtonVariant.MATERIAL_CONTAINED);
         addButton.getStyle().set("margin", "0px 0px 0px auto");
 
-        final var upload = new JSONUploadSection(addButton);
+        final var upload = new JSONUploadSection(addButton, this::close);
         layout.add(new H2("New Project"), columnLayout, new Text("Import a project:"), upload, addButton);
     }
 }
