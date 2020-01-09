@@ -13,13 +13,13 @@ public class RadialBarChart extends View {
 
         ApexCharts multiRadialBarChart = ApexChartsBuilder.get()
                 .withTitle(TitleSubtitleBuilder.get()
-                        .withText("Cost Performance Index")
+                        .withText("Cost & Schedule Performance Index")
                         .build())
                 .withChart(ChartBuilder.get()
                         .withType(Type.radialBar)
                         .build())
-                .withSeries(44.0, 55.0, 67.0, 83.0)
-                .withLabels("Sprint 1", "Sprint 2", "Sprint 3", "Sprint 4")
+                .withSeries(44.0, 55.0)
+                .withLabels("Cost Performance", "Schedule Performance")
                 .build();
         this.add(multiRadialBarChart);
     }
