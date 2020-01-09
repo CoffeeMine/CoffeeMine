@@ -91,13 +91,13 @@ public class UserProfile extends VerticalLayout implements ProtectedView, HasUrl
         details.setWidthFull();
 
         FormLayout accountDetails = new FormLayout();
-        final var fullnameInput = new SpaceableTextField();
-        fullnameInput.setValue(user.getName());
+        final var fullNameInput = new SpaceableTextField();
+        fullNameInput.setValue(user.getName());
 
         final var emailInput = new SpaceableTextField();
         emailInput.setValue(user.getEmail());
 
-        accountDetails.addFormItem(fullnameInput, "Full name：");
+        accountDetails.addFormItem(fullNameInput, "Full name：");
         accountDetails.addFormItem(emailInput, "Email:");
 
         details.add(new H3("Account details"), accountDetails);
@@ -113,11 +113,17 @@ public class UserProfile extends VerticalLayout implements ProtectedView, HasUrl
         info.add(details, states);
 
         Button save = new Button("save", e -> {
-            user.setName(fullnameInput.getOptionalValue().orElse(user.getName()));
+            user.setName(fullNameInput.getOptionalValue().orElse(user.getName()));
             user.setEmail(emailInput.getOptionalValue().orElse(user.getEmail()));
             db.updateUser(user);
             Notification.show("Updated user succesfully.", 2000, Notification.Position.BOTTOM_END);
         });
+
+        if (CurrentUser.get().getId() != user.getId()) {
+            save.setEnabled(false);
+            fullNameInput.setEnabled(false);
+            emailInput.setEnabled(false);
+        }
 
         save.getStyle().set("margin-left", "auto");
         save.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
