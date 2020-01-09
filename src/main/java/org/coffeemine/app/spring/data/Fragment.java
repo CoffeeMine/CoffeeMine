@@ -3,10 +3,13 @@ package org.coffeemine.app.spring.data;
 import com.vaadin.flow.component.JsonSerializable;
 import elemental.json.JsonObject;
 import elemental.json.impl.JreJsonFactory;
+
+import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.db.NO2Serializable;
+import org.coffeemine.app.spring.db.NitriteDBProvider;
 import org.dizitart.no2.Document;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -15,40 +18,70 @@ import java.util.ArrayList;
 
 import static java.time.format.DateTimeFormatter.ofLocalizedDate;
 
-public class Fragment implements JsonSerializable, NO2Serializable {
+import java.time.Instant;
+
+public class Fragment implements JsonSerializable, NO2Serializable, ChangeTracker {
     private int id;
-    private LocalDate begin = LocalDate.EPOCH;
-    private LocalDate end = LocalDate.EPOCH;
+    private LocalDateTime begin = LocalDateTime.MIN;
+    private LocalDateTime end = LocalDateTime.MIN;
     private ArrayList<Integer> users = new ArrayList<>();
+    private Long lastModifiedTime;
+    private int revision;
 
-    public Fragment() { }
+    public Fragment() {}
 
-    public Fragment(int id, LocalDate begin, LocalDate end, ArrayList<Integer> users) {
+    public Fragment(int id, LocalDateTime begin, LocalDateTime end, ArrayList<Integer> users) {
         this.id = id;
         this.begin = begin;
         this.end = end;
         this.users = users;
+        this.lastModifiedTime = Instant.now().toEpochMilli();
+        this.revision = 1;
     }
 
     public int getId() {
         return id;
     }
 
-    public LocalDate getBegin() {
+    public LocalDateTime getBegin() {
         return begin;
     }
 
-    public LocalDate getEnd() {
+    public LocalDateTime getEnd() {
         return end;
     }
 
-    public int getHours() {return (int) ChronoUnit.HOURS.between(begin, end);}
+    public int getHours() {
+        return (int) ChronoUnit.HOURS.between(begin, end);
+    }
 
-    public void setBegin(LocalDate begin) {
+    @Override
+    public String getType() {
+        return "Work log";
+    }
+
+    @Override
+    public String getMessage() {
+        final var db = NitriteDBProvider.getInstance();
+        final var task = db.getTasks4Project(db.getProject(CurrentUser.get().getCurrentProject())).filter(s -> s.getFragments().contains(id)).findFirst();
+        return task.isPresent() ? getHours() + " hours for task " + task.get().getName() : "null";
+    }
+
+    @Override
+    public Long getLastModifiedTime() {
+        return lastModifiedTime;
+    }
+
+    @Override
+    public int getRevision() {
+        return revision;
+    }
+
+    public void setBegin(LocalDateTime begin) {
         this.begin = begin;
     }
 
-    public void setEnd(LocalDate end) {
+    public void setEnd(LocalDateTime end) {
         this.end = end;
     }
 
@@ -77,8 +110,8 @@ public class Fragment implements JsonSerializable, NO2Serializable {
         id = (int) value.getNumber("id");
 
         final var f = ofLocalizedDate(FormatStyle.SHORT);;
-        begin = ZonedDateTime.parse(value.getString("begin"), f).toLocalDate();
-        end = ZonedDateTime.parse(value.getString("end"), f).toLocalDate();
+        begin = ZonedDateTime.parse(value.getString("begin"), f).toLocalDateTime();
+        end = ZonedDateTime.parse(value.getString("end"), f).toLocalDateTime();
 
         final var jusers = value.getArray("users");
         users.ensureCapacity(jusers.length());
@@ -99,9 +132,11 @@ public class Fragment implements JsonSerializable, NO2Serializable {
     @Override
     public Fragment fromNO2Doc(Document doc) {
         id = doc.get("id", Integer.class);
-        begin = doc.get("begin", LocalDate.class);
-        end = doc.get("end", LocalDate.class);
+        begin = doc.get("begin", LocalDateTime.class);
+        end = doc.get("end", LocalDateTime.class);
         users = ((ArrayList<Integer>) doc.get("users"));
+        lastModifiedTime = doc.getLastModifiedTime();
+        revision = doc.getRevision();
         return this;
     }
 }

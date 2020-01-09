@@ -3,9 +3,9 @@ package org.coffeemine.app.spring.components;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.textfield.TextField;
 import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.data.TrackItem;
+import org.coffeemine.app.spring.components.SpaceableTextField;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -18,9 +18,9 @@ public class CreateTrackItem extends Dialog {
         final var type = new ComboBox<>("Type");
         type.setItems(Arrays.stream(TrackItem.Type.values()).map(Enum::name).collect(Collectors.toList()));
         type.setRequired(true);
-        final var name = new TextField("Title: ");
+        final var name = new SpaceableTextField("Title: ");
         name.setRequired(true);
-        final var desc = new TextField("Description: ");
+        final var desc = new SpaceableTextField("Description: ");
         desc.setRequired(true);
         final var submit = new Button("Submit", e -> {
             callback.accept(new TrackItem(-1,

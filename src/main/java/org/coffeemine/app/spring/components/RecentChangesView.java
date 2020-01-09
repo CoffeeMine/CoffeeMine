@@ -26,6 +26,7 @@ public class RecentChangesView extends VerticalLayout {
 
         total = Stream.concat(total, db.getSprints4Project(project));
         total = Stream.concat(total, db.getSprints4Project(project).flatMap(s -> db.getTasks4Sprint(s)));
+        total = Stream.concat(total, db.getSprints4Project(project).flatMap(s -> db.getTasks4Sprint(s).flatMap(t -> db.getFragments4Task(t))));
 
         total.sorted((a, b) -> -Long.compare(a.getLastModifiedTime(), b.getLastModifiedTime()))
         .forEach(change -> {
@@ -33,7 +34,7 @@ public class RecentChangesView extends VerticalLayout {
 
             final var changeText = new Span();
             changeText.getElement().setProperty("innerHTML", change.getType() + " \"" + change.getMessage() + "\":<br/>"
-                    + ((change.getRevision() == 1) ? "Added" : "Modified") + " at: " + date.format(DateTimeFormatter.ofPattern("dd MMM. yyyy hh:mm:ss")));
+                    + ((change.getRevision() == 1) ? "Added" : "Modified") + " at: " + date.format(DateTimeFormatter.ofPattern("uuuu MMM dd HH:mm:ss")));
             add(changeText);
         });
     }

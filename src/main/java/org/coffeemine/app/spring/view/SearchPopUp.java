@@ -4,16 +4,16 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 
 import org.coffeemine.app.spring.components.LetterIcon;
+import org.coffeemine.app.spring.components.SpaceableTextField;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 import org.coffeemine.app.spring.userprofile.UserProfile;
 
 class SearchPopUp extends VerticalLayout {
 
-    private TextField searchbar;
+    private SpaceableTextField searchbar;
 
     public SearchPopUp() {
         addClassNames("accountinfo", "mono_font");
@@ -24,7 +24,7 @@ class SearchPopUp extends VerticalLayout {
         final var results = new VerticalLayout();
         results.addClassNames("mono_font", "projectlist");
 
-        searchbar = new TextField();
+        searchbar = new SpaceableTextField();
 
         searchbar.setWidthFull();
         searchbar.setValueChangeMode(ValueChangeMode.EAGER);

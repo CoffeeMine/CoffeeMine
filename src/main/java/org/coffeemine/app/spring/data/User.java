@@ -20,16 +20,18 @@ public class User implements NO2Serializable {
 
     private String account_name;
     private String account_passhash;
+    private String email;
 
     public User(){}
 
-    public User(int id, String name, Status status) {
-        this(id, name, status, 0.0f, null, null);
+    public User(int id, String name, String email, Status status) {
+        this(id, name, email, status, 0.0f, null, null);
     }
 
-    public User(int id, String name, Status status, float hourly_salary, String account_name, String account_passhash) {
+    public User(int id, String name, String email, Status status, float hourly_salary, String account_name, String account_passhash) {
         this.id = id;
         this.name = name;
+        this.email = email;
         this.hourly_salary = hourly_salary;
         this.status = status;
         this.account_name = account_name;
@@ -46,6 +48,14 @@ public class User implements NO2Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+	public String getEmail() {
+		return email;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public float getHourlySalary() {
@@ -92,6 +102,7 @@ public class User implements NO2Serializable {
     public Document asNO2Doc() {
         return Document.createDocument("id", id)
                 .put("name", name)
+                .put("email", email)
                 .put("salary", hourly_salary)
                 .put("status", status)
                 .put("current_proj", current_proj)
@@ -106,6 +117,7 @@ public class User implements NO2Serializable {
 
         id = doc.get("id", Integer.class);
         name = doc.get("name", String.class);
+        email = doc.get("email", String.class);
         hourly_salary = doc.get("salary", Float.class);
         status = doc.get("status", User.Status.class);
         current_proj = doc.get("current_proj", Integer.class);

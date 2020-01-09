@@ -8,9 +8,9 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
@@ -24,7 +24,9 @@ import org.coffeemine.app.spring.components.AddProjectDialog;
 import org.coffeemine.app.spring.components.ProjectList;
 import org.coffeemine.app.spring.components.EventsDialog.TaskDetail;
 import org.coffeemine.app.spring.components.EventsDialog.UserCreation;
+import org.coffeemine.app.spring.components.SpaceableTextField;
 import org.coffeemine.app.spring.data.ChangeTracker;
+import org.coffeemine.app.spring.data.Fragment;
 import org.coffeemine.app.spring.data.User;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 import org.coffeemine.app.spring.view.Overview;
@@ -41,6 +43,8 @@ public class UserProfile extends VerticalLayout implements ProtectedView, HasUrl
         setHeightFull();
         setPadding(false);
         setAlignItems(Alignment.CENTER);
+
+        final var db = NitriteDBProvider.getInstance();
 
         VerticalLayout userprofile = new VerticalLayout();
         userprofile.addClassName("userprofile");
@@ -87,8 +91,14 @@ public class UserProfile extends VerticalLayout implements ProtectedView, HasUrl
         details.setWidthFull();
 
         FormLayout accountDetails = new FormLayout();
-        accountDetails.addFormItem(new TextField(), "Full name：");
-        accountDetails.addFormItem(new TextField(), "Email:");
+        final var fullNameInput = new SpaceableTextField();
+        fullNameInput.setValue(user.getName());
+
+        final var emailInput = new SpaceableTextField();
+        emailInput.setValue(user.getEmail());
+
+        accountDetails.addFormItem(fullNameInput, "Full name：");
+        accountDetails.addFormItem(emailInput, "Email:");
 
         details.add(new H3("Account details"), accountDetails);
 
@@ -96,18 +106,31 @@ public class UserProfile extends VerticalLayout implements ProtectedView, HasUrl
         states.setWidthFull();
 
         FormLayout accountStates = new FormLayout();
-        accountStates.addFormItem(new Span("0.0"), "Hourly salary");
-        accountStates.addFormItem(new Span("0.0"), "Total hours worked: ");
+        accountStates.addFormItem(new Span(Float.toString(user.getHourlySalary())), "Hourly salary");
+        accountStates.addFormItem(new Span(Integer.toString(db.getFragments4User(user).mapToInt(Fragment::getHours).sum())), "Total hours worked: ");
 
         states.add(new H3("Account states "), accountStates);
         info.add(details, states);
 
-        Button save = new Button("save");
+        Button save = new Button("save", e -> {
+            user.setName(fullNameInput.getOptionalValue().orElse(user.getName()));
+            user.setEmail(emailInput.getOptionalValue().orElse(user.getEmail()));
+            db.updateUser(user);
+            Notification.show("Updated user succesfully.", 2000, Notification.Position.BOTTOM_END);
+        });
+
+        if (CurrentUser.get().getId() != user.getId()) {
+            save.setEnabled(false);
+            fullNameInput.setEnabled(false);
+            emailInput.setEnabled(false);
+        }
+
         save.getStyle().set("margin-left", "auto");
         save.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
 
         final var particpation = new HorizontalLayout();
         particpation.setWidthFull();
+        particpation.setHeight("26rem");
         
         final var projects = new VerticalLayout();
         projects.setWidth("50%");
@@ -139,7 +162,6 @@ public class UserProfile extends VerticalLayout implements ProtectedView, HasUrl
 
         final var allTasks = new VerticalLayout();
         allTasks.addClassName("projectlist");
-        final var db = NitriteDBProvider.getInstance();
         db.getTasks().sorted((a, b) -> -Long.compare(((ChangeTracker) a).getLastModifiedTime(), ((ChangeTracker) b).getLastModifiedTime()))
         .forEach(task -> {
             if (task.getAssignees().contains(user.getId())) {

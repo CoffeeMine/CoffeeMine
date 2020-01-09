@@ -7,7 +7,7 @@ import org.coffeemine.app.spring.data.User;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 
 public final class CurrentUser {
-    private static User currentUser = null;
+    private static int currentUserId = -1;
 
     public static final String CURRENT_USER_SESSION_ATTRIBUTE_KEY = CurrentUser.class.getCanonicalName();
 
@@ -15,7 +15,7 @@ public final class CurrentUser {
     }
 
     public static User get() {
-        return currentUser;
+        return NitriteDBProvider.getInstance().getUser(currentUserId);
     }
 
     private static WrappedSession getCurrentHttpSession() {
@@ -29,10 +29,10 @@ public final class CurrentUser {
     public static void set(Integer userId) {
         if (userId == null) {
             getCurrentHttpSession().removeAttribute(CURRENT_USER_SESSION_ATTRIBUTE_KEY);
-            currentUser = null;
+            currentUserId = -1;
         } else {
             getCurrentHttpSession().setAttribute(CURRENT_USER_SESSION_ATTRIBUTE_KEY, userId);
-            currentUser = NitriteDBProvider.getInstance().getUser(userId);
+            currentUserId = userId;
         }
     }
 
