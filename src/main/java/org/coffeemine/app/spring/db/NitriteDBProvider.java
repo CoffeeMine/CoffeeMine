@@ -319,6 +319,26 @@ public class NitriteDBProvider implements DBProvider {
         db.commit();
     }
 
+    public Stream<Risk> getRisks(){
+        return db.getCollection("risks").find().toList().stream().map(d -> ((Risk) d.get("obj")));
+    }
+
+    public void addRisk (Risk risk){
+        risk.setId(idFor(Risk.class));
+        final var doc = Document.createDocument("obj", risk);
+        doc.put("id", risk.getId());
+        db.getCollection("risks").insert(doc);
+    }
+
+    public void updateRisk(Risk risk){
+        final var doc = Document.createDocument("obj", risk);
+        doc.put("id", risk.getId());
+        db.getCollection("risks").update(eq("id", risk.getId()), doc);
+        db.commit();
+    }
+
+    public void removeRisk(int id){db.getCollection("risks").remove(eq("id", id));}
+
     @Override
     public Integer account_id(String name, String hashpass) {
         final var res = db.getCollection("users")
@@ -351,6 +371,9 @@ public class NitriteDBProvider implements DBProvider {
 
         if (c.equals(TrackItem.class))
             return getTrackItems().map(TrackItem::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
+
+        if (c.equals((Risk.class)))
+            return getRisks().map(Risk::getId).anyMatch(id -> id.equals(v)) ? idFor(c) : v;
 
         throw new UnsupportedOperationException();
     }

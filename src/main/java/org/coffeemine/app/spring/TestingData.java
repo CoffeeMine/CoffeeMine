@@ -15,7 +15,7 @@ public class TestingData {
 
     static void load() {
         final var db = NitriteDBProvider.getInstance();
-        var defaultUser = new User(0, "Admoon", "admoon@foobar.xyz", User.Status.ADMIN, 420f, "admoon", "Foobar");
+        var defaultUser = new User(0, "Admoon", "admoon@foobar.xyz", User.Status.ADMIN, 250.0f, "admoon", "Foobar");
 
         final var proj_id = db.addProject(new Project("CoffeeMine", -1));
 
@@ -28,6 +28,25 @@ public class TestingData {
 
         var users = new ArrayList<Integer>();
         users.add(defaultUserId);
+
+        db.addRisk(new Risk (1,"No or poor business case", "Commercial", "Select", "Select"));
+        db.addRisk(new Risk (2,"More than one customer", "Commercial", "Select", "Select"));
+        db.addRisk(new Risk (5,"Ill-defined scope", "Commercial", "Select", "Select"));
+        db.addRisk(new Risk (6,"Unclear payment schedule", "Commercial", "Select", "Select"));
+        db.addRisk(new Risk (8,"Unclear customer structure", "Relationship", "Select", "Select"));
+        db.addRisk(new Risk (10,"Internal customer politics", "Relationship", "Select", "Select"));
+        db.addRisk(new Risk (11,"Multiple stakeholders", "Relationship", "Select", "Select"));
+        db.addRisk(new Risk (13,"Unwillingness to change", "Relationship", "Select", "Select"));
+        db.addRisk(new Risk (15,"Requirements not agreed", "Requirements", "Select", "Select"));
+        db.addRisk(new Risk (16,"Requirements incomplete", "Requirements", "Select", "Select"));
+        db.addRisk(new Risk (18,"Ambiguity in requirements", "Requirements", "Select", "Select"));
+        db.addRisk(new Risk (21,"Acceptance criteria not agreed", "Requirements", "Select", "Select"));
+        db.addRisk(new Risk (26,"Developers lack key skills", "Planning and Resource", "Select", "Select"));
+        db.addRisk(new Risk (32,"Unfamiliar system software", "Technical", "Select", "Select"));
+        db.addRisk(new Risk (33,"Lack of technical support", "Technical", "Select", "Select"));
+        db.addRisk(new Risk (35,"New/unproven technology used", "Technical", "Select", "Select"));
+        db.addRisk(new Risk (37,"Suppliers in poor financial state", "Subcontract", "Select", "Select"));
+        db.addRisk(new Risk (39,"No choice of supplier", "Subcontract", "Select", "Select"));
 
         var tasks = new ArrayList<Integer>();
         tasks.add(db.addTask(new Task(-1, "Hello0", "Task1", 10, true, users, new ArrayList<>(), new ArrayList<>())));
