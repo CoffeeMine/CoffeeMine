@@ -253,6 +253,24 @@ public class NitriteDBProvider implements DBProvider {
         db.commit();
     }
 
+    public Stream<Risk> getRisks(){
+        return db.getCollection("risks").find().toList().stream().map(d -> ((Risk) d.get("obj")));
+    }
+
+    public void addRisk (Risk risk){
+        risk.setId(idFor(Risk.class));
+        final var doc = Document.createDocument("obj", risk);
+        doc.put("id", risk.getId());
+        db.getCollection("risks").insert(doc);
+    }
+
+    public void updateRisk(Risk risk){
+        final var doc = Document.createDocument("obj", risk);
+        doc.put("id", risk.getId());
+        db.getCollection("risks").update(eq("id", risk.getId()), doc);
+        db.commit();
+    }
+
     @Override
     public Integer account_id(String name, String hashpass) {
         final var res = db.getCollection("users")
