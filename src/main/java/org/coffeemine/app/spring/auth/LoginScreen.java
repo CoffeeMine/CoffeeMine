@@ -5,6 +5,9 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+
+import org.coffeemine.app.spring.components.AddProjectDialog;
+import org.coffeemine.app.spring.db.NitriteDBProvider;
 import org.coffeemine.app.spring.view.Overview;
 
 @Route(value = "login")
@@ -12,6 +15,7 @@ public class LoginScreen extends VerticalLayout {
     public static final Boolean routable = false;
 
     LoginScreen() {
+        projectCheck();
         this.setSizeFull();
         final var branding = new Image("./icons/icon-mono.png", "");
         branding.getStyle().set("position", "fixed");
@@ -37,5 +41,13 @@ public class LoginScreen extends VerticalLayout {
                 login.setEnabled(true);
             }
         });
+    }
+
+    private void projectCheck() {
+        if (NitriteDBProvider.getInstance().getProjects().count() == 0) {
+            final var createProjectDialog = new AddProjectDialog();
+            createProjectDialog.open();
+            createProjectDialog.addOpenedChangeListener(e -> projectCheck());
+        }
     }
 }

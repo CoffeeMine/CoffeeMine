@@ -4,83 +4,183 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.WildcardParameter;
+
 import org.coffeemine.app.spring.auth.BasicAccessControl;
 import org.coffeemine.app.spring.auth.CurrentUser;
+import org.coffeemine.app.spring.auth.LoginScreen;
 import org.coffeemine.app.spring.auth.ProtectedView;
+import org.coffeemine.app.spring.components.AddProjectDialog;
 import org.coffeemine.app.spring.components.ProjectList;
+import org.coffeemine.app.spring.components.EventsDialog.TaskDetail;
+import org.coffeemine.app.spring.components.EventsDialog.UserCreation;
+import org.coffeemine.app.spring.data.ChangeTracker;
 import org.coffeemine.app.spring.data.User;
+import org.coffeemine.app.spring.db.NitriteDBProvider;
 import org.coffeemine.app.spring.view.Overview;
 
 @Route(value = "Profile")
-public class UserProfile extends VerticalLayout implements ProtectedView {
+public class UserProfile extends VerticalLayout implements ProtectedView, HasUrlParameter<String> {
+    private User user;
+
     public UserProfile() {
-        this.setHeightFull();
-        this.setPadding(false);
+    }
+
+    public void generate() {
+        removeAll();
+        setHeightFull();
+        setPadding(false);
+        setAlignItems(Alignment.CENTER);
+
         VerticalLayout userprofile = new VerticalLayout();
-        userprofile.setHeightFull();
         userprofile.addClassName("userprofile");
-        userprofile.setMaxWidth("800px");
-        // copy this to center
-        userprofile.getStyle().set("margin", "auto");
-        this.add(userprofile);
+
+        final var topControl = new HorizontalLayout();
+        topControl.setPadding(false);
+        topControl.setWidthFull();
+
         Button back = new Button("back");
         back.addClickListener(e -> UI.getCurrent().navigate(Overview.class));
         back.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
-        HorizontalLayout usernameTitle = new HorizontalLayout();
-        usernameTitle.getStyle().set("margin-left", "auto");
-        usernameTitle.getStyle().set("margin-right", "auto");
+        topControl.add(back);
 
-        User user = CurrentUser.get();
+        if (CurrentUser.get().getStatus().equals(User.Status.ADMIN)) {
+            final var addUserButton = new Button("Add User", e -> {
+                final var userCreator = new UserCreation();
+                userCreator.open();
+            });
+            addUserButton.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
+            addUserButton.getStyle().set("margin-left", "auto");
+            topControl.add(addUserButton);
+        }
+
+        HorizontalLayout usernameTitle = new HorizontalLayout();
+        usernameTitle.setWidthFull();
+        usernameTitle.setAlignItems(Alignment.CENTER);
+
         String userName = (user == null) ? "No User" : user.getName();
 
         H2 title = new H2(userName);
         title.getStyle().set("padding", "0px");
-        title.getStyle().set("margin-top", "auto");
-        title.getStyle().set("margin-bottom", "auto");
-        // circle capital letter A
+        title.getStyle().set("margin", "auto auto auto 0px");
+
         Span letter = new Span(userName.substring(0, 1));
         letter.addClassName("lettericon");
+        letter.getStyle().set("margin-left", "auto");
+
         usernameTitle.add(letter, title);
-        userprofile.add(back);
-        userprofile.add(usernameTitle);
+
         HorizontalLayout info = new HorizontalLayout();
         info.setWidthFull();
-        userprofile.add(info);
-        // details
+
         VerticalLayout details = new VerticalLayout();
         details.setWidthFull();
-        details.add(new H3("Account details"));
+
         FormLayout accountDetails = new FormLayout();
         accountDetails.addFormItem(new TextField(), "Full name：");
         accountDetails.addFormItem(new TextField(), "Email:");
-        details.add(accountDetails);
+
+        details.add(new H3("Account details"), accountDetails);
+
         VerticalLayout states = new VerticalLayout();
         states.setWidthFull();
-        states.add(new H3("Account states "));
+
         FormLayout accountStates = new FormLayout();
         accountStates.addFormItem(new Span("0.0"), "Hourly salary");
         accountStates.addFormItem(new Span("0.0"), "Total hours worked: ");
-        states.add(accountStates);
+
+        states.add(new H3("Account states "), accountStates);
         info.add(details, states);
-        H3 currentProject = new H3("Current projects");
+
         Button save = new Button("save");
         save.getStyle().set("margin-left", "auto");
         save.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
-        final var currentProjects = new ProjectList(ProjectList.Modes.LARGE);
-        currentProjects.setHeight("100%");
-        userprofile.add(save);
-        userprofile.add(currentProject);
-        userprofile.add(currentProjects);
+
+        final var particpation = new HorizontalLayout();
+        particpation.setWidthFull();
+        
+        final var projects = new VerticalLayout();
+        projects.setWidth("50%");
+
+        ProjectList currentProjects = new ProjectList(ProjectList.Modes.LARGE);
+
+        // TODO: somehow align all this properly.
+        final var projectsHeader = new Div();
+        projectsHeader.getStyle().set("margin", "calc(0.4 * var(--material-h5-font-size)) 0px");
+        projectsHeader.getStyle().set("max-height", "var(--material-h5-font-size)");
+        projectsHeader.setWidthFull();
+
+        final var projectsText = new Span("Current Projects");
+        projectsText.getStyle().set("font-size", "var(--material-h5-font-size)");
+        projectsHeader.add(projectsText);
+
+        if (CurrentUser.get().getStatus().equals(User.Status.ADMIN)) {
+            final var newProjectButton = new Button("New Project", e -> {
+                final var createProjectDialog = new AddProjectDialog();
+                createProjectDialog.open();
+            });
+            newProjectButton.getStyle().set("float", "right");
+            projectsHeader.add(newProjectButton);
+        }
+        projects.add(projectsHeader, currentProjects);
+
+        final var tasks = new VerticalLayout(new H3("Assigned tasks"));
+        tasks.setWidth("50%");
+
+        final var allTasks = new VerticalLayout();
+        allTasks.addClassName("projectlist");
+        final var db = NitriteDBProvider.getInstance();
+        db.getTasks().sorted((a, b) -> -Long.compare(((ChangeTracker) a).getLastModifiedTime(), ((ChangeTracker) b).getLastModifiedTime()))
+        .forEach(task -> {
+            if (task.getAssignees().contains(user.getId())) {
+                final var taskItem = new Div(new Span(task.getName()));
+                taskItem.addClassNames("projectitem", "projectitem-small");
+                taskItem.addClickListener(e -> {
+                    final var detailDialog = new TaskDetail(task.getId(), t -> {
+                        UI.getCurrent().navigate(LoginScreen.class);
+                        UI.getCurrent().navigate(UserProfile.class, Integer.toString(user.getId()));
+                    });
+                    detailDialog.open();
+                });
+                allTasks.add(taskItem);
+            }
+        });
+
+        tasks.add(allTasks);
+        particpation.add(projects, tasks);
+
         Button logOut = new Button("Log out", e -> BasicAccessControl.getInstance().signOut());
-        logOut.getStyle().set("margin-left", "auto");
+        logOut.getStyle().set("margin", "auto 0px 0px auto");
         logOut.addThemeVariants(ButtonVariant.MATERIAL_CONTAINED);
-        userprofile.add(logOut);
+
+        userprofile.add(topControl, usernameTitle, info, save, particpation, logOut);
+        add(userprofile);
+    }
+
+    @Override
+    public void setParameter(BeforeEvent event, @WildcardParameter String parameter) {
+        if (!parameter.isEmpty()) {
+            if (parameter.equals("current")) {
+                user = CurrentUser.get();
+            } else {
+                try {
+                    user = NitriteDBProvider.getInstance().getUser(Integer.parseInt(parameter));
+                } catch (Exception e) {
+                }
+            }
+        }
+        if (user != null) {
+            generate();
+        }
     }
 }

@@ -5,6 +5,8 @@ import elemental.json.impl.JreJsonFactory;
 import org.dizitart.no2.Document;
 
 import javax.validation.constraints.NotNull;
+
+import java.time.Instant;
 import java.util.ArrayList;
 
 public class Task implements ITask {
@@ -22,6 +24,8 @@ public class Task implements ITask {
     @NotNull
     private ArrayList<Integer> fragments = new ArrayList<>();
     private ArrayList<String> commits;
+    private Long lastModifiedTime;
+    private int revision;
 
     public Task() { }
 
@@ -34,6 +38,8 @@ public class Task implements ITask {
         this.assignees = assignees;
         this.fragments = fragments;
         this.commits = commits;
+        this.lastModifiedTime = Instant.now().toEpochMilli();
+        this.revision = 1;
     }
 
     @Override
@@ -92,6 +98,11 @@ public class Task implements ITask {
     }
 
     @Override
+    public void addFragment(int id) {
+        fragments.add(id);
+    }
+
+    @Override
     public ArrayList<String> getCommits() {
         return commits;
     }
@@ -99,6 +110,26 @@ public class Task implements ITask {
     @Override
     public void setCommits(ArrayList<String> commits) {
         this.commits = commits;
+    }
+
+    @Override
+    public String getType() {
+        return "Task";
+    }
+
+    @Override
+    public String getMessage() {
+        return getName();
+    }
+
+    @Override
+    public Long getLastModifiedTime() {
+        return lastModifiedTime;
+    }
+
+    @Override
+    public int getRevision() {
+        return revision;
     }
 
     @Override
@@ -186,6 +217,8 @@ public class Task implements ITask {
         assignees = ((ArrayList<Integer>) doc.get("assignees"));
         fragments = ((ArrayList<Integer>) doc.get("fragments"));
         commits = doc.get("commits") != null ? ((ArrayList<String>) doc.get("commits")) : null;
+        lastModifiedTime = doc.getLastModifiedTime();
+        revision = doc.getRevision();
         return this;
     }
 }

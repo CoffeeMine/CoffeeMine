@@ -181,7 +181,8 @@ public class NitriteDBProvider implements DBProvider {
     public Project getCurrentProject(User user) {
         if (user == null)
             return null;
-        return this.getProject(user.getCurrentProject());
+        final var currentProject = getProject(user.getCurrentProject());
+        return (currentProject != null) ? currentProject : getProjects().findAny().get();
     }
 
     @Override
@@ -234,9 +235,12 @@ public class NitriteDBProvider implements DBProvider {
 
     @Override
     public int addUser(User user) {
-        db.getCollection("users").insert(user.asNO2Doc());
+        final var doc = user.asNO2Doc();
+        final var id = idFor(User.class);
+        doc.replace("id", id);
+        db.getCollection("users").insert(doc);
         db.commit();
-        return user.getId();
+        return id;
     }
 
     @Override
