@@ -14,9 +14,11 @@ import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import org.apache.commons.lang3.StringUtils;
 import org.coffeemine.app.spring.data.Risk;
+import org.coffeemine.app.spring.db.NitriteDBProvider;
 import org.coffeemine.app.spring.view.View;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class RiskMatrix extends View {
 
@@ -25,50 +27,8 @@ public class RiskMatrix extends View {
 
     public RiskMatrix(){
 
-        riskList = new ArrayList<>();
+        riskList = NitriteDBProvider.getInstance().getRisks().collect(Collectors.toList());
         dataProvider = new ListDataProvider<>(riskList);
-
-        riskList.add(new Risk (1,"No or poor business case", "Commercial", "Select", "Select"));
-        riskList.add(new Risk (2,"More than one customer", "Commercial", "Select", "Select"));
-        riskList.add(new Risk (3,"Inappropriate contract type", "Commercial", "Select", "Select"));
-        riskList.add(new Risk (4,"Penalties for non-performance", "Commercial", "Select", "Select"));
-        riskList.add(new Risk (5,"Ill-defined scope", "Commercial", "Select", "Select"));
-        riskList.add(new Risk (6,"Unclear payment schedule", "Commercial", "Select", "Select"));
-        riskList.add(new Risk (7,"Payments not linked to deliverables", "Commercial", "Select", "Select"));
-        riskList.add(new Risk (8,"Unclear customer structure", "Relationship", "Select", "Select"));
-        riskList.add(new Risk (9,"Poor access to stakeholders", "Relationship", "Select", "Select"));
-        riskList.add(new Risk (10,"Internal customer politics", "Relationship", "Select", "Select"));
-        riskList.add(new Risk (11,"Multiple stakeholders", "Relationship", "Select", "Select"));
-        riskList.add(new Risk (12,"Users not committed to project", "Relationship", "Select", "Select"));
-        riskList.add(new Risk (13,"Unwillingness to change", "Relationship", "Select", "Select"));
-        riskList.add(new Risk (14,"Management and users disagree", "Relationship", "Select", "Select"));
-        riskList.add(new Risk (15,"Requirements not agreed", "Requirements", "Select", "Select"));
-        riskList.add(new Risk (16,"Requirements incomplete", "Requirements", "Select", "Select"));
-        riskList.add(new Risk (17,"Requirements not detailed enough", "Requirements", "Select", "Select"));
-        riskList.add(new Risk (18,"Ambiguity in requirements", "Requirements", "Select", "Select"));
-        riskList.add(new Risk (19,"No single document of requirements", "Requirements", "Select", "Select"));
-        riskList.add(new Risk (20,"Stringent non-functional requirements", "Requirements", "Select", "Select"));
-        riskList.add(new Risk (21,"Acceptance criteria not agreed", "Requirements", "Select", "Select"));
-        riskList.add(new Risk (22,"Project manager not involved in initial planning", "Planning and Resource", "Select", "Select"));
-        riskList.add(new Risk (23,"Project very large with quick build-up", "Planning and Resource", "Select", "Select"));
-        riskList.add(new Risk (24,"Estimates not based on metrics", "Planning and Resource", "Select", "Select"));
-        riskList.add(new Risk (25,"Excessive reliance on key staff", "Planning and Resource", "Select", "Select"));
-        riskList.add(new Risk (26,"Developers lack key skills", "Planning and Resource", "Select", "Select"));
-        riskList.add(new Risk (27,"Inexperience in business area", "Planning and Resource", "Select", "Select"));
-        riskList.add(new Risk (28,"Inexperience of technology", "Planning and Resource", "Select", "Select"));
-        riskList.add(new Risk (29,"Environment new to developers", "Technical", "Select", "Select"));
-        riskList.add(new Risk (30,"Development and live environment differs", "Technical", "Select", "Select"));
-        riskList.add(new Risk (31,"Restricted access to environment", "Technical", "Select", "Select"));
-        riskList.add(new Risk (32,"Unfamiliar system software", "Technical", "Select", "Select"));
-        riskList.add(new Risk (33,"Lack of technical support", "Technical", "Select", "Select"));
-        riskList.add(new Risk (34,"Unfamiliar tools/methods/standards", "Technical", "Select", "Select"));
-        riskList.add(new Risk (35,"New/unproven technology used", "Technical", "Select", "Select"));
-        riskList.add(new Risk (36,"No/little experience of suppliers", "Subcontract", "Select", "Select"));
-        riskList.add(new Risk (37,"Suppliers in poor financial state", "Subcontract", "Select", "Select"));
-        riskList.add(new Risk (38,"Difficult to stage tests of items", "Subcontract", "Select", "Select"));
-        riskList.add(new Risk (39,"No choice of supplier", "Subcontract", "Select", "Select"));
-        riskList.add(new Risk (40,"Use of proprietary products", "Subcontract", "Select", "Select"));
-        riskList.add(new Risk (41,"Subcontracts not 'back-to-back' with main contract", "Subcontract", "Select", "Select"));
 
         ArrayList<String> types = new ArrayList<>();
         types.add("Commercial");
@@ -161,6 +121,7 @@ public class RiskMatrix extends View {
 
         Button addButton = new Button("Add New Risk", event -> {
             riskList.add(new Risk(0,"New Risk", "Commercial", "Select", "Select"));
+            NitriteDBProvider.getInstance().addRisk(new Risk(0,"New Risk", "Commercial", "Select", "Select"));
             riskMatrix.getDataProvider().refreshAll();
         });
 
@@ -225,6 +186,7 @@ public class RiskMatrix extends View {
     private Button createRemoveButton(Grid<Risk> grid, Risk risk) {
         @SuppressWarnings("unchecked")
         Button button = new Button("Remove", clickEvent -> {
+            NitriteDBProvider.getInstance().removeRisk(risk.getId());
             ListDataProvider<Risk> listDataProvider = (ListDataProvider<Risk>) grid
                     .getDataProvider();
             listDataProvider.getItems().remove(risk);
