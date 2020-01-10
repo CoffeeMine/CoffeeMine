@@ -28,21 +28,41 @@ public class Statistics extends View {
         final var currentProject = NitriteDBProvider.getInstance().getCurrentProject(CurrentUser.get());
         final var currentSprint = NitriteDBProvider.getInstance().getCurrentSprint(currentProject);
 
+        Div mainLayout = new Div();
+        this.add(mainLayout);
+        mainLayout.getStyle().set("text-align", "center");
+
+        Div statsLayout = new Div();
+        statsLayout.getStyle().set("margin", "auto");
         FormLayout layout = new FormLayout();
         H1 header = new H1("Statistics");
         H3 subtitle = new H3("Earned Value Analysis");
 
-        this.add(header);
-        this.add(subtitle);
-        this.add(layout);
+        mainLayout.add(header);
+        mainLayout.add(subtitle);
+        statsLayout.add(layout);
+        this.add(statsLayout);
 
-        layout.add(new Span("Actual Value: SEK " + Double.toString(95000)));
-        layout.add(new Span("Planned Value: SEK " + Double.toString(115000)));
-        layout.add(new Span("Earned Value: SEK " + Double.toString(90000)));
-        layout.add(new Span("Cost Variance: SEK " + Double.toString(5000)));
-        layout.add(new Span("Schedule Variance: SEK "+ Double.toString(-25000)));
-        layout.add(new Span("Cost Performance Index: "+ Double.toString(94.73) +"%"));
-        layout.add(new Span("Schedule Performance Index: "+ Double.toString(78.26) +"%"));
+        Span actualValue = new Span("SEK " + Double.toString(95000));
+        layout.addFormItem(actualValue, "Actual Value");
+
+        Span plannedValue = new Span("SEK " + Double.toString(115000));
+        layout.addFormItem(plannedValue, "Planned Value");
+
+        Span earnedValue = new Span("SEK " + Double.toString(90000));
+        layout.addFormItem(earnedValue, "Earned Value");
+
+        Span costVariance = new Span("SEK " + Double.toString(5000));
+        layout.addFormItem(costVariance, "Cost Variance");
+
+        Span scheduleVariance = new Span("SEK " + Double.toString(-25000));
+        layout.addFormItem(scheduleVariance, "Schedule Variance");
+
+        Span costPerformance = new Span("SEK " + Double.toString(94.73) +"%");
+        layout.addFormItem(costPerformance, "Cost Performance Index");
+
+        Span schedulePerformance = new Span("SEK " + Double.toString(78.26) +"%");
+        layout.addFormItem(schedulePerformance, "Schedule Performance Index");
 
         Div barChartLayout = new Div();
         barChartLayout.getStyle().set("margin", "auto");
@@ -58,7 +78,10 @@ public class Statistics extends View {
         RadialBarChart radialBarChart = new RadialBarChart();
         radialChartLayout.add(radialBarChart);
 
-        this.add(new H3("Risk Matrix"));
+        Div matrixLayout = new Div();
+        this.add(matrixLayout);
+        matrixLayout.getStyle().set("text-align", "center");
+        matrixLayout.add(new H3("Risk Matrix"));
 
         RiskMatrix riskMatrix = new RiskMatrix();
         this.add(riskMatrix);
