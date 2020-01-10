@@ -145,6 +145,6 @@ class Calendar extends View {
 
     private void openTask(Entry currentEntry) {
         System.out.println("Calendar.openTask");
-        new TaskDetail(Integer.parseInt(currentEntry.getId()), t -> updateEvents());
+        new TaskDetail(Integer.parseInt(currentEntry.getId().substring(1)), t -> updateEvents());
     }
 }
