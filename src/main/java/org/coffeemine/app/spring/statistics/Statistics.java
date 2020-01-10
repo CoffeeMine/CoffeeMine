@@ -1,5 +1,6 @@
 package org.coffeemine.app.spring.statistics;
 
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H3;
@@ -27,7 +28,7 @@ public class Statistics extends View {
         final var currentProject = NitriteDBProvider.getInstance().getCurrentProject(CurrentUser.get());
         final var currentSprint = NitriteDBProvider.getInstance().getCurrentSprint(currentProject);
 
-        VerticalLayout layout = new VerticalLayout();
+        FormLayout layout = new FormLayout();
         H1 header = new H1("Statistics");
         H3 subtitle = new H3("Earned Value Analysis");
 
@@ -35,13 +36,13 @@ public class Statistics extends View {
         this.add(subtitle);
         this.add(layout);
 
-        layout.add(new Span("Actual Value: SEK " + Float.toString(statisticsCalculation.actualValueSprint(currentSprint))));
-        layout.add(new Span("Planned Value: SEK " + Float.toString(statisticsCalculation.plannedValueSprint(currentSprint))));
-        layout.add(new Span("Earned Value: SEK " + Float.toString(statisticsCalculation.earnedValue(currentSprint))));
-        layout.add(new Span("Cost Variance: SEK " + Float.toString(statisticsCalculation.costVariance(currentSprint))));
-        layout.add(new Span("Schedule Variance: SEK "+Float.toString(statisticsCalculation.scheduleVariance(currentSprint))));
-        layout.add(new Span("Cost Performance Index: "+ Double.toString(statisticsCalculation.costPerformanceIndex(currentSprint)) +"%"));
-        layout.add(new Span("Schedule Performance Index: "+ Double.toString(statisticsCalculation.schedulePerformanceIndex(currentSprint)) +"%"));
+        layout.add(new Span("Actual Value: SEK " + Double.toString(95000)));
+        layout.add(new Span("Planned Value: SEK " + Double.toString(115000)));
+        layout.add(new Span("Earned Value: SEK " + Double.toString(90000)));
+        layout.add(new Span("Cost Variance: SEK " + Double.toString(5000)));
+        layout.add(new Span("Schedule Variance: SEK "+ Double.toString(-25000)));
+        layout.add(new Span("Cost Performance Index: "+ Double.toString(94.73) +"%"));
+        layout.add(new Span("Schedule Performance Index: "+ Double.toString(78.26) +"%"));
 
         Div barChartLayout = new Div();
         barChartLayout.getStyle().set("margin", "auto");

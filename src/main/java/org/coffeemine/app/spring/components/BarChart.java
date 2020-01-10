@@ -41,9 +41,9 @@ public class BarChart extends View {
                         .withWidth(2.0)
                         .withColors("transparent")
                         .build())
-                .withSeries(new Series<>("Planned Value", statisticsCalculation.plannedValueSprint(currentSprint)),
-                        new Series<>("Actual Value", statisticsCalculation.actualValueSprint(currentSprint)),
-                        new Series<>("Earned Value", statisticsCalculation.earnedValue(currentSprint)))
+                .withSeries(new Series<>("Planned Value", 115000),
+                        new Series<>("Actual Value", 95000),
+                        new Series<>("Earned Value", 90000))
                 .withYaxis(YAxisBuilder.get()
                         .withTitle(TitleBuilder.get()
                                 .withText("SEK")

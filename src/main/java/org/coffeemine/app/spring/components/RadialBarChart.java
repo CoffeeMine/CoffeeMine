@@ -28,7 +28,7 @@ public class RadialBarChart extends View {
                 .withChart(ChartBuilder.get()
                         .withType(Type.radialBar)
                         .build())
-                .withSeries(statisticsCalculation.costPerformanceIndex(currentSprint), statisticsCalculation.schedulePerformanceIndex(currentSprint))
+                .withSeries(94.73, 78.26)
                 .withLabels("Cost Performance", "Schedule Performance")
                 .build();
         this.add(multiRadialBarChart);
