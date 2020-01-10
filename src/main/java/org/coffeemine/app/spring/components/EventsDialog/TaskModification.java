@@ -48,7 +48,7 @@ public class TaskModification extends Dialog {
         final var save = new Button("Save", e -> {
             task.setName(name.getValue());
             final var old_sprint = sprint4task(task);
-            old_sprint.getTasks().remove(task_id);
+            old_sprint.getTasks().remove((Integer) task_id);
             NitriteDBProvider.getInstance().updateSprint(old_sprint);
 
             final var new_sprint = sprint_sel.getValue();
