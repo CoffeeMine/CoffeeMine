@@ -45,7 +45,7 @@ public class TaskCreation extends Dialog {
             usersId.add(assignees_sel.getValue().getId());
             task = NitriteDBProvider.getInstance().getTask(
                     NitriteDBProvider.getInstance().addTask(
-                            new Task(-1, name.getValue(), desc.getValue(), true, usersId, new ArrayList<>(), new ArrayList<>())));
+                            new Task(-1, name.getValue(), desc.getValue(), true, 5, usersId, new ArrayList<>(), new ArrayList<>())));
             callback.accept(task);
             Notification notification = new Notification(
                     "Added task #" + task.getId() +
