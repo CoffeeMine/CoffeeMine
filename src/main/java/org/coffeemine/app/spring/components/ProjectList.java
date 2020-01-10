@@ -1,7 +1,6 @@
 package org.coffeemine.app.spring.components;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -55,7 +54,9 @@ public class ProjectList extends VerticalLayout {
                     final var buttons = new HorizontalLayout();
                     buttons.getStyle().set("padding-top", "1em");
                     final var confirm = new Button("Switch", s -> {
-                        CurrentUser.get().setCurrentProject(project.getId());
+                        final var user = CurrentUser.get();
+                        user.setCurrentProject(project.getId());
+                        NitriteDBProvider.getInstance().updateUser(user);
                         // small trick to also refresh overview
                         UI.getCurrent().navigate("login");
                         UI.getCurrent().navigate("");
