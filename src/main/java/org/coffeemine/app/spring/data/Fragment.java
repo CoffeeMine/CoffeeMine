@@ -3,12 +3,12 @@ package org.coffeemine.app.spring.data;
 import com.vaadin.flow.component.JsonSerializable;
 import elemental.json.JsonObject;
 import elemental.json.impl.JreJsonFactory;
-
 import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.db.NO2Serializable;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 import org.dizitart.no2.Document;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,8 +17,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 import static java.time.format.DateTimeFormatter.ofLocalizedDate;
-
-import java.time.Instant;
 
 public class Fragment implements JsonSerializable, NO2Serializable, ChangeTracker {
     private int id;
@@ -94,8 +92,8 @@ public class Fragment implements JsonSerializable, NO2Serializable, ChangeTracke
         final var factory = new JreJsonFactory();
         final var ret = factory.createObject();
         ret.put("id", id);
-        ret.put("begin", begin.format(DateTimeFormatter.BASIC_ISO_DATE));
-        ret.put("end", end.format(DateTimeFormatter.BASIC_ISO_DATE));
+        ret.put("begin", begin.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        ret.put("end", end.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
         final var users = factory.createArray();
         for (int i = 0; i < this.users.size(); ++i)

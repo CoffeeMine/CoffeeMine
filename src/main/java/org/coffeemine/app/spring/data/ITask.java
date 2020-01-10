@@ -17,10 +17,6 @@ public interface ITask extends JsonSerializable, NO2Serializable, ChangeTracker 
 
     void setDescription(@NotNull String description);
 
-    int getHours();
-
-    void setHours(int hours);
-
     boolean isCompleted();
 
     void setCompleted(boolean completed);

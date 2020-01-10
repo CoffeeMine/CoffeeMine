@@ -1,6 +1,9 @@
 package org.coffeemine.app.spring.statistics;
 
-import org.coffeemine.app.spring.data.*;
+import org.coffeemine.app.spring.data.Fragment;
+import org.coffeemine.app.spring.data.ISprint;
+import org.coffeemine.app.spring.data.ITask;
+import org.coffeemine.app.spring.data.User;
 import org.coffeemine.app.spring.db.DBProvider;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 
@@ -30,7 +33,12 @@ public class StatisticsCalculation {
                 .mapToInt(Integer::intValue)
                 .sum();
 
-        return sum_of_days * getSalary(task) * task.getHours();
+        final long task_hours = dbProvider()
+                .getFragments4Task(task)
+                .map(t -> ChronoUnit.HOURS.between(t.getBegin(), t.getEnd()))
+                .reduce(Long::sum).orElse(0L);
+
+        return sum_of_days * getSalary(task) * task_hours;
     }
 
     public float actualValueSprint(ISprint sprint) {
@@ -41,9 +49,15 @@ public class StatisticsCalculation {
     }
 
     public float plannedValue(ISprint sprint, ITask task) {
-        int totalDays = (int) ChronoUnit.DAYS.between(sprint.getStart(), sprint.getEnd());
+        final var totalDays = (int) ChronoUnit.DAYS.between(sprint.getStart(), sprint.getEnd());
 
-        return totalDays * task.getHours() * getSalary(task);
+        final long task_hours = dbProvider()
+                .getFragments4Task(task)
+                .map(t -> ChronoUnit.HOURS.between(t.getBegin(), t.getEnd()))
+                .reduce(Long::sum).orElse(0L);
+
+
+        return totalDays * task_hours * getSalary(task);
     }
 
     public float plannedValueSprint(ISprint sprint) {
