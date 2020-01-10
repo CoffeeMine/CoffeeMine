@@ -10,13 +10,9 @@ import org.dizitart.no2.Document;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-
-import static java.time.format.DateTimeFormatter.ofLocalizedDate;
 
 public class Fragment implements JsonSerializable, NO2Serializable, ChangeTracker {
     private int id;
@@ -107,9 +103,9 @@ public class Fragment implements JsonSerializable, NO2Serializable, ChangeTracke
     public Fragment readJson(JsonObject value) {
         id = (int) value.getNumber("id");
 
-        final var f = ofLocalizedDate(FormatStyle.SHORT);;
-        begin = ZonedDateTime.parse(value.getString("begin"), f).toLocalDateTime();
-        end = ZonedDateTime.parse(value.getString("end"), f).toLocalDateTime();
+        final var f = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        begin = LocalDateTime.parse(value.getString("begin"), f);
+        end = LocalDateTime.parse(value.getString("end"), f);
 
         final var jusers = value.getArray("users");
         users.ensureCapacity(jusers.length());
