@@ -6,6 +6,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.components.SpaceableTextField;
@@ -28,6 +29,12 @@ public class TaskCreation extends Dialog {
         final var desc = new TextArea();
         desc.setPlaceholder("Please provide task description here");
 
+        final var workTime = new NumberField();
+        workTime.setValue(0d);
+        workTime.setHasControls(true);
+        workTime.setStep(1);
+        workTime.setMin(0);
+
         final var assignees_sel = new /*Multiselect*/ComboBox<User>();
         assignees_sel.setItems(NitriteDBProvider.getInstance().getUsers().collect(Collectors.toList()));
         assignees_sel.setPlaceholder("Assigning to..");
@@ -45,7 +52,7 @@ public class TaskCreation extends Dialog {
             usersId.add(assignees_sel.getValue().getId());
             task = NitriteDBProvider.getInstance().getTask(
                     NitriteDBProvider.getInstance().addTask(
-                            new Task(-1, name.getValue(), desc.getValue(), true, 5, usersId, new ArrayList<>(), new ArrayList<>())));
+                            new Task(-1, name.getValue(), desc.getValue(), true, workTime.getValue().intValue(), usersId, new ArrayList<>(), new ArrayList<>())));
             callback.accept(task);
             Notification notification = new Notification(
                     "Added task #" + task.getId() +
@@ -60,6 +67,7 @@ public class TaskCreation extends Dialog {
         final var form = new FormLayout();
         form.add("New Task");
         form.addFormItem(name, "Task Name");
+        form.addFormItem(workTime, "Estimate hours");
         form.addFormItem(assignees_sel, "Task assign");
         form.addFormItem(sprint_sel, "Sprint assign");
         form.addFormItem(desc, "Task Description");

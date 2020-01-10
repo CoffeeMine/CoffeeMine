@@ -20,6 +20,7 @@ public class TaskDetail extends Dialog {
         final var name = new Text(task.getName());
         final var id_txt = new Text(Integer.toString(task.getId()));
         final var description = new Text(task.getDescription());
+        final var estimate_work_hours = new Text(Integer.toString(task.getHours()));
         final var bound_assignees = new Text(String.join(", ", task.getAssignees().stream().map(t -> NitriteDBProvider.getInstance().getUser(t).getName()).toArray(String[]::new)));
         final var bound_sprint = new Text(NitriteDBProvider.getInstance().getSprints()
                 .filter(s -> s.getTasks().contains(task.getId())).findFirst().map(ISprint::getStart)
@@ -35,6 +36,7 @@ public class TaskDetail extends Dialog {
         form.add("Task #" + task.getId() + " " + task.getName());
         form.addFormItem(name, "Task Name");
         form.addFormItem(id_txt, "Task ID");
+        form.addFormItem(estimate_work_hours, "Estimate hours");
         form.addFormItem(bound_assignees, "Assigning to");
         form.addFormItem(bound_sprint, "Sprint assign");
         form.addFormItem(description, "Task Description");

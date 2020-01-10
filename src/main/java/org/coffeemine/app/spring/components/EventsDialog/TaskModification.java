@@ -6,6 +6,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.textfield.NumberField;
 import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.components.SpaceableTextArea;
 import org.coffeemine.app.spring.components.SpaceableTextField;
@@ -32,6 +33,12 @@ public class TaskModification extends Dialog {
         desc.setPlaceholder("Please provide a task description here");
         desc.setValue(task.getDescription());
 
+        final var workTime = new NumberField();
+        workTime.setValue(((double) task.getHours()));
+        workTime.setHasControls(true);
+        workTime.setStep(1);
+        workTime.setMin(0);
+
         final var assignees_sel = new /*Multiselect*/ComboBox<User>();
         assignees_sel.setItems(NitriteDBProvider.getInstance().getUsers().collect(Collectors.toList()));
         assignees_sel.setPlaceholder("Assigning to..");
@@ -55,7 +62,7 @@ public class TaskModification extends Dialog {
             new_sprint.getTasks().add(task_id);
             NitriteDBProvider.getInstance().updateSprint(new_sprint);
 
-
+            task.setHours(workTime.getValue().intValue());
             task.setDescription(desc.getValue());
             NitriteDBProvider.getInstance().updateTask(task);
             callback.accept(task);
@@ -82,6 +89,7 @@ public class TaskModification extends Dialog {
         final var form = new FormLayout();
         form.add("Modifying Task #" + task.getId() + " " + task.getName());
         form.addFormItem(name, "Task Name");
+        form.addFormItem(workTime, "Estimate hours");
         form.addFormItem(assignees_sel, "Assigning to");
         form.addFormItem(sprint_sel, "For");
         form.addFormItem(desc, "Task Description");

@@ -10,6 +10,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.Route;
 import org.coffeemine.app.spring.annonations.NavbarRoutable;
+import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.components.EventsDialog.SprintCreation;
 import org.coffeemine.app.spring.components.EventsDialog.TaskCreation;
 import org.coffeemine.app.spring.components.EventsDialog.TaskDetail;
@@ -96,7 +97,7 @@ class Calendar extends View {
         colorsSet.add("gray");
         colorsSet.add("slateblue");
         colorsSet.add("violet");
-        NitriteDBProvider.getInstance().getSprints().map(sprint ->
+        NitriteDBProvider.getInstance().getSprints4Project(NitriteDBProvider.getInstance().getCurrentProject(CurrentUser.get())).map(sprint ->
                 new Entry(
                         "S" + sprint.getId(),
                         Integer.toString(sprint.getId()),
@@ -108,7 +109,7 @@ class Calendar extends View {
                         ""))
                 .peek(entry -> entry.setRenderingMode(Entry.RenderingMode.BACKGROUND))
                 .forEach(calendar::addEntry);
-        NitriteDBProvider.getInstance().getTasks().map(task ->
+        NitriteDBProvider.getInstance().getTasks4Project(NitriteDBProvider.getInstance().getCurrentProject(CurrentUser.get())).map(task ->
                 new Entry(
                         "T" + task.getId(),
                         task.getName(),
