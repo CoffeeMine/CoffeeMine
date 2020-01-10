@@ -13,6 +13,7 @@ import org.coffeemine.app.spring.annonations.NavbarRoutable;
 import org.coffeemine.app.spring.components.EventsDialog.SprintCreation;
 import org.coffeemine.app.spring.components.EventsDialog.TaskCreation;
 import org.coffeemine.app.spring.components.EventsDialog.TaskDetail;
+import org.coffeemine.app.spring.data.Fragment;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 import org.coffeemine.app.spring.view.View;
 import org.vaadin.stefan.fullcalendar.CalendarViewImpl;
@@ -23,7 +24,10 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Route
 @NavbarRoutable
@@ -37,7 +41,10 @@ class Calendar extends View {
         final var date_picker = new DatePicker(LocalDate.now());
         date_picker.setPlaceholder("Date within this month");
         date_picker.setClearButtonVisible(true);
-        date_picker.addValueChangeListener(event -> calendar.gotoDate(event.getValue()));
+        date_picker.addValueChangeListener(event -> {
+            if (event.getValue() != null)
+                calendar.gotoDate(event.getValue());
+        });
 
         final var today = new Button("Today", event -> {
             calendar.today();
@@ -89,31 +96,29 @@ class Calendar extends View {
         colorsSet.add("gray");
         colorsSet.add("slateblue");
         colorsSet.add("violet");
-        NitriteDBProvider.getInstance().getSprints().forEach(sprint -> {
-            final var entry = new Entry(
-                    Integer.toString(sprint.getId()),
-                    Integer.toString(sprint.getId()),
-                    sprint.getStart().atStartOfDay(),
-                    sprint.getEnd().plusDays(1).atStartOfDay(),
-                    true,
-                    true,
-                    "dodgerblue",
-                    "");
-            entry.setRenderingMode(Entry.RenderingMode.BACKGROUND);
-            calendar.addEntry(entry);
-        });
-        NitriteDBProvider.getInstance().getTasks().forEach(task -> {
-            final var entry = new Entry(
-                    Integer.toString(task.getId()),
-                    task.getName(),
-                    LocalDateTime.now(),
-                    LocalDateTime.of(2019, 11, 28, 12, 0),
-                    true,
-                    true,
-                    colorsSet.get(new Random().nextInt(colorsSet.size()-1)),
-                    task.getDescription());
-            calendar.addEntry(entry);
-        });
+        NitriteDBProvider.getInstance().getSprints().map(sprint ->
+                new Entry(
+                        "S" + sprint.getId(),
+                        Integer.toString(sprint.getId()),
+                        sprint.getStart().atStartOfDay(),
+                        sprint.getEnd().plusDays(1).atStartOfDay(),
+                        true,
+                        true,
+                        colorsSet.get(new Random().nextInt(colorsSet.size() - 1)),
+                        ""))
+                .peek(entry -> entry.setRenderingMode(Entry.RenderingMode.BACKGROUND))
+                .forEach(calendar::addEntry);
+        NitriteDBProvider.getInstance().getTasks().map(task ->
+                new Entry(
+                        "T" + task.getId(),
+                        task.getName(),
+                        NitriteDBProvider.getInstance().getFragments4Task(task).map(Fragment::getBegin).min(Comparator.naturalOrder()).orElse(LocalDateTime.now()),
+                        NitriteDBProvider.getInstance().getFragments4Task(task).map(Fragment::getEnd).max(Comparator.naturalOrder()).orElse(LocalDateTime.now().plus(10, DAYS)),
+                        true,
+                        true,
+                        colorsSet.get(new Random().nextInt(colorsSet.size() - 1)),
+                        task.getDescription()))
+                .forEach(calendar::addEntry);
     }
 
     void changeCalendarView(String view_name){
