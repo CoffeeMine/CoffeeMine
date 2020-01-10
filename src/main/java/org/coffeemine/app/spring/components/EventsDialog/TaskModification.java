@@ -9,10 +9,12 @@ import com.vaadin.flow.component.select.Select;
 import org.coffeemine.app.spring.auth.CurrentUser;
 import org.coffeemine.app.spring.components.SpaceableTextArea;
 import org.coffeemine.app.spring.components.SpaceableTextField;
+import org.coffeemine.app.spring.data.ISprint;
 import org.coffeemine.app.spring.data.ITask;
 import org.coffeemine.app.spring.data.User;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
 
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -38,17 +40,22 @@ public class TaskModification extends Dialog {
         if (!currentAssignees.isEmpty())
             assignees_sel.setValue(currentAssignees.stream().findFirst().get());
 
-        final var sprints = new String[(int) NitriteDBProvider.getInstance().getSprints4Project(NitriteDBProvider.getInstance().getCurrentProject(CurrentUser.get())).count()];
-        for (int i = 1; i <= sprints.length; i++) {
-            sprints[i - 1] = "Sprint " + i;
-        }
-        final var sprint_sel = new Select<>(sprints);
+        final var sprint_sel = new Select<>(NitriteDBProvider.getInstance().getSprints4Project(NitriteDBProvider.getInstance().getCurrentProject(CurrentUser.get())).collect(Collectors.toList()).toArray(ISprint[]::new));
         sprint_sel.setPlaceholder("Assigning to sprint..");
-        sprint_sel.setValue(task.getAssignSprint());
+        sprint_sel.setItemLabelGenerator(s -> s == null ? "N/A" : s.getStart().format(DateTimeFormatter.ofPattern("uuuu MMM dd")));
+        sprint_sel.setValue(sprint4task(task));
 
         final var save = new Button("Save", e -> {
             task.setName(name.getValue());
-            task.setAssignSprint(sprint_sel.getValue());
+            final var old_sprint = sprint4task(task);
+            old_sprint.getTasks().remove(task_id);
+            NitriteDBProvider.getInstance().updateSprint(old_sprint);
+
+            final var new_sprint = sprint_sel.getValue();
+            new_sprint.getTasks().add(task_id);
+            NitriteDBProvider.getInstance().updateSprint(new_sprint);
+
+
             task.setDescription(desc.getValue());
             NitriteDBProvider.getInstance().updateTask(task);
             callback.accept(task);
@@ -75,13 +82,18 @@ public class TaskModification extends Dialog {
         final var form = new FormLayout();
         form.add("Modifying Task #" + task.getId() + " " + task.getName());
         form.addFormItem(name, "Task Name");
-        form.addFormItem(assignees_sel,"Assigning to");
+        form.addFormItem(assignees_sel, "Assigning to");
         form.addFormItem(sprint_sel, "For");
         form.addFormItem(desc, "Task Description");
         form.add(save, reset, delete);
 
         add(form);
         open();
+    }
+
+    private static ISprint sprint4task(ITask task) {
+        return NitriteDBProvider.getInstance().getSprints()
+                .filter(s -> s.getTasks().contains(task.getId())).findFirst().orElse(null);
     }
 
 }
