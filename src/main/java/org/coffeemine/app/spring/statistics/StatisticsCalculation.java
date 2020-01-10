@@ -33,12 +33,7 @@ public class StatisticsCalculation {
                 .mapToInt(Integer::intValue)
                 .sum();
 
-        final long task_hours = dbProvider()
-                .getFragments4Task(task)
-                .map(t -> ChronoUnit.HOURS.between(t.getBegin(), t.getEnd()))
-                .reduce(Long::sum).orElse(0L);
-
-        return sum_of_days * getSalary(task) * task_hours;
+        return sum_of_days * getSalary(task) * task.getHours();
     }
 
     public float actualValueSprint(ISprint sprint) {
@@ -49,15 +44,9 @@ public class StatisticsCalculation {
     }
 
     public float plannedValue(ISprint sprint, ITask task) {
-        final var totalDays = (int) ChronoUnit.DAYS.between(sprint.getStart(), sprint.getEnd());
+        int totalDays = (int) ChronoUnit.DAYS.between(sprint.getStart(), sprint.getEnd());
 
-        final long task_hours = dbProvider()
-                .getFragments4Task(task)
-                .map(t -> ChronoUnit.HOURS.between(t.getBegin(), t.getEnd()))
-                .reduce(Long::sum).orElse(0L);
-
-
-        return totalDays * task_hours * getSalary(task);
+        return totalDays * task.getHours() * getSalary(task);
     }
 
     public float plannedValueSprint(ISprint sprint) {
@@ -73,6 +62,7 @@ public class StatisticsCalculation {
                 .filter(ITask::isCompleted)
                 .reduce(0.0f, (f, t) -> f + plannedValue(sprint, t), Float::sum);
     }
+
 
     public float costVariance(ISprint sprint) {
         return earnedValue(sprint) - actualValueSprint(sprint);
