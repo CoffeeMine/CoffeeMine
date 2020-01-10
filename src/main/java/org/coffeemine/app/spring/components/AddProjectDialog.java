@@ -12,7 +12,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import org.coffeemine.app.spring.data.Project;
 import org.coffeemine.app.spring.db.NitriteDBProvider;
-import org.coffeemine.app.spring.components.SpaceableTextField;
 
 public class AddProjectDialog extends Dialog {
 
@@ -49,8 +48,8 @@ public class AddProjectDialog extends Dialog {
         addCleanButton.addClickListener(c -> {
             try {
                 final var newProjectName = projectName.getOptionalValue().orElseThrow();
-                NitriteDBProvider.getInstance().addProject(new Project(newProjectName, 0));
-                Notification.show("Project \"" + newProjectName+ "\" created", 2000, Notification.Position.BOTTOM_END);
+                NitriteDBProvider.getInstance().addProject(new Project(newProjectName, -1));
+                Notification.show("Project \"" + newProjectName + "\" created", 2000, Notification.Position.BOTTOM_END);
                 close();
             } catch (Exception e) {
             }

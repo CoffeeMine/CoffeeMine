@@ -7,6 +7,7 @@ import org.dizitart.no2.Document;
 import org.dizitart.no2.Nitrite;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -57,7 +58,7 @@ public class NitriteDBProvider implements DBProvider {
         final var factory = new JreJsonFactory();
         final JsonObject obj = factory.parse(json);
 
-        db.getCollection("projects").insert(new Project().readJson(obj).asNO2Doc());
+        addProject(new Project().readJson(obj));
 
         final var jsprints = obj.getArray("sprints");
         final var db_sprints = db.getCollection("sprints");
@@ -192,7 +193,8 @@ public class NitriteDBProvider implements DBProvider {
     public ISprint getCurrentSprint(Project project) {
         var now = LocalDate.now();
         return this.getSprints4Project(project)
-                .dropWhile(sprint -> !(sprint.getStart().isBefore(now) && sprint.getEnd().isAfter(now))).findFirst()
+                .dropWhile(sprint -> !sprint.getStart().isBefore(now))
+                .min(Comparator.comparing(ISprint::getStart))
                 .orElse(null);
     }
 
