@@ -113,6 +113,7 @@ constexpr auto jschema = R"({
         "required":[
           "id",
           "name",
+          "hours",
           "description",
           "assignees",
           "fragments"
@@ -138,6 +139,16 @@ constexpr auto jschema = R"({
             ],
             "pattern":"^(.*)$"
           },
+          "hours":{
+            "$id":"#/properties/tasks/items/properties/hours",
+            "type":"number",
+             "multipleOf":1.0,
+             "title":"The Hours Schema",
+             "default":0,
+             "examples":[
+               0
+             ]
+           },
           "description":{
             "$id":"#/properties/tasks/items/properties/description",
             "type":"string",

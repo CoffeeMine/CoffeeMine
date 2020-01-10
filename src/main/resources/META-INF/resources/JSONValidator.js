@@ -1209,11 +1209,11 @@ function updateGlobalBufferAndViews(buf) {
 
 
 var STATIC_BASE = 1024,
-    STACK_BASE = 5256720,
+    STACK_BASE = 5259888,
     STACKTOP = STACK_BASE,
-    STACK_MAX = 13840,
-    DYNAMIC_BASE = 5256720,
-    DYNAMICTOP_PTR = 13824;
+    STACK_MAX = 17008,
+    DYNAMIC_BASE = 5259888,
+    DYNAMICTOP_PTR = 16992;
 
 assert(STACK_BASE % 16 === 0, 'stack must start aligned');
 assert(DYNAMIC_BASE % 16 === 0, 'heap must start aligned');
@@ -1731,7 +1731,9 @@ var tempI64;
 var ASM_CONSTS = [];
 
 
-// STATICTOP = STATIC_BASE + 12816;
+
+
+// STATICTOP = STATIC_BASE + 15984;
 /* global initializers */  __ATINIT__.push({ func: function() { ___wasm_call_ctors() } });
 
 
